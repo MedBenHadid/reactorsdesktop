@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.apache.catalina.realm.MessageDigestCredentialHandler;
+
 
 import static javafx.fxml.FXMLLoader.load;
 
@@ -21,13 +21,6 @@ public class Main extends Application {
         // System.out.println(newUser);
         // SINGELTON
 
-        MessageDigestCredentialHandler credentialHandler = new MessageDigestCredentialHandler();
-        credentialHandler.setAlgorithm("SHA-512");
-        credentialHandler.setSaltLength(0);
-        credentialHandler.setIterations(13);
-        credentialHandler.mutate("1ac2620f");
-
-
         Parent root = load(getClass().getResource("/sharedAppPackage/scenes/login/fxml/Login.fxml"));
 
         stage.initStyle(StageStyle.DECORATED);
@@ -36,6 +29,7 @@ public class Main extends Application {
         stage.setTitle("ReactorsFX : La bénévolat en desktop");
 
         // Louled ken fadetkom set them both to false
+        // Set them true mba3d
         stage.setAlwaysOnTop(false);
         stage.setMaximized(false);
         stage.setFullScreen(false);

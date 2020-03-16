@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import sharedAppPackage.utils.BinaryValidator.EmailValidator;
 import sharedAppPackage.utils.connector.ConnectionUtil;
 
 import java.io.IOException;
@@ -45,9 +46,9 @@ public class LoginController implements Initializable {
     @FXML
     private Button btnSignin;
 
-    Connection con = null;
-    PreparedStatement preparedStatement = null;
-    ResultSet resultSet = null;
+    private Connection con = null;
+    private PreparedStatement preparedStatement = null;
+    private ResultSet resultSet = null;
 
     @FXML
     public void handleButtonAction(MouseEvent event) {
@@ -56,16 +57,15 @@ public class LoginController implements Initializable {
             //login here
             if (logIn().equals("Success")) {
                 try {
-
                     //add you loading or delays - ;-)
                     Node node = (Node) event.getSource();
                     Stage stage = (Stage) node.getScene().getWindow();
                     //stage.setMaximized(true);
                     stage.close();
+
                     Scene scene = new Scene(FXMLLoader.load(getClass().getResource("./../../OnBoard/fxml/OnBoard.fxml")));
                     stage.setScene(scene);
                     stage.show();
-
                 } catch (IOException ex) {
                     System.err.println(ex.getMessage());
                 }
@@ -100,14 +100,19 @@ public class LoginController implements Initializable {
             status = "Error";
         } else {
             //query
-            String sql = "SELECT * FROM user Where email = ? and password = ?";
+            String sql;
+            if (EmailValidator.isEmail(email))
+                sql = "SELECT * FROM user Where email = ? and password_plain = ?";
+            else
+                sql = "SELECT * FROM user Where username =? and password_plain = ?";
+            System.out.println(sql);
             try {
                 preparedStatement = con.prepareStatement(sql);
                 preparedStatement.setString(1, email);
                 preparedStatement.setString(2, password);
                 resultSet = preparedStatement.executeQuery();
                 if (!resultSet.next()) {
-                    setLblError(Color.TOMATO, "Enter Correct Email/Password");
+                    setLblError(Color.TOMATO, "Enter Correct (Email/Username)-/Password");
                     status = "Error";
                 } else {
                     setLblError(Color.GREEN, "Login Successful..Redirecting..");
@@ -127,23 +132,6 @@ public class LoginController implements Initializable {
         System.out.println(text);
     }
 
-    public static String encryptPassword(String input)
-    {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            byte[] messageDigest = md.digest(input.getBytes());
-            BigInteger no = new BigInteger(1, messageDigest);
-            String hashtext = no.toString(16);
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
-            }
-            System.out.println(hashtext);
-            return hashtext;
-        }
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
 
 
