@@ -18,7 +18,7 @@
             <children>
                 <ImageView fitHeight="52.0" fitWidth="52.0" layoutX="75.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../styling/images/login/icons8_Google_Wallet_50px.png" />
+                        <Image url="@../../login/images/login/icons8_Google_Wallet_50px.png" />
                     </image>
                 </ImageView>
                 <Label alignment="CENTER" layoutX="140.0" layoutY="54.0" prefHeight="23.0" prefWidth="173.0" text="Easy Wallet Control" textFill="WHITE">
@@ -35,7 +35,7 @@
                 <TextField fx:id="txtLastname" layoutX="75.0" layoutY="217.0" prefHeight="32.0" prefWidth="278.0" promptText="lastname" />
                 <TextField fx:id="txtEmail" layoutX="75.0" layoutY="276.0" prefHeight="32.0" prefWidth="278.0" promptText="email" />
                 <DatePicker fx:id="txtDOB" layoutX="75.0" layoutY="390.0" prefHeight="32.0" prefWidth="278.0" promptText="dob" />
-                <Button fx:id="btnSave" layoutX="76.0" layoutY="449.0" mnemonicParsing="false" onMouseClicked="#HandleEvents" prefHeight="32.0" prefWidth="278.0" styleClass="button2" stylesheets="@../../styling/css/fullpackstyling.css" text="Save" />
+                <Button fx:id="btnSave" layoutX="76.0" layoutY="449.0" mnemonicParsing="false" onMouseClicked="#HandleEvents" prefHeight="32.0" prefWidth="278.0" styleClass="button2" stylesheets="@../../login/fullpackstyling.css" text="Save" />
                 <ComboBox fx:id="txtGender" editable="true" layoutX="76.0" layoutY="334.0" prefHeight="32.0" prefWidth="278.0" promptText="gender">
                 </ComboBox>
             </children>

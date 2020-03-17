@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" nodeOrientation="LEFT_TO_RIGHT" prefHeight="709.0" prefWidth="1271.0"
+            style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sharedAppPackage.scenes.adminDashboard.HomeController">
+   <Pane layoutX="-2.0" prefHeight="145.0" prefWidth="1062.0" styleClass="head-background" stylesheets="@style.css"
+         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Label layoutX="224.0" layoutY="47.0" prefHeight="53.0" prefWidth="463.0" text="Reactors FX dashboard : "
+             textFill="WHITE">
+         <font>
+            <Font size="36.0"/>
+         </font>
+      </Label>
+      <Label layoutX="227.0" layoutY="100.0" text="Username" textFill="WHITE">
+         <font>
+            <Font size="13.0"/>
+         </font>
+      </Label>
+      <JFXButton fx:id="btnLogout" onMouseClicked="#handleButtonAction" layoutX="1043.0" layoutY="58.0"
+                 nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="163.0" ripplerFill="WHITE"
+                 style="-fx-background-color: #473E98;" text="Logout" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0"/>
+         </font>
+      </JFXButton>
+      <JFXButton id="edit_profile" layoutX="867.0" layoutY="58.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0"
+                 prefWidth="163.0" ripplerFill="WHITE" style="-fx-background-color: #473E98;" text="EDIT PROFILE"
+                 textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0"/>
+         </font>
+      </JFXButton>
+   </Pane>
+   <VBox layoutX="-1.0" layoutY="145.0" prefHeight="438.0" prefWidth="252.0" style="-fx-background-color: #fff;"
+         AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="146.0">
+      <Label prefHeight="30.0" prefWidth="252.0" text="Global management" textFill="#171717">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <padding>
+            <Insets left="40.0"/>
+         </padding>
+         <VBox.margin>
+            <Insets top="60.0"/>
+         </VBox.margin>
+      </Label>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Users list" textFill="#5b5858">
+         <VBox.margin>
+            <Insets/>
+         </VBox.margin>
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true"
+                       preserveRatio="true">
+               <Image url="@images/projects.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Members list" textFill="#5b5858">
+         <VBox.margin>
+            <Insets/>
+         </VBox.margin>
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@images/reliabilty.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Association admins list" textFill="#5b5858">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <viewport>
+                  <Rectangle2D/>
+               </viewport>
+               <Image url="@images/projections.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+      <Label prefHeight="30.0" prefWidth="252.0" text="Association management" textFill="#171717">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <padding>
+            <Insets left="40.0"/>
+         </padding>
+      </Label>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Associations" textFill="#5b5858">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true"
+                       preserveRatio="true">
+               <Image url="@images/icons8_Workflow_64px.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Dons" textFill="#5b5858">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true"
+                       preserveRatio="true">
+               <Image url="@images/icons8_US_Dollar_64px.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Missions" textFill="#5b5858">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true"
+                       preserveRatio="true">
+               <Image url="@images/icons8_US_Dollar_64px.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Regugees" textFill="#5b5858">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@images/agencies.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Helpdesk" textFill="#5b5858">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <viewport>
+                  <Rectangle2D/>
+               </viewport>
+               <Image url="@images/icons8_Share_64px.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+      <JFXButton alignment="BASELINE_LEFT" graphicTextGap="10.0" prefHeight="43.0" prefWidth="252.0"
+                 ripplerFill="#bfadf8" text="Communication" textFill="#5b5858">
+         <font>
+            <Font size="13.0"/>
+         </font>
+         <graphic>
+            <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true"
+                       preserveRatio="true">
+               <Image url="@images/icons8_Workflow_64px.png"/>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets left="50.0"/>
+         </padding>
+      </JFXButton>
+   </VBox>
+   <Pane layoutX="71.0" layoutY="44.0" prefHeight="131.0" prefWidth="142.0" style="-fx-background-color: #fff;">
+      <effect>
+         <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0"/>
+      </effect>
+      <ImageView fitHeight="120.0" fitWidth="139.0" layoutX="11.0" layoutY="5.0" pickOnBounds="true"
+                 preserveRatio="true">
+         <Image url="@images/logo.png"/>
+      </ImageView>
+   </Pane>
+   <ScrollPane layoutX="251.0" layoutY="182.0" prefHeight="406.0" prefWidth="810.0" style="-fx-background-color: #fff;"
+               AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="2.0"
+               AnchorPane.topAnchor="182.0">
+      <VBox fx:id="pnl_scroll" prefHeight="404.0" prefWidth="1023.0" spacing="20.0"
+            style="-fx-background-color: #fff;"/>
+   </ScrollPane>
+</AnchorPane>

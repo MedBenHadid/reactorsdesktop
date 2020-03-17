@@ -1,6 +1,8 @@
 package sharedAppPackage.services;
 
 import sharedAppPackage.models.User;
+import sharedAppPackage.models.UserSession;
+import sharedAppPackage.utils.BinaryValidator.EmailValidator;
 import sharedAppPackage.utils.connector.ConnectionUtil;
 
 import java.sql.*;
@@ -10,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserService {
+    private static UserService instance;
     private Connection connection;
 
     public void createUser(User user){
@@ -35,8 +38,15 @@ public class UserService {
         }
     }
 
-    public User readUser(int id){
-        User user = null;
+    public User readUserById(int id){
+        User user=null;
+        try {
+            PreparedStatement pt = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
+            pt.setInt(1,id);
+            user = resultSetToUser(pt.executeQuery());
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
         return user;
     }
 
@@ -47,9 +57,17 @@ public class UserService {
             ResultSet rs = pt.executeQuery();
             while(rs.next()){
                 // TO:DO : Add parameters !
-                User user = User.getInstance();
-                userList.add(user);
-
+                User u = new User();
+                    u.setId(rs.getInt("id"));
+                    u.setUsername(rs.getString("username"));
+                    u.setUsername(rs.getString("email"));
+                    u.setPlainPassword(rs.getString("password_plain"));
+                    u.setEnabled(rs.getBoolean("enabled"));
+                    u.setLast_login(rs.getTimestamp("last_login"));
+                    u.setIs_admin(rs.getBoolean("is_admin"));
+                    u.setIs_ass_admin(rs.getBoolean("is_ass_admin"));
+                    u.setIs_member(rs.getBoolean("is_member"));
+                userList.add(u);
             }
             return userList;
         } catch (SQLException e) {
@@ -70,11 +88,49 @@ public class UserService {
 
     }
 
-    public boolean validateLogin(String email, String password){
+    public boolean validateLogin(String credential, String password) throws SQLException {
+        String sql;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        boolean t;
+        if (EmailValidator.isEmail(credential))
+            sql = "SELECT * FROM user Where email = ? and password_plain = ?";
+        else
+            sql = "SELECT * FROM user Where username =? and password_plain = ?";
 
-        return true;
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, credential);
+            preparedStatement.setString(2, password);
+            resultSet = preparedStatement.executeQuery();
+            t = resultSet.next();
+            if (t) {
+                User current = UserService.getInstace().resultSetToUser(resultSet);
+                UserSession.getInstace(current.getUsername(), current.getIs_admin(), current.getIs_ass_admin(), current.getIs_member());
+            }
+            return t;
     }
-    public UserService() {
+
+    public User resultSetToUser(ResultSet rs) throws SQLException {
+        User u = new User();
+        u.setId(rs.getInt("id"));
+        u.setUsername(rs.getString("username"));
+        u.setUsername(rs.getString("email"));
+        u.setPlainPassword(rs.getString("password_plain"));
+        u.setEnabled(rs.getBoolean("enabled"));
+        u.setLast_login(rs.getTimestamp("last_login"));
+        u.setIs_admin(rs.getBoolean("is_admin"));
+        u.setIs_ass_admin(rs.getBoolean("is_ass_admin"));
+        u.setIs_member(rs.getBoolean("is_member"));
+        return u;
+    }
+
+    private UserService() {
         connection = ConnectionUtil.conDB().conn;
+    }
+    public static UserService getInstace() {
+        if(instance == null) {
+            instance = new UserService();
+        }
+        return instance;
     }
 }

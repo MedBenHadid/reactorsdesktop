@@ -16,13 +16,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // SINGELTON
-        // User newUser = User.getInstance();
-        // System.out.println(newUser);
-        // SINGELTON
-
-        Parent root = load(getClass().getResource("/sharedAppPackage/scenes/login/fxml/Login.fxml"));
-
+        Parent root = load(getClass().getResource("/sharedAppPackage/scenes/login/Login.fxml"));
+        //        "/sharedAppPackage/scenes/login/fxml/Login.fxml"
+        // "./scenes/adminDashboard/Home.fxml"
         stage.initStyle(StageStyle.DECORATED);
 
 
