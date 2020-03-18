@@ -81,13 +81,13 @@ public class LoginController implements Initializable {
                         stage.close();
                         UserSession us = UserSession.getInstace();
                         Scene scene = null;
-                        if (us.isIs_admin())
+                        if (us.getUser().isAdmin())
                             scene = new Scene(FXMLLoader.load(getClass().getResource("./../adminDashboard/Home.fxml")));
-                        else if (us.isIs_ass_admin())
+                        else if (us.getUser().isAssociationAdmin())
                             scene = new Scene(FXMLLoader.load(getClass().getResource("./../OnBoard/fxml/OnBoard.fxml")));
-                        else if (us.isIs_member())
+                        else if (us.getUser().isMember())
                             System.out.println("Member");
-                        else
+                        else if (us.getUser().isClient())
                             System.out.println("User");
 
                         stage.setScene(scene);

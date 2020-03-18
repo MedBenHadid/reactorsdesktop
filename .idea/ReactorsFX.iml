@@ -12,5 +12,6 @@
     <orderEntry type="library" name="tomcat-embed-core-10.0.0-M1" level="project" />
     <orderEntry type="library" name="libs" level="project" />
     <orderEntry type="library" name="jfoenix-9.0.8" level="project" />
+    <orderEntry type="library" name="pherialize-1.2.2" level="project" />
   </component>
 </module>

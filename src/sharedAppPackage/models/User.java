@@ -1,28 +1,50 @@
 package sharedAppPackage.models;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import de.ailis.pherialize.MixedArray;
+import sharedAppPackage.models.enums.RoleEnum;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class User {
+public class User extends RecursiveTreeObject<User> {
     private int id;
-    private String username,email,plainPassword;
+    private String username,email,password,plainPassword;
     private Timestamp last_login;
-    private Boolean enabled,approuved,is_admin=false,is_ass_admin=false,is_member=false;
+    private Boolean enabled,approuved,banned;
+    private MixedArray roles;
+    private Profile profile;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", plainPassword='" + plainPassword + '\'' +
-                ", last_login=" + last_login + '\'' +
-                ", enabled=" + enabled +'\'' +
-                ", approuved=" + approuved +'\'' +
-                ", is_admin=" + is_admin +'\'' +
-                ", is_ass_admin=" + is_ass_admin +'\'' +
-                ", is_member=" + is_member +'\'' +
-                '}';
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Boolean getBanned() {
+        return banned;
+    }
+
+    public void setBanned(Boolean banned) {
+        this.banned = banned;
+    }
+
+    public MixedArray getRoles() {
+        return roles;
+    }
+
+    public void setRoles(MixedArray roles) {
+        this.roles = roles;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     @Override
@@ -93,35 +115,19 @@ public class User {
     public void setApprouved(Boolean approuved) {
         this.approuved = approuved;
     }
-
-    public Boolean getIs_admin() {
-        return is_admin;
+    public boolean isAdmin() {
+        return this.roles.contains(RoleEnum.ROLE_SUPER_ADMIN);
+    }
+    public boolean isAssociationAdmin() {
+        return this.roles.contains(RoleEnum.ROLE_ADMIN_ASSOCIATION);
+    }
+    public boolean isMember() { return this.roles.contains(RoleEnum.ROLE_MEMBER); }
+    public boolean isClient() {
+        return this.roles.contains(RoleEnum.ROLE_CLIENT);
     }
 
-    public void setIs_admin(Boolean is_admin) {
-        this.is_admin = is_admin;
-    }
-
-    public Boolean getIs_ass_admin() {
-        return is_ass_admin;
-    }
-
-    public void setIs_ass_admin(Boolean is_ass_admin) {
-        this.is_ass_admin = is_ass_admin;
-    }
-
-    public Boolean getIs_member() {
-        return is_member;
-    }
-
-    public void setIs_member(Boolean is_member) {
-        this.is_member = is_member;
-    }
-
-
-
-    // SINGELTON
     public User() {
+        this.profile = new Profile();
     }
 
 }

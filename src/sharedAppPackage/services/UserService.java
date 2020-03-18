@@ -1,21 +1,20 @@
 package sharedAppPackage.services;
 
+import de.ailis.pherialize.Pherialize;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import sharedAppPackage.models.User;
 import sharedAppPackage.models.UserSession;
-import sharedAppPackage.utils.BinaryValidator.EmailValidator;
+import sharedAppPackage.utils.BCrypt.BCrypt;
 import sharedAppPackage.utils.connector.ConnectionUtil;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class UserService {
     private static UserService instance;
     private Connection connection;
 
-    public void createUser(User user){
+    public void createUpdateUser(User user){
         String request ="INSERT INTO user VALUES ()";
         Statement st;
         try {
@@ -26,102 +25,126 @@ public class UserService {
         }
     }
 
-    public void updateUserLastName(int id,String firstName){
-        try {
-            PreparedStatement pt = connection.prepareStatement("UPDATE user SET nom=? WHERE id=?");
-            pt.setString(1,firstName);
-            pt.setInt(2,id);
-            pt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Logger.getLogger(UserService.class.getName()).log(Level.SEVERE,null,e);
-        }
-    }
-
-    public User readUserById(int id){
-        User user=null;
+    public User readUserBy(int id){
+        User user;
         try {
             PreparedStatement pt = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
             pt.setInt(1,id);
             user = resultSetToUser(pt.executeQuery());
+            return user;
         } catch (SQLException e){
-            e.printStackTrace();
-        }
-        return user;
-    }
-
-    public List<User> listUsers(){
-        List<User> userList = new ArrayList<>();
-        try {
-            PreparedStatement pt = connection.prepareStatement("SELECT * FROM user");
-            ResultSet rs = pt.executeQuery();
-            while(rs.next()){
-                // TO:DO : Add parameters !
-                User u = new User();
-                    u.setId(rs.getInt("id"));
-                    u.setUsername(rs.getString("username"));
-                    u.setUsername(rs.getString("email"));
-                    u.setPlainPassword(rs.getString("password_plain"));
-                    u.setEnabled(rs.getBoolean("enabled"));
-                    u.setLast_login(rs.getTimestamp("last_login"));
-                    u.setIs_admin(rs.getBoolean("is_admin"));
-                    u.setIs_ass_admin(rs.getBoolean("is_ass_admin"));
-                    u.setIs_member(rs.getBoolean("is_member"));
-                userList.add(u);
-            }
-            return userList;
-        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void deleteUser(int id){
+    public User readUserBy(String credential){
+        User user;
+        try {
+            PreparedStatement pt = connection.prepareStatement("SELECT * FROM user WHERE username = ? OR email = ?");
+            pt.setString(1,credential);
+            pt.setString(2,credential);
+            user = resultSetToUser(pt.executeQuery());
+            return user;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteUser(User user){
         PreparedStatement ps ;
         try {
             ps = connection.prepareStatement("DELETE FROM user WHERE id=?");
-            ps.setInt(1,id);
+            ps.setInt(1,user.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
-
-    public boolean validateLogin(String credential, String password) throws SQLException {
-        String sql;
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        boolean t;
-        if (EmailValidator.isEmail(credential))
-            sql = "SELECT * FROM user Where email = ? and password_plain = ?";
-        else
-            sql = "SELECT * FROM user Where username =? and password_plain = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, credential);
-            preparedStatement.setString(2, password);
-            resultSet = preparedStatement.executeQuery();
-            t = resultSet.next();
-            if (t) {
-                User current = UserService.getInstace().resultSetToUser(resultSet);
-                UserSession.getInstace(current.getUsername(), current.getIs_admin(), current.getIs_ass_admin(), current.getIs_member());
+    public ObservableList<User> listUsers(){
+        ObservableList<User> users = FXCollections.observableArrayList();
+        try {
+            PreparedStatement pt = connection.prepareStatement("SELECT * FROM user");
+            ResultSet rs = pt.executeQuery();
+            while(rs.next()){
+                users.add(resultSetToUser(rs));
             }
-            return t;
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public User resultSetToUser(ResultSet rs) throws SQLException {
+
+    public boolean validateLogin(String credential, String password) throws SQLException {
+        String sql= "SELECT * FROM user Where username =? OR  email =? ";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, credential);
+        preparedStatement.setString(2, credential);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password")) && UserSession.getInstace(UserService.getInstace().resultSetToUser(resultSet)) != null;
+    }
+
+    public void register(User u) {
+        String req = "insert into user (username,username_canonical,email,email_canonical,enabled,password,nom,prenom,date_naissance,cin,roles) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(req);
+            preparedStatement.setString(1, u.getUsername());
+            preparedStatement.setString(2, u.getUsername());
+            preparedStatement.setString(3, u.getEmail());
+            preparedStatement.setString(4, u.getEmail());
+            preparedStatement.setString(6, u.getPassword());
+            preparedStatement.setString(7, u.getProfile().getNom());
+            preparedStatement.setString(8, u.getProfile().getPrenom());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    private User resultSetToUser(ResultSet rs) throws SQLException {
         User u = new User();
         u.setId(rs.getInt("id"));
         u.setUsername(rs.getString("username"));
-        u.setUsername(rs.getString("email"));
+        u.setEmail(rs.getString("email"));
         u.setPlainPassword(rs.getString("password_plain"));
         u.setEnabled(rs.getBoolean("enabled"));
         u.setLast_login(rs.getTimestamp("last_login"));
-        u.setIs_admin(rs.getBoolean("is_admin"));
-        u.setIs_ass_admin(rs.getBoolean("is_ass_admin"));
-        u.setIs_member(rs.getBoolean("is_member"));
+        u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
+
+        //u.getProfile().setAdresse();
         return u;
+    }
+
+    public void disable(User u) {
+        String req = "update user set enabled=? where username=?";
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(req);
+            preparedStatement.setInt(1, 0);
+            preparedStatement.setString(2, u.getUsername());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void enable(User u) {
+        String req = "update user set enabled=? where username=?";
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(req);
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, u.getUsername());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private UserService() {
@@ -133,4 +156,5 @@ public class UserService {
         }
         return instance;
     }
+
 }

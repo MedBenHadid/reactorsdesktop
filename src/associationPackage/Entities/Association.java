@@ -6,11 +6,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.util.List;
+
 public class Association {
 
-    private SimpleIntegerProperty id;
-    private SimpleStringProperty  name;
-    private SimpleStringProperty  description;
-    private ObjectProperty<User> manager;
-    private ListProperty<Membership> membershipList;
+    private int id;
+    private User manager;
+    private Category domaine;
+    private List<Membership> memberships;
+    private String nom,telephone,photoAgence,pieceJustificatif,rue,codePostal,lat,lon,description;
+
 }
