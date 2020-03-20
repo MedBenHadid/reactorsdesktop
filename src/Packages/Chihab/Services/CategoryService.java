@@ -11,8 +11,7 @@ import java.util.List;
 public class CategoryService {
     private static CategoryService instance;
     private Connection connection;
-
-    // TODO : Add readById so you can show domain in association profile and so the boys can use it too
+    // DONE
     public void create(Category category){
         String sql ="INSERT INTO category (name,description) VALUES (?,?)";
         PreparedStatement st;
@@ -44,7 +43,13 @@ public class CategoryService {
 
     public Category readById(int id){
         Category c = new Category();
-
+        try {
+            PreparedStatement pt = connection.prepareStatement("SELECT * FROM category WHERE id = ?");
+            pt.setInt(1,id);
+            c =  resultSetToCategory(pt.executeQuery());
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
         return c;
     }
 
@@ -92,9 +97,11 @@ public class CategoryService {
 
     public Category resultSetToCategory(ResultSet rs) throws SQLException {
         Category cat=new Category();
-        cat.setId(rs.getInt("id"));
-        cat.setNom(rs.getString("name"));
-        cat.setDescription("description");
+        if(rs.next()) {
+            cat.setId(rs.getInt("id"));
+            cat.setNom(rs.getString("name"));
+            cat.setDescription("description");
+        }
         return cat;
     }
     private CategoryService() { connection = utils.Utils.Connector.ConnectionUtil.conDB().conn; }

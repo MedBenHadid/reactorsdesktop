@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,9 +27,10 @@ public class AuthLayout  extends Application implements Initializable {
 
     private AnchorPane loginPane;
     private Parent root;
+    @FXML
+    private Group group;
     @Override
     public void initialize(URL url, ResourceBundle rb){
-
         // TODO
         try {
             loginPane = FXMLLoader.load(getClass().getResource(URLScenes.login));
@@ -40,9 +42,9 @@ public class AuthLayout  extends Application implements Initializable {
     }
 
     private void setNode(Node node) {
-        container.getChildren().clear();
-        container.getChildren().add((Node) node);
-        FadeTransition ft = new FadeTransition(Duration.millis(1500));
+        group.getChildren().clear();
+        group.getChildren().add((Node) node);
+        FadeTransition ft = new FadeTransition(Duration.millis(15000));
         ft.setNode(node);
         ft.setFromValue(0.1);
         ft.setToValue(1);
@@ -64,10 +66,10 @@ public class AuthLayout  extends Application implements Initializable {
 
         // Louled ken fadetkom set them both to false
         // Set them true mba3d
-        stage.setAlwaysOnTop(false);
-        stage.setMaximized(false);
-        stage.setFullScreen(false);
-
+        //stage.setAlwaysOnTop(true);
+        //stage.setMaximized(true);
+        //stage.setFullScreen(true);
+        stage.setResizable(false);
         root.setOnMousePressed(event -> { xOffset = event.getSceneX();yOffset = event.getSceneY(); });
         root.setOnMouseDragged(event -> { stage.setX(event.getScreenX() - xOffset);stage.setY(event.getScreenY() - yOffset); });
 

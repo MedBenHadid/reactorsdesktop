@@ -20,8 +20,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -58,6 +60,9 @@ public class HomeController implements Initializable {
     @FXML
     private ImageView userImage;
 
+    @FXML
+    private AnchorPane mainAnchor;
+
     private Node [] nodes;
     public HomeController() {
     }
@@ -78,6 +83,9 @@ public class HomeController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            stage.setResizable(false);
+            stage.setFullScreen(false);
+            stage.setMaximized(false);
             stage.setScene(scene);
             stage.show();
         } else if (event.getSource().equals(btnAssAdmins)){
@@ -89,19 +97,7 @@ public class HomeController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        labelUsername.setText(labelUsername.getText()+" "+UserSession.getInstace().getUser().getUsername());
-        Image profilePicture;
-        try {
-            //profilePicture = SwingFXUtils.toFXImage(ImageIO.read(new URL(URLServer.userImage+UserSession.getInstace().getUser().getProfile().getImage()).openStream()),null) ;
-            //userImage.setImage();
-            BufferedImage d = ImageIO.read(new URL(URLServer.userImage+UserSession.getInstace().getUser().getProfile().getImage()));
-            BufferedImage tempCard = d.getSubimage( 50, 50, 50, 50 );
-            Image card = SwingFXUtils.toFXImage(tempCard, null );
-            userImage.setImage(card);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //refreshNodes();
+        labelUsername.setText(UserSession.getInstace().getUser().getUsername());
     }    
     
     private void refreshNodes()

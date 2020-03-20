@@ -70,11 +70,12 @@ public class LoginController implements Initializable {
                         //add you loading or delays - ;-)
                         Node node = (Node) event.getSource();
                         Stage stage = (Stage) node.getScene().getWindow();
-                        //stage.setMaximized(true);
+                        stage.setMaximized(true);
                         stage.close();
-                        UserSession us = UserSession.getInstace();
                         Scene scene = new Scene(FXMLLoader.load(getClass().getResource(URLScenes.mainScene)));
                         stage.setScene(scene);
+                        stage.setFullScreen(true);
+                        stage.setResizable(true);
                         stage.show();
                     } catch (IOException ex) {
                         a = new Alert(AlertType.ERROR);

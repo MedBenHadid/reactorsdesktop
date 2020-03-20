@@ -123,15 +123,17 @@ public class UserService {
 
     private User resultSetToUser(ResultSet rs) throws SQLException {
         User u = new User();
-        u.setId(rs.getInt("id"));
-        u.setUsername(rs.getString("username"));
-        u.setEmail(rs.getString("email"));
-        u.setPlainPassword(rs.getString("password_plain"));
-        u.setEnabled(rs.getBoolean("enabled"));
-        u.setLast_login(rs.getTimestamp("last_login"));
-        u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
-        u.getProfile().setImage(rs.getString("image"));
-        //u.getProfile().setAdresse();
+        if(rs.next()) {
+            u.setId(rs.getInt("id"));
+            u.setUsername(rs.getString("username"));
+            u.setEmail(rs.getString("email"));
+            u.setPlainPassword(rs.getString("password_plain"));
+            u.setEnabled(rs.getBoolean("enabled"));
+            u.setLast_login(rs.getTimestamp("last_login"));
+            u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
+            u.getProfile().setImage(rs.getString("image"));
+            //u.getProfile().setAdresse();
+        }
         return u;
     }
 
