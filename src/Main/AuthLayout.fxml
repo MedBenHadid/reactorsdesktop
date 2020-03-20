@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="827.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Main.AuthLayout">
-    <AnchorPane prefHeight="503.0" prefWidth="382.0" style="-fx-background-color: #473E98;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Label alignment="CENTER" layoutX="104.0" layoutY="176.0" prefHeight="23.0" prefWidth="173.0" text="Reactors FX" textFill="WHITE">
-            <font>
-                <Font name="Segoe UI" size="18.0" />
-            </font>
-        </Label>
-        <Label alignment="CENTER" layoutX="89.0" layoutY="215.0" prefHeight="23.0" prefWidth="205.0" text="La premiére plateforme de bénévolat" textFill="WHITE">
-            <font>
-                <Font name="Segoe UI" size="12.0" />
-            </font>
-        </Label>
-    </AnchorPane>
-   <AnchorPane fx:id="container" layoutX="465.0" layoutY="40.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="305.0" prefWidth="294.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="465.0" AnchorPane.rightAnchor="68.0" AnchorPane.topAnchor="40.0" />
+<AnchorPane prefHeight="400.0" prefWidth="827.0" style="-fx-background-color: ffffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Main.AuthLayout">
+   <AnchorPane prefHeight="200.0" prefWidth="200.0">
+      <children>
+          <AnchorPane prefHeight="400.0" prefWidth="346.0" style="-fx-background-color: #473E98;" AnchorPane.bottomAnchor="-200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <Label alignment="CENTER" layoutX="104.0" layoutY="176.0" prefHeight="23.0" prefWidth="173.0" text="Reactors FX" textFill="WHITE">
+                  <font>
+                      <Font name="Segoe UI" size="18.0" />
+                  </font>
+              </Label>
+              <Label alignment="CENTER" layoutX="89.0" layoutY="215.0" prefHeight="23.0" prefWidth="205.0" text="La premiére plateforme de bénévolat" textFill="WHITE">
+                  <font>
+                      <Font name="Segoe UI" size="12.0" />
+                  </font>
+              </Label>
+          </AnchorPane>
+      </children>
+   </AnchorPane>
+   <VBox layoutX="358.0" layoutY="14.0" prefHeight="386.0" prefWidth="470.0">
+       <children>
+           <StackPane prefHeight="379.0" prefWidth="214.0" AnchorPane.bottomAnchor="0.0">
+               <children>
+                   <Group fx:id="group" StackPane.alignment="CENTER">
+                       <children>
+
+                       </children>
+                   </Group>
+               </children>
+           </StackPane>
+       </children>
+   </VBox>
 </AnchorPane>

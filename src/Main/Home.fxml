@@ -17,8 +17,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1101.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Main.HomeController">
-   <Pane layoutX="-2.0" prefHeight="145.0" prefWidth="1062.0" styleClass="head-background" stylesheets="@../Styles/Style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="38.59999999999991">
+<AnchorPane fx:id="AnchorPane" prefHeight="564.0" prefWidth="1101.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Main.HomeController">
+   <Pane layoutX="-2.0" prefHeight="146.0" prefWidth="1101.0" styleClass="head-background" stylesheets="@../SharedResources/Styles/Style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
       <Label layoutX="224.0" layoutY="47.0" prefHeight="53.0" prefWidth="463.0" text="Reactors FX dashboard : " textFill="WHITE">
          <font>
             <Font size="36.0" />
@@ -29,20 +29,20 @@
             <Font size="13.0" />
          </font>
       </Label>
-      <JFXButton fx:id="btnLogout" layoutX="898.0" layoutY="59.0" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#handleButtonAction" prefHeight="30.0" prefWidth="163.0" ripplerFill="WHITE" style="-fx-background-color: #473E98;" text="Logout" textFill="WHITE">
+      <JFXButton fx:id="btnLogout" layoutX="924.0" layoutY="74.0" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#handleButtonAction" prefHeight="30.0" prefWidth="163.0" ripplerFill="WHITE" style="-fx-background-color: #473E98;" text="Logout" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
          <padding>
-            <Insets right="20.0" />
+            <Insets right="4.0" top="10.0" />
          </padding>
       </JFXButton>
-      <JFXButton id="btnProfile" layoutX="706.0" layoutY="59.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="163.0" ripplerFill="WHITE" style="-fx-background-color: #473E98;" text="EDIT PROFILE" textFill="WHITE">
+      <JFXButton id="btnProfile" layoutX="924.0" layoutY="32.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="163.0" ripplerFill="WHITE" style="-fx-background-color: #473E98;" text="EDIT PROFILE" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
          <padding>
-            <Insets right="20.0" />
+            <Insets right="4.0" top="10.0" />
          </padding>
       </JFXButton>
    </Pane>
@@ -71,7 +71,7 @@
                            <graphic>
                               <ImageView fx:id="userImage" accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="http://localhost/www/reactors/web/uploads/user/images/user.png" />
+                                    <Image url="@../SharedResources/Images/icons8_XING_100px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -86,7 +86,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_US_Dollar_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_US_Dollar_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -101,7 +101,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_Workflow_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_Workflow_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -124,7 +124,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/projects.png" />
+                                    <Image url="@../SharedResources/Images/projects.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -139,7 +139,7 @@
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/reliabilty.png" />
+                                    <Image url="@../SharedResources/Images/reliabilty.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -157,7 +157,7 @@
                                     <Rectangle2D />
                                  </viewport>
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/projections.png" />
+                                    <Image url="@../SharedResources/Images/projections.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -215,7 +215,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_US_Dollar_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_US_Dollar_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -230,7 +230,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_US_Dollar_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_US_Dollar_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -245,7 +245,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_Workflow_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_Workflow_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -268,7 +268,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/projects.png" />
+                                    <Image url="@../SharedResources/Images/projects.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -283,7 +283,7 @@
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/reliabilty.png" />
+                                    <Image url="@../SharedResources/Images/reliabilty.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -301,7 +301,7 @@
                                     <Rectangle2D />
                                  </viewport>
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/projections.png" />
+                                    <Image url="@../SharedResources/Images/projections.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -359,7 +359,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_US_Dollar_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_US_Dollar_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -374,7 +374,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_US_Dollar_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_US_Dollar_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -389,7 +389,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_Workflow_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_Workflow_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -412,7 +412,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/projects.png" />
+                                    <Image url="@../SharedResources/Images/projects.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -427,7 +427,7 @@
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/reliabilty.png" />
+                                    <Image url="@../SharedResources/Images/reliabilty.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -445,7 +445,7 @@
                                     <Rectangle2D />
                                  </viewport>
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/projections.png" />
+                                    <Image url="@../SharedResources/Images/projections.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -503,7 +503,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_US_Dollar_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_US_Dollar_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -518,7 +518,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_US_Dollar_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_US_Dollar_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -533,7 +533,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/icons8_Workflow_64px.png" />
+                                    <Image url="@../SharedResources/Images/icons8_Workflow_64px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -556,7 +556,7 @@
                            <graphic>
                               <ImageView accessibleText="Project List" fitHeight="16.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/projects.png" />
+                                    <Image url="@../SharedResources/Images/projects.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -571,7 +571,7 @@
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/reliabilty.png" />
+                                    <Image url="@../SharedResources/Images/reliabilty.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -589,7 +589,7 @@
                                     <Rectangle2D />
                                  </viewport>
                                  <image>
-                                    <Image url="@SharedResources/Images/AuthInterface/projections.png" />
+                                    <Image url="@../SharedResources/Images/projections.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -635,7 +635,7 @@
          <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0" />
       </effect>
       <ImageView fitHeight="120.0" fitWidth="139.0" layoutX="11.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
-         <Image url="@SharedResources/Images/AuthInterface/logo.png" />
+         <Image url="@../SharedResources/Images/logo.png" />
       </ImageView>
    </Pane>
    <ScrollPane layoutX="251.0" layoutY="190.0" prefHeight="699.0" prefWidth="1037.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="190.0">
