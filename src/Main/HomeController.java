@@ -10,13 +10,15 @@ import Main.Services.UserService;
 import Resources.URLScenes;
 import Resources.URLServer;
 import com.jfoenix.controls.JFXButton;
+import javafx.animation.FadeTransition;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.scene.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -24,6 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -35,35 +38,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HomeController implements Initializable {
-    
     @FXML
-    private Label label;
-    
-    @FXML
-    private VBox pnl_scroll;
-
-    @FXML
-    private JFXButton btnLogout;
-
-    @FXML
-    private JFXButton btnUsers;
-
-    @FXML
-    private JFXButton btnMembers;
-
-    @FXML
-    private JFXButton btnAssAdmins;
+    private Button btnLogout,btnAssAdmins,test;
 
     @FXML
     private Label labelUsername;
 
     @FXML
-    private ImageView userImage;
+    private AnchorPane view,details;
 
-    @FXML
-    private AnchorPane mainAnchor;
-
-    private Node [] nodes;
     public HomeController() {
     }
 
@@ -79,7 +62,7 @@ public class HomeController implements Initializable {
             stage.close();
             Scene scene = null;
             try {
-                scene = new Scene(FXMLLoader.load(getClass().getResource(URLScenes.authLayout)));
+                scene = new Scene(FXMLLoader.load(getClass().getResource(URLScenes.login)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -90,34 +73,27 @@ public class HomeController implements Initializable {
             stage.show();
         } else if (event.getSource().equals(btnAssAdmins)){
             System.out.println("TEST");
+        } else if (event.getSource().equals(test)) {
+            try {
+                AnchorPane test = FXMLLoader.load(getClass().getResource(URLScenes.authLayout));
+                setNode(test);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-
     }
-    
+
+    private void setNode(AnchorPane node) {
+        view.setClip((Node) node);
+        //view.getChildren().clear();
+        //view.getChildren().add(node);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        labelUsername.setText(UserSession.getInstace().getUser().getUsername());
+        //labelUsername.setText(UserSession.getInstace().getUser().getUsername());
     }    
     
-    private void refreshNodes()
-    {
-        pnl_scroll.getChildren().clear();
-        List<User> users = UserService.getInstace().listUsers();
-        nodes = new  Node[users.size()];
 
-
-        for(int i = 0; i<users.size(); i++)
-        {
-            try {
-                nodes[i] = FXMLLoader.load(getClass().getResource("LoggedInStage/users/Item.fxml"));
-                pnl_scroll.getChildren().add(nodes[i]);
-                //pnl_scroll.getChildren().removeAll();
-                //pnl_scroll.getChildren().add(new TreeTableView<User>());
-            } catch (IOException ex) {
-                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }  
-    }
     
 }

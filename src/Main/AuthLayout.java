@@ -22,18 +22,26 @@ import java.util.ResourceBundle;
 import static javafx.fxml.FXMLLoader.load;
 
 public class AuthLayout  extends Application implements Initializable {
-    @FXML
-    private AnchorPane container;
 
-    private AnchorPane loginPane;
-    private Parent root;
+
     @FXML
-    private Group group;
+    public Group group;
+
+    @FXML
+    private AnchorPane side;
+
     @Override
     public void initialize(URL url, ResourceBundle rb){
+        FadeTransition ft = new FadeTransition(Duration.millis(15000));
+        ft.setNode(side);
+        ft.setFromValue(0.1);
+        ft.setToValue(1);
+        ft.setCycleCount(1);
+        ft.setAutoReverse(false);
+        ft.play();
         // TODO
         try {
-            loginPane = FXMLLoader.load(getClass().getResource(URLScenes.login));
+            AnchorPane loginPane = FXMLLoader.load(getClass().getResource(URLScenes.login));
             setNode((Node)loginPane);
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,16 +49,9 @@ public class AuthLayout  extends Application implements Initializable {
 
     }
 
-    private void setNode(Node node) {
+    public void setNode(Node node) {
         group.getChildren().clear();
         group.getChildren().add((Node) node);
-        FadeTransition ft = new FadeTransition(Duration.millis(15000));
-        ft.setNode(node);
-        ft.setFromValue(0.1);
-        ft.setToValue(1);
-        ft.setCycleCount(1);
-        ft.setAutoReverse(false);
-        ft.play();
     }
 
 
@@ -69,7 +70,7 @@ public class AuthLayout  extends Application implements Initializable {
         //stage.setAlwaysOnTop(true);
         //stage.setMaximized(true);
         //stage.setFullScreen(true);
-        stage.setResizable(false);
+        //stage.setResizable(false);
         root.setOnMousePressed(event -> { xOffset = event.getSceneX();yOffset = event.getSceneY(); });
         root.setOnMouseDragged(event -> { stage.setX(event.getScreenX() - xOffset);stage.setY(event.getScreenY() - yOffset); });
 

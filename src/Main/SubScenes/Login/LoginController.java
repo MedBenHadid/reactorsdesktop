@@ -10,17 +10,18 @@ import Resources.URLScenes;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import Main.Entities.UserSession;
 import Main.Services.UserService;
 import utils.Utils.Connector.ConnectionUtil;
 
@@ -43,21 +44,12 @@ public class LoginController implements Initializable {
     private TextField txtPassword;
 
     @FXML
-    private Button btnSignin;
-
-    @FXML
-    private Label btnForgot;
-
-    @FXML
-    private Button btnFB;
-
-    @FXML
-    private Button btnSignup;
+    private Button btnSignin,btnSignup;
 
     private UserService userService = UserService.getInstace();
     private Connection con ;
-
     private Alert a = new Alert(AlertType.ERROR);
+
     @FXML
     public void handleButtonAction(MouseEvent event) {
 
@@ -95,6 +87,22 @@ public class LoginController implements Initializable {
                     a.setContentText("ReactorsFX");
                     a.show();
                     break;
+            }
+        }
+        if (event.getSource() == btnSignup){
+            try {
+                /**Node node = (Node) event.getSource();
+                Stage stage = (Stage) node.getScene().getWindow();
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/Main/SubScenes/Register/Register.fxml")));
+                stage.setScene(scene);
+                stage.show();**/
+
+                AnchorPane a = FXMLLoader.load(getClass().getResource("/Main/SubScenes/Register/Register.fxml"));
+                Group group = (Group) ((Node)event.getSource()).getParent().getParent().getParent().getParent();
+                group.getChildren().clear();
+                group.getChildren().add((Node)a);
+            } catch (IOException ex){
+                System.out.println(ex);
             }
         }
     }

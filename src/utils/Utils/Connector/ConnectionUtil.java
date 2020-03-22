@@ -27,8 +27,8 @@ public class ConnectionUtil {
             System.err.println("ConnectionUtil Exception : "+ex.getMessage()+ ex.getCause());
         }
     }
+
     /**
-     *
      * @return MysqlConnect Database connection object
      */
     public static synchronized ConnectionUtil conDB() {
