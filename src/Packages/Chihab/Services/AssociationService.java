@@ -2,7 +2,7 @@ package Packages.Chihab.Services;
 
 import Main.Services.UserService;
 import Packages.Chihab.Models.Association;
-import Packages.Chihab.Models.Category;
+import SharedResources.Utils.Connector.ConnectionUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -214,7 +214,9 @@ public class AssociationService {
         return m;
     }
 
-    private AssociationService() { connection = utils.Utils.Connector.ConnectionUtil.conDB().conn; }
+    private AssociationService() {
+        connection = ConnectionUtil.conDB().conn;
+    }
     public static AssociationService getInstace() {
         if(instance == null) { instance = new AssociationService(); }
         return instance;

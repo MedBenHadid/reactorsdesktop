@@ -1,41 +1,21 @@
-package Main;/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package Main;
 
-import Main.Entities.User;
 import Main.Entities.UserSession;
-import Main.Services.UserService;
-import Resources.URLScenes;
-import Resources.URLServer;
-import com.jfoenix.controls.JFXButton;
-import javafx.animation.FadeTransition;
-import javafx.embed.swing.SwingFXUtils;
+import SharedResources.URLScenes;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.*;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.util.Duration;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class HomeController implements Initializable {
     @FXML
@@ -45,7 +25,7 @@ public class HomeController implements Initializable {
     private Label labelUsername;
 
     @FXML
-    private AnchorPane view,details;
+    private AnchorPane view, details, holderPane;
 
     public HomeController() {
     }
@@ -54,7 +34,9 @@ public class HomeController implements Initializable {
     private void handleButtonAction(MouseEvent event) {
         //refreshNodes();
         if (event.getSource().equals(btnLogout)) {
-            UserSession.getInstace().cleanUserSession();
+            if (UserSession.getInstace() != null) {
+                UserSession.getInstace().cleanUserSession();
+            }
             //add you loading or delays - ;-)
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
@@ -84,9 +66,8 @@ public class HomeController implements Initializable {
     }
 
     private void setNode(AnchorPane node) {
-        view.setClip((Node) node);
-        //view.getChildren().clear();
-        //view.getChildren().add(node);
+        holderPane.getChildren().clear();
+        holderPane.getChildren().add(node);
     }
 
     @Override

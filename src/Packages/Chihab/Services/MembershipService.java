@@ -1,8 +1,8 @@
 package Packages.Chihab.Services;
 
 import Packages.Chihab.Models.Membership;
+import SharedResources.Utils.Connector.ConnectionUtil;
 
-import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -35,7 +35,10 @@ public class MembershipService {
 
     private static MembershipService instance;
     private Connection connection;
-    private MembershipService() { connection = utils.Utils.Connector.ConnectionUtil.conDB().conn; }
+
+    private MembershipService() {
+        connection = ConnectionUtil.conDB().conn;
+    }
     public static MembershipService getInstace() {
         if(instance == null) { instance = new MembershipService(); }
         return instance;

@@ -1,12 +1,12 @@
 package Main.Services;
 
+import Main.Entities.User;
+import Main.Entities.UserSession;
+import SharedResources.Utils.BCrypt.BCrypt;
+import SharedResources.Utils.Connector.ConnectionUtil;
 import de.ailis.pherialize.Pherialize;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import Main.Entities.User;
-import Main.Entities.UserSession;
-import utils.Utils.BCrypt.BCrypt;
-import utils.Utils.Connector.ConnectionUtil;
 
 import java.sql.*;
 
@@ -103,7 +103,7 @@ public class UserService {
     }
 
     public void register(User u) {
-        String req = "insert into user (username,username_canonical,email,email_canonical,enabled,password,nom,prenom,date_naissance,cin,roles) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String req = "insert into user (username,username_canonical,email,email_canonical,enabled,password,nom,prenom,date_naissance,cin,roles) values (?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement(req);

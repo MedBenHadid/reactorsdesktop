@@ -1,18 +1,32 @@
 package Packages.Chihab.Services;
 
-import Main.Entities.User;
-import Main.Services.UserService;
 import Packages.Chihab.Models.Category;
+import SharedResources.Utils.Connector.ConnectionUtil;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryService {
     private static CategoryService instance;
     private Connection connection;
+
+    private CategoryService() {
+        connection = ConnectionUtil.conDB().conn;
+    }
+
+    static CategoryService getInstace() {
+        if (instance == null) {
+            instance = new CategoryService();
+        }
+        return instance;
+    }
+
     // DONE
-    public void create(Category category){
+    void create(Category category) {
         String sql ="INSERT INTO category (name,description) VALUES (?,?)";
         PreparedStatement st;
         try {
@@ -25,7 +39,7 @@ public class CategoryService {
         }
     }
 
-    public List<Category> readAll(){
+    List<Category> readAll() {
         ArrayList<Category> categories = new ArrayList<>();
         String req = "SELECT * FROM category";
         PreparedStatement preparedStatement;
@@ -41,7 +55,7 @@ public class CategoryService {
         return categories;
     }
 
-    public Category readById(int id){
+    Category readById(int id) {
         Category c = new Category();
         try {
             PreparedStatement pt = connection.prepareStatement("SELECT * FROM category WHERE id = ?");
@@ -53,35 +67,9 @@ public class CategoryService {
         return c;
     }
 
-    public void update(Category c) {
-        String req = "UPDATE category SET name=?,description=?WHERE id=?";
-        PreparedStatement preparedStatement;
-        try {
-            preparedStatement = connection.prepareStatement(req);
-            preparedStatement.setString(1, c.getNom());
-            preparedStatement.setString(2, c.getDescription());
-            preparedStatement.setInt(3, c.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void delete(Category c){
-        String req = "DELETE FROM category WHERE id=?";
-        PreparedStatement preparedStatement;
-        try {
-            preparedStatement = connection.prepareStatement(req);
-            preparedStatement.setInt(1, c.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public List<Category> search(String name){
+    public List<Category> search(String name) {
         ArrayList<Category> categories = new ArrayList<>();
-        String req = "SELECT * FROM category WHERE name LIKE '%"+name+"%' ";
+        String req = "SELECT * FROM category WHERE name LIKE '%" + name + "%' ";
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement(req);
@@ -95,7 +83,33 @@ public class CategoryService {
         return categories;
     }
 
-    public Category resultSetToCategory(ResultSet rs) throws SQLException {
+    void update(Category c) {
+        String req = "UPDATE category SET name=?,description=?WHERE id=?";
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(req);
+            preparedStatement.setString(1, c.getNom());
+            preparedStatement.setString(2, c.getDescription());
+            preparedStatement.setInt(3, c.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    void delete(Category c) {
+        String req = "DELETE FROM category WHERE id=?";
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(req);
+            preparedStatement.setInt(1, c.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    Category resultSetToCategory(ResultSet rs) throws SQLException {
         Category cat=new Category();
         if(rs.next()) {
             cat.setId(rs.getInt("id"));
@@ -103,10 +117,5 @@ public class CategoryService {
             cat.setDescription("description");
         }
         return cat;
-    }
-    private CategoryService() { connection = utils.Utils.Connector.ConnectionUtil.conDB().conn; }
-    public static CategoryService getInstace() {
-        if(instance == null) { instance = new CategoryService(); }
-        return instance;
     }
 }

@@ -1,6 +1,6 @@
 package Main;
 
-import Resources.URLScenes;
+import SharedResources.URLScenes;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -42,16 +42,16 @@ public class AuthLayout  extends Application implements Initializable {
         // TODO
         try {
             AnchorPane loginPane = FXMLLoader.load(getClass().getResource(URLScenes.login));
-            setNode((Node)loginPane);
+            setNode(loginPane);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void setNode(Node node) {
+    void setNode(Node node) {
         group.getChildren().clear();
-        group.getChildren().add((Node) node);
+        group.getChildren().add(node);
     }
 
 
