@@ -59,7 +59,7 @@ public class AuthLayout  extends Application implements Initializable {
     private double yOffset = 0;
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = load(getClass().getResource(URLScenes.authLayout));
+        Parent root = load(getClass().getResource(URLScenes.associationHome));
         stage.initStyle(StageStyle.DECORATED);
 
 

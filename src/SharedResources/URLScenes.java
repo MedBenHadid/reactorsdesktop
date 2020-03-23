@@ -12,7 +12,7 @@ public class URLScenes {
 
     // Chihab
     final private static String chihab = "/Packages/Chihab/Scenes/";
-    final public static String associationHome = chihab + "AssociationList.fxml";
+    final public static String associationHome = chihab + "Domaines.fxml";
     //
     //
     //
