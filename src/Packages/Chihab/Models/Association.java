@@ -134,6 +134,13 @@ public class Association {
         this.approuved = approuved;
     }
 
+    public String getManagerUserName() {
+        return this.getManager().getUsername();
+    }
+
+    public String getDomaineNom() {
+        return this.getDomaine().getNom();
+    }
     @Override
     public String toString() {
         return "Association{" +

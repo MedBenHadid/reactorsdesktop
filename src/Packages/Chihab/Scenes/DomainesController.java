@@ -3,6 +3,7 @@ package Packages.Chihab.Scenes;
 import Main.Entities.UserSession;
 import Packages.Chihab.Models.Category;
 import Packages.Chihab.Services.CategoryService;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DomainesController implements Initializable {
     @FXML
@@ -36,6 +39,8 @@ public class DomainesController implements Initializable {
     @FXML
     private TabPane tabPane;
     @FXML
+    private Label size;
+    @FXML
     private Tab newTab;
 
     private UserSession userSession = UserSession.getInstace();
@@ -46,15 +51,18 @@ public class DomainesController implements Initializable {
         try {
             catList.addAll(CategoryService.getInstace().readAll());
         } catch (SQLException e) {
-            showDialog(Alert.AlertType.ERROR, "", "Connexion au serveur échoué", "Veuillez assurer la bonne connexion");
+            Logger.getLogger(
+                    DomainesController.class.getName()).log(
+                    Level.INFO, null, e
+            );
+            showDialog(Alert.AlertType.ERROR, "", "Connexion au serveur échoué:", "Veuillez assurer la bonne connexion");
         }
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         /**
          * Initializing components reserved for Super admin (Create Tab , Update event handlers, Delete button and event handler)
          */
-        assert this.userSession.getUser() != null;
-        //this.userSession.getUser().isAdmin()
+
         if (1 == 1) {
             newTab.setDisable(false);
             deleteOption.setVisible(true);
@@ -74,6 +82,10 @@ public class DomainesController implements Initializable {
                                 current.setNom(categoryStringCellEditEvent.getNewValue());
                                 CategoryService.getInstace().update(current);
                             } catch (SQLException e) {
+                                Logger.getLogger(
+                                        DomainesController.class.getName()).log(
+                                        Level.INFO, null, e
+                                );
                                 showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
                             }
                         else
@@ -89,6 +101,10 @@ public class DomainesController implements Initializable {
                                 current.setDescription(categoryStringCellEditEvent.getNewValue());
                                 CategoryService.getInstace().update(current);
                             } catch (SQLException e) {
+                                Logger.getLogger(
+                                        DomainesController.class.getName()).log(
+                                        Level.INFO, null, e
+                                );
                                 showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
                             }
                         else
@@ -99,7 +115,6 @@ public class DomainesController implements Initializable {
             deleteOption.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
             deleteOption.setCellFactory(param -> new TableCell<>() {
                 private final Button deleteButton = new Button("Supprimer");
-
                 @Override
                 protected void updateItem(Category cat, boolean empty) {
                     super.updateItem(cat, empty);
@@ -109,7 +124,11 @@ public class DomainesController implements Initializable {
                     }
                     setGraphic(deleteButton);
                     deleteButton.setOnAction(event -> {
-                        Optional<ButtonType> confirmationResult = showDialog(Alert.AlertType.CONFIRMATION, "Suppression", "Vous aller supprimer le domaine " + cat.getNom() + "!", "Etes vous sure?");
+                        Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+                        confirmationDialog.setTitle("Suppression");
+                        confirmationDialog.setHeaderText("Vous aller supprimer le domaine " + cat.getNom() + "!");
+                        confirmationDialog.setContentText("Etes vous sure?");
+                        Optional<ButtonType> confirmationResult = confirmationDialog.showAndWait();
                         if (confirmationResult.isPresent())
                             if (confirmationResult.get() == ButtonType.OK)
                                 try {
@@ -117,6 +136,10 @@ public class DomainesController implements Initializable {
                                     catTV.getItems().remove(cat);
                                     showDialog(Alert.AlertType.CONFIRMATION, "", "", "Domaine supprimée !!");
                                 } catch (SQLException e) {
+                                    Logger.getLogger(
+                                            DomainesController.class.getName()).log(
+                                            Level.INFO, null, e
+                                    );
                                     showDialog(Alert.AlertType.ERROR, "Suppression échoué", "Raison : Reference", "Domaine ne peut pas étre supprimé!");
                                 }
                     });
@@ -144,6 +167,8 @@ public class DomainesController implements Initializable {
             sortedList.comparatorProperty().bind(catTV.comparatorProperty());
             catTV.setItems(sortedList);
         });
+        size.textProperty().bind(Bindings.size((catTV.getItems())).asString("Domaines : %d"));
+
     }
 
     /**
@@ -161,6 +186,10 @@ public class DomainesController implements Initializable {
                 catTV.getItems().add(c);
                 showDialog(Alert.AlertType.CONFIRMATION, "Success", "", "Domaine ajouté avec succées");
             } catch (SQLException e) {
+                Logger.getLogger(
+                        DomainesController.class.getName()).log(
+                        Level.INFO, null, e
+                );
                 showDialog(Alert.AlertType.ERROR, "Création échoué", "Raison " + e.getErrorCode(), "Création du domaine échoué!!");
             }
         }
@@ -194,13 +223,12 @@ public class DomainesController implements Initializable {
         return true;
     }
 
-
-    Optional<ButtonType> showDialog(Alert.AlertType t, String title, String header, String context) {
+    void showDialog(Alert.AlertType t, String title, String header, String context) {
         Alert a = new Alert(t);
         a.setTitle(title);
         a.setHeaderText(header);
         a.setContentText(context);
-        return a.showAndWait();
+        a.showAndWait();
     }
 
 

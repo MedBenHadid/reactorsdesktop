@@ -1,15 +1,15 @@
 package Main.Entities;
 
+import Packages.Chihab.Models.enums.RoleEnum;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import de.ailis.pherialize.MixedArray;
-import Packages.Chihab.Models.enums.RoleEnum;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 
 public class User extends RecursiveTreeObject<User> {
     private int id;
-    private String username,email,password,plainPassword;
+    private String username, email, password;
     private Timestamp last_login;
     private Boolean enabled,approuved,banned;
     private MixedArray roles;
@@ -82,14 +82,6 @@ public class User extends RecursiveTreeObject<User> {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPlainPassword() {
-        return plainPassword;
-    }
-
-    public void setPlainPassword(String plainPassword) {
-        this.plainPassword = plainPassword;
     }
 
     public Timestamp getLast_login() {

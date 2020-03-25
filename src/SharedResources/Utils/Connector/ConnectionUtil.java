@@ -1,6 +1,8 @@
 package SharedResources.Utils.Connector;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ConnectionUtil {
@@ -25,6 +27,10 @@ public class ConnectionUtil {
         catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Connection Failed! Check output console");
             System.err.println("ConnectionUtil Exception : "+ex.getMessage()+ ex.getCause());
+            Logger.getLogger(
+                    ConnectionUtil.class.getName()).log(
+                    Level.INFO, null, ex
+            );
         }
     }
 
