@@ -44,7 +44,7 @@ public class HomeController implements Initializable {
             stage.close();
             Scene scene = null;
             try {
-                scene = new Scene(FXMLLoader.load(getClass().getResource(URLScenes.login)));
+                scene = new Scene(FXMLLoader.load(getClass().getResource(URLScenes.associationSuperAdminDashboard)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -57,7 +57,7 @@ public class HomeController implements Initializable {
             System.out.println("TEST");
         } else if (event.getSource().equals(test)) {
             try {
-                AnchorPane test = FXMLLoader.load(getClass().getResource(URLScenes.authLayout));
+                AnchorPane test = FXMLLoader.load(getClass().getResource(URLScenes.associationSuperAdminDashboard));
                 setNode(test);
             } catch (IOException e) {
                 e.printStackTrace();
