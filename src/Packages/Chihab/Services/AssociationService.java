@@ -3,10 +3,10 @@ package Packages.Chihab.Services;
 import Main.Services.UserService;
 import Packages.Chihab.Models.Association;
 import SharedResources.Utils.Connector.ConnectionUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AssociationService {
     private static AssociationService instance;
@@ -54,8 +54,8 @@ public class AssociationService {
         return 0;
     }
 
-    public List<Association> readAll() throws SQLException {
-        List<Association> ms = new ArrayList<>();
+    public ObservableList<Association> readAll() throws SQLException {
+        ObservableList<Association> ms = FXCollections.observableArrayList();
         String req = "SELECT * FROM association";
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement(req);

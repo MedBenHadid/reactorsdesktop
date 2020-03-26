@@ -93,8 +93,8 @@ public class UserService {
         preparedStatement.setString(1, credential);
         preparedStatement.setString(2, credential);
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password"))){
-            UserSession us =UserSession.getInstace(UserService.getInstace().resultSetToUser(resultSet));
+        if (resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password"))) {
+            UserSession.getInstace(UserService.getInstace().resultSetToUser(resultSet));
         }
         return UserSession.getInstace()!=null;
     }

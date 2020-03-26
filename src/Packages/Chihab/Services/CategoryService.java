@@ -2,10 +2,10 @@ package Packages.Chihab.Services;
 
 import Packages.Chihab.Models.Category;
 import SharedResources.Utils.Connector.ConnectionUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CategoryService {
     private static CategoryService instance;
@@ -35,8 +35,8 @@ public class CategoryService {
         return 0;
     }
 
-    public List<Category> readAll() throws SQLException {
-        ArrayList<Category> categoriesItems = new ArrayList<>();
+    public ObservableList<Category> readAll() throws SQLException {
+        ObservableList<Category> categoriesItems = FXCollections.observableArrayList();
         String req = "SELECT * FROM category";
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement(req);
@@ -80,7 +80,6 @@ public class CategoryService {
 
     Category resultSetToCategory(ResultSet rs) throws SQLException {
         Category cat=new Category();
-        //if(!rs.isAfterLast()) {
         cat.setId(rs.getInt("id"));
         cat.setNom(rs.getString("name"));
         cat.setDescription(rs.getString("description"));

@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.FlowPane?>
-<FlowPane xmlns:fx="http://javafx.com/fxml" fx:id="root">
-    <Label fx:id="firstName"/>
-    <Label fx:id="lastName"/>
-</FlowPane>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<CardPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+          minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1">
+    <HBox alignment="CENTER">
+        <children>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                <children>
+                    <ImageView fx:id="imageImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true"
+                               preserveRatio="true"/>
+                    <Label fx:id="nameLabel" text="Label"/>
+                    <JFXToggleButton/>
+                </children>
+            </VBox>
+        </children>
+    </HBox>
+    <Label fx:id="descriptionLabel" style="-fx-padding:10;" text="Description :"/>
+</CardPane>

@@ -2,8 +2,9 @@ package Packages.Chihab.Scenes;
 
 import Main.Entities.User;
 import Main.Services.UserService;
+import Packages.Chihab.Custom.AutoCompleteBox;
+import Packages.Chihab.Custom.ComboBoxAutoComplete;
 import Packages.Chihab.Models.Association;
-import Packages.Chihab.Scenes.Custom.ComboBoxAutoComplete;
 import SharedResources.URLServer;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTimePicker;
@@ -15,7 +16,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import javafx.util.StringConverter;
 import org.apache.commons.net.ftp.FTPClient;
 
 import javax.imageio.ImageIO;
@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,7 +49,7 @@ public class AssociationCreateController implements Initializable {
     @FXML
     private ComboBox<String> villeComboBox;
     @FXML
-    private ComboBox<User> managerComboBox;
+    private ComboBox<String> managerComboBox;
 
     private Association association;
 
@@ -101,24 +100,14 @@ public class AssociationCreateController implements Initializable {
         villeComboBox.setItems(FXCollections.observableArrayList("Ariana", "Béja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"));
         villeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> association.setVille(newValue));
         villeComboBox.setTooltip(new Tooltip());
-        new ComboBoxAutoComplete<>(villeComboBox);
-
+        new AutoCompleteBox<String>(villeComboBox);
 
         try {
-            managerComboBox.setItems(FXCollections.observableArrayList((Collection<? extends User>) UserService.getInstace().listUsers().stream().filter(u -> !u.isAdmin()).collect(Collectors.toCollection(ArrayList::new))));
-            managerComboBox.setConverter(new StringConverter<>() {
-                @Override
-                public String toString(User u) {
-                    return u.getUsername();
-                }
-
-                @Override
-                public User fromString(String string) {
-                    return managerComboBox.getItems().stream().filter(ap -> ap.getUsername().equals(string)).findFirst().orElse(null);
-                }
-            });
+            managerComboBox.getItems().addAll(FXCollections.observableArrayList((Collection<? extends String>) UserService.getInstace().listUsers().stream().filter(u -> !u.isAdmin()).map(User::getUsername).collect(Collectors.toCollection(ArrayList::new))));
             managerComboBox.setVisibleRowCount(6);
-        } catch (SQLException e) {
+            managerComboBox.setTooltip(new Tooltip());
+            new ComboBoxAutoComplete<>(managerComboBox);
+        } catch (Exception e) {
             Logger.getLogger(
                     AssociationCreateController.class.getName()).log(
                     Level.SEVERE, null, e
@@ -148,11 +137,8 @@ public class AssociationCreateController implements Initializable {
                     pieceAlert.setContentText("Veuillez choisir un document avec un format supporté");
                     pieceAlert.showAndWait();
                 }
-                //openFile(file);
             }
         });
-        // Piece justificative
-        // Photo validation
         fileChooser.setTitle("Veuillez choisir la piece justificative de l'association");
         photoButton.setTooltip(new Tooltip("Veuillez choisir la photo de l'association"));
         photoButton.setOnAction(e -> {
@@ -168,13 +154,12 @@ public class AssociationCreateController implements Initializable {
                         break;
                     }
                 }
-                //openFile(file);
             } else {
-
+                Alert pieceAlert = new Alert(Alert.AlertType.WARNING);
+                pieceAlert.setContentText("Veuillez choisir un document avec un format supporté");
+                pieceAlert.showAndWait();
             }
         });
-        // Photo validation
-        // Date validation
         de.valueProperty().setValue(LocalTime.now());
         de.valueProperty().addListener(a -> {
             vers.setValue(de.getValue().plusHours(1));
@@ -185,7 +170,7 @@ public class AssociationCreateController implements Initializable {
         });
         vers.onHiddenProperty().setValue(event -> {
             int compValue = de.getValue().compareTo(vers.getValue());
-            if (compValue == 0 || compValue == 1) {
+            if (compValue != -1) {
                 Alert dateTimeAlert = new Alert(Alert.AlertType.WARNING);
                 dateTimeAlert.setContentText("Veuillez choisir une date supérieure a la date d'ouverture");
                 dateTimeAlert.showAndWait();
@@ -194,10 +179,13 @@ public class AssociationCreateController implements Initializable {
                 association.setHoraireTravail("De " + de.getValue() + " vers : " + vers.getValue());
             }
         });
-        // Date validation
         // TODO : Check Ville is not null on Register/Create
         createButton.disableProperty().bind(versTimeFieldValid);
         registerButton.disableProperty().bind(nomFieldValid.or(descriptionFieldValid.or(zipFieldValid.or(rueFieldValid.or(phoneNumberFieldValid.or(versTimeFieldValid))))));
+
+
+        //    return managerComboBox.getItems().stream().filter(ap -> ap.getEmail().equals(string)).findFirst().orElse(null);
+
     }
 
     boolean rueValidCheck(String rue) {

@@ -2,10 +2,11 @@ package Packages.Chihab.Services;
 
 import Packages.Chihab.Models.Membership;
 import SharedResources.Utils.Connector.ConnectionUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MembershipService {
@@ -13,7 +14,7 @@ public class MembershipService {
     private final String a = "adherance";
     public void create(Membership m , int userId , int associationId){ }
     public List<Membership> read(){
-        List<Membership> ms = new ArrayList<>();
+        ObservableList<Membership> ms = FXCollections.observableArrayList();
         return ms;
     }
     public void update(Membership m){ }

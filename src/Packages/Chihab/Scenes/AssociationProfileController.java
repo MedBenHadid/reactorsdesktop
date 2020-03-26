@@ -6,18 +6,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AssociationProfileController implements Initializable {
     @FXML
-    Label firstName;
+    Label nameLabel, descriptionLabel;
     @FXML
-    Label lastName;
+
     private Association passedAssociation;
     private Desktop desktop = Desktop.getDesktop();
 
@@ -33,18 +29,8 @@ public class AssociationProfileController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        firstName.setText(passedAssociation.getNom());
-        lastName.setText(passedAssociation.getVille());
+        nameLabel.setText(passedAssociation.getNom());
+        descriptionLabel.setText(passedAssociation.getDescription());
     }
 
-    private void openFile(File file) {
-        try {
-            desktop.open(file);
-        } catch (IOException ex) {
-            Logger.getLogger(
-                    AssociationProfileController.class.getName()).log(
-                    Level.SEVERE, null, ex
-            );
-        }
-    }
 }

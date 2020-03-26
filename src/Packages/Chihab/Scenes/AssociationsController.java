@@ -5,6 +5,7 @@ import Packages.Chihab.Models.Association;
 import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
+import SharedResources.Utils.FTPInterface.FTPInterface;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -19,27 +20,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-import org.apache.commons.net.ftp.FTPClient;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,8 +49,7 @@ public class AssociationsController implements Initializable {
     private TableColumn<Association, Number> idCol;
     @FXML
     private TableColumn<User, String> managerCol;
-    @FXML
-    private TableColumn<Association, String> statusCol;
+    FTPInterface ftpInterface;
     @FXML
     private TextField inputName, inputCity;
     @FXML
@@ -66,52 +60,22 @@ public class AssociationsController implements Initializable {
     private Tab associationListTab;
     @FXML
     private Button addButton;
+    @FXML
+    private TableColumn<Association, Boolean> statusCol;
 
-    private static File downloadFile(String filePath) throws IOException {
-        FTPClient ftpClient = new FTPClient();
+    public AssociationsController() {
         try {
-            ftpClient.connect(URLServer.ftpServerLink, URLServer.ftpSocketPort);
-            ftpClient.login(URLServer.ftpUser, URLServer.ftpPassword);
-            ftpClient.enterLocalPassiveMode();
-            ftpClient.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-            InputStream inputStream = ftpClient.retrieveFileStream(filePath);
-            String extension = "";
-            int i = filePath.lastIndexOf('.');
-            int p = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
-            if (i > p) {
-                extension = filePath.substring(i + 1);
-            }
-            File temp = File.createTempFile(UUID.randomUUID().toString(), "." + extension);
-            Files.copy(inputStream, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            return temp;
-        } catch (IOException ex) {
-            Logger.getLogger(
-                    AssociationsController.class.getName()).log(
-                    Level.SEVERE, null, ex
-            );
-            throw ex;
-        } finally {
-            try {
-                if (ftpClient.isConnected()) {
-                    ftpClient.logout();
-                    ftpClient.disconnect();
-                }
-            } catch (IOException e) {
-                Logger.getLogger(
-                        AssociationsController.class.getName()).log(
-                        Level.SEVERE, null, e
-                );
-                e.printStackTrace();
-            }
+            this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO 1: Based on role, disable { addButton, idCol's view, deleteOption, managerCol, statusCol}
         associationListTab.setClosable(false);
         //addButton.setVisible(false);
-        ObservableList associationList = FXCollections.observableArrayList();
+        ObservableList<Association> associationList = FXCollections.observableArrayList();
         try {
             associationList.addAll(AssociationService.getInstace().readAll());
         } catch (SQLException e) {
@@ -120,11 +84,10 @@ public class AssociationsController implements Initializable {
         }
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("approuved"));
         villeCol.setCellValueFactory(new PropertyValueFactory<>("ville"));
         managerCol.setCellValueFactory(new PropertyValueFactory<>("managerUserName"));
         domaineCol.setCellValueFactory(new PropertyValueFactory<>("domaineNom"));
-
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("approuved"));
         associationTableView.setItems(associationList);
         /**
          * Start of Super Admin section
@@ -138,7 +101,7 @@ public class AssociationsController implements Initializable {
                 "Ariana", "Béja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"
         ));
         // TODO - Pre-Finishing steps: JFXToggleButton this bitch ChoiceBoxTableCell.forTableColumn(ScheduleEntry.ALLOWED_TYPES.toArray(new String[0])));
-        statusCol.setCellFactory(ChoiceBoxTableCell.forTableColumn("Approvée", "Bloquer compte"));
+
         // Update section
         // Update name section
         nomCol.setOnEditCommit(
@@ -249,7 +212,7 @@ public class AssociationsController implements Initializable {
                 setGraphic(pieceButton);
                 pieceButton.setOnAction(event -> {
                     try {
-                        File file = downloadFile(URLServer.associationPieceDir + a.getPieceJustificatif());
+                        File file = ftpInterface.downloadFile(URLServer.associationPieceDir + a.getPieceJustificatif(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
                         if (!Desktop.isDesktopSupported())
                             return;
                         Desktop desktop = Desktop.getDesktop();
@@ -261,9 +224,11 @@ public class AssociationsController implements Initializable {
                     } catch (Exception e) {
                         Logger.getLogger(
                                 AssociationsController.class.getName()).log(
-                                Level.INFO, null, e
+                                Level.SEVERE, null, e
                         );
-                        e.printStackTrace();
+                        Alert connAlert = new Alert(Alert.AlertType.WARNING);
+                        connAlert.setContentText("Veuillez assurer la connexion");
+                        connAlert.show();
                     }
 
                 });
@@ -319,6 +284,8 @@ public class AssociationsController implements Initializable {
                     if (result.isPresent())
                         if (result.get() == ButtonType.OK)
                             stage.close();
+                        else
+                            System.out.println("Cancel clicked, but ORACLE Y U DO DIS");
                 });
             } catch (IOException ex) {
                 Logger.getLogger(
@@ -367,6 +334,7 @@ public class AssociationsController implements Initializable {
         // Label for displaying number of current associations bindings
         size.textProperty().bind(Bindings.size((associationList)).asString("Associations : %d"));
     }
+
 
     boolean checkValidUpdate(String oldValue, String newValue, Boolean isAlphaNumerical, int minLength, int maxLength, String string) {
         if (!checkValidStringInput(newValue, isAlphaNumerical, minLength, maxLength, string)) {
