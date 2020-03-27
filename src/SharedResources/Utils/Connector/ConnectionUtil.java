@@ -1,6 +1,8 @@
-package utils.Utils.Connector;
+package SharedResources.Utils.Connector;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ConnectionUtil {
@@ -20,15 +22,19 @@ public class ConnectionUtil {
         String driver = "com.mysql.cj.jdbc.Driver";
         try {
             Class.forName(driver);
-            this.conn =(Connection) DriverManager.getConnection(dbDriver+dbHost+dbPort+dbName, dbUser , dbPassword);
+            this.conn = DriverManager.getConnection(dbDriver + dbHost + dbPort + dbName, dbUser, dbPassword);
         }
         catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Connection Failed! Check output console");
             System.err.println("ConnectionUtil Exception : "+ex.getMessage()+ ex.getCause());
+            Logger.getLogger(
+                    ConnectionUtil.class.getName()).log(
+                    Level.INFO, null, ex
+            );
         }
     }
+
     /**
-     *
      * @return MysqlConnect Database connection object
      */
     public static synchronized ConnectionUtil conDB() {
@@ -42,18 +48,17 @@ public class ConnectionUtil {
      *
      * @param query String The query to be executed
      * @return a ResultSet object containing the results or null if not available
-     * @throws SQLException
+     * @throws SQLException when you WABALABADUBDUB BITCH
      */
     public ResultSet query(String query) throws SQLException{
         statement = db.conn.createStatement();
-        ResultSet res = statement.executeQuery(query);
-        return res;
+        return statement.executeQuery(query);
     }
     /**
      * @desc Method to insert data to a table
      * @param insertQuery String The Insert query
      * @return boolean
-     * @throws SQLException
+     * @throws SQLException when you WABALABADUBDUB BITCH
      */
     public int insert(String insertQuery) throws SQLException {
         statement = db.conn.createStatement();

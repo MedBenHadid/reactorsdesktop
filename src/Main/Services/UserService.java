@@ -1,12 +1,12 @@
 package Main.Services;
 
+import Main.Entities.User;
+import Main.Entities.UserSession;
+import SharedResources.Utils.BCrypt.BCrypt;
+import SharedResources.Utils.Connector.ConnectionUtil;
 import de.ailis.pherialize.Pherialize;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import Main.Entities.User;
-import Main.Entities.UserSession;
-import utils.Utils.BCrypt.BCrypt;
-import utils.Utils.Connector.ConnectionUtil;
 
 import java.sql.*;
 
@@ -37,19 +37,20 @@ public class UserService {
     }
 
     public User readUserBy(int id){
-        User user;
         try {
             PreparedStatement pt = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
             pt.setInt(1,id);
-            user = resultSetToUser(pt.executeQuery());
-            return user;
+            ResultSet rs = pt.executeQuery();
+            if (rs.next()) {
+                return resultSetToUser(rs);
+            }
         } catch (SQLException e){
             e.printStackTrace();
         }
         return null;
     }
 
-    public User readUserBy(String credential){
+    public User readUserByCredentials(String credential) {
         User user;
         try {
             PreparedStatement pt = connection.prepareStatement("SELECT * FROM user WHERE username = ? OR email = ?");
@@ -74,19 +75,15 @@ public class UserService {
         }
 
     }
-    public ObservableList<User> listUsers(){
+
+    public ObservableList<User> listUsers() throws SQLException {
         ObservableList<User> users = FXCollections.observableArrayList();
-        try {
-            PreparedStatement pt = connection.prepareStatement("SELECT * FROM user");
-            ResultSet rs = pt.executeQuery();
-            while(rs.next()){
-                users.add(resultSetToUser(rs));
-            }
-            return users;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        PreparedStatement pt = connection.prepareStatement("SELECT * FROM user");
+        ResultSet rs = pt.executeQuery();
+        while (rs.next()) {
+            users.add(resultSetToUser(rs));
         }
-        return null;
+        return users;
     }
 
 
@@ -96,14 +93,14 @@ public class UserService {
         preparedStatement.setString(1, credential);
         preparedStatement.setString(2, credential);
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password"))){
-            UserSession us =UserSession.getInstace(UserService.getInstace().resultSetToUser(resultSet));
+        if (resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password"))) {
+            UserSession.getInstace(UserService.getInstace().resultSetToUser(resultSet));
         }
         return UserSession.getInstace()!=null;
     }
 
     public void register(User u) {
-        String req = "insert into user (username,username_canonical,email,email_canonical,enabled,password,nom,prenom,date_naissance,cin,roles) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String req = "insert into user (username,username_canonical,email,email_canonical,enabled,password,nom,prenom,date_naissance,cin,roles) values (?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement(req);
@@ -123,17 +120,16 @@ public class UserService {
 
     private User resultSetToUser(ResultSet rs) throws SQLException {
         User u = new User();
-        if(rs.next()) {
-            u.setId(rs.getInt("id"));
-            u.setUsername(rs.getString("username"));
-            u.setEmail(rs.getString("email"));
-            u.setPlainPassword(rs.getString("password_plain"));
-            u.setEnabled(rs.getBoolean("enabled"));
-            u.setLast_login(rs.getTimestamp("last_login"));
-            u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
-            u.getProfile().setImage(rs.getString("image"));
-            //u.getProfile().setAdresse();
-        }
+        u.setId(rs.getInt("id"));
+        u.setUsername(rs.getString("username"));
+        u.setEmail(rs.getString("email"));
+        u.setEnabled(rs.getBoolean("enabled"));
+        u.setLast_login(rs.getTimestamp("last_login"));
+        u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
+        u.getProfile().setImage(rs.getString("image"));
+        //u.getProfile().setAdresse();
+        u.getProfile().setNom(rs.getString("nom"));
+        u.getProfile().setPrenom(rs.getString("prenom"));
         return u;
     }
 

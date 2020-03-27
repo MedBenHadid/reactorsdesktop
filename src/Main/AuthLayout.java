@@ -1,6 +1,6 @@
 package Main;
 
-import Resources.URLScenes;
+import SharedResources.URLScenes;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -18,39 +18,46 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static javafx.fxml.FXMLLoader.load;
 
 public class AuthLayout  extends Application implements Initializable {
-    @FXML
-    private AnchorPane container;
 
-    private AnchorPane loginPane;
-    private Parent root;
+
     @FXML
-    private Group group;
+    public Group group;
+
+    @FXML
+    private AnchorPane side;
+
     @Override
     public void initialize(URL url, ResourceBundle rb){
-        // TODO
-        try {
-            loginPane = FXMLLoader.load(getClass().getResource(URLScenes.login));
-            setNode((Node)loginPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void setNode(Node node) {
-        group.getChildren().clear();
-        group.getChildren().add((Node) node);
         FadeTransition ft = new FadeTransition(Duration.millis(15000));
-        ft.setNode(node);
+        ft.setNode(side);
         ft.setFromValue(0.1);
         ft.setToValue(1);
         ft.setCycleCount(1);
         ft.setAutoReverse(false);
         ft.play();
+        // TODO
+        try {
+            AnchorPane loginPane = FXMLLoader.load(getClass().getResource(URLScenes.login));
+            setNode(loginPane);
+        } catch (IOException e) {
+            Logger.getLogger(
+                    AuthLayout.class.getName()).log(
+                    Level.SEVERE, null, e
+            );
+            e.printStackTrace();
+        }
+
+    }
+
+    void setNode(Node node) {
+        group.getChildren().clear();
+        group.getChildren().add(node);
     }
 
 
@@ -58,18 +65,15 @@ public class AuthLayout  extends Application implements Initializable {
     private double yOffset = 0;
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = load(getClass().getResource(URLScenes.authLayout));
+        Parent root = load(getClass().getResource(URLScenes.associationSuperAdminDashboard));
         stage.initStyle(StageStyle.DECORATED);
-
-
         stage.setTitle("ReactorsFX : La bénévolat en desktop");
-
         // Louled ken fadetkom set them both to false
         // Set them true mba3d
         //stage.setAlwaysOnTop(true);
         //stage.setMaximized(true);
         //stage.setFullScreen(true);
-        stage.setResizable(false);
+        //stage.setResizable(false);
         root.setOnMousePressed(event -> { xOffset = event.getSceneX();yOffset = event.getSceneY(); });
         root.setOnMouseDragged(event -> { stage.setX(event.getScreenX() - xOffset);stage.setY(event.getScreenY() - yOffset); });
 

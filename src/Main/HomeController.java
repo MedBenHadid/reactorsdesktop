@@ -1,69 +1,32 @@
-package Main;/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package Main;
 
-import Main.Entities.User;
 import Main.Entities.UserSession;
-import Main.Services.UserService;
-import Resources.URLScenes;
-import Resources.URLServer;
-import com.jfoenix.controls.JFXButton;
-import javafx.embed.swing.SwingFXUtils;
+import SharedResources.URLScenes;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class HomeController implements Initializable {
-    
     @FXML
-    private Label label;
-    
-    @FXML
-    private VBox pnl_scroll;
-
-    @FXML
-    private JFXButton btnLogout;
-
-    @FXML
-    private JFXButton btnUsers;
-
-    @FXML
-    private JFXButton btnMembers;
-
-    @FXML
-    private JFXButton btnAssAdmins;
+    private Button btnLogout,btnAssAdmins,test;
 
     @FXML
     private Label labelUsername;
 
     @FXML
-    private ImageView userImage;
+    private AnchorPane view, details, holderPane;
 
-    @FXML
-    private AnchorPane mainAnchor;
-
-    private Node [] nodes;
     public HomeController() {
     }
 
@@ -71,7 +34,9 @@ public class HomeController implements Initializable {
     private void handleButtonAction(MouseEvent event) {
         //refreshNodes();
         if (event.getSource().equals(btnLogout)) {
-            UserSession.getInstace().cleanUserSession();
+            if (UserSession.getInstace() != null) {
+                UserSession.getInstace().cleanUserSession();
+            }
             //add you loading or delays - ;-)
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
@@ -79,7 +44,7 @@ public class HomeController implements Initializable {
             stage.close();
             Scene scene = null;
             try {
-                scene = new Scene(FXMLLoader.load(getClass().getResource(URLScenes.authLayout)));
+                scene = new Scene(FXMLLoader.load(getClass().getResource(URLScenes.associationSuperAdminDashboard)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -90,34 +55,26 @@ public class HomeController implements Initializable {
             stage.show();
         } else if (event.getSource().equals(btnAssAdmins)){
             System.out.println("TEST");
+        } else if (event.getSource().equals(test)) {
+            try {
+                AnchorPane test = FXMLLoader.load(getClass().getResource(URLScenes.associationSuperAdminDashboard));
+                setNode(test);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-
     }
-    
+
+    private void setNode(AnchorPane node) {
+        holderPane.getChildren().clear();
+        holderPane.getChildren().add(node);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        labelUsername.setText(UserSession.getInstace().getUser().getUsername());
+        //labelUsername.setText(UserSession.getInstace().getUser().getUsername());
     }    
     
-    private void refreshNodes()
-    {
-        pnl_scroll.getChildren().clear();
-        List<User> users = UserService.getInstace().listUsers();
-        nodes = new  Node[users.size()];
 
-
-        for(int i = 0; i<users.size(); i++)
-        {
-            try {
-                nodes[i] = FXMLLoader.load(getClass().getResource("LoggedInStage/users/Item.fxml"));
-                pnl_scroll.getChildren().add(nodes[i]);
-                //pnl_scroll.getChildren().removeAll();
-                //pnl_scroll.getChildren().add(new TreeTableView<User>());
-            } catch (IOException ex) {
-                Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }  
-    }
     
 }

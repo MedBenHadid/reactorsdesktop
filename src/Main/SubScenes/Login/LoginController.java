@@ -1,28 +1,23 @@
 package Main.SubScenes.Login;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-import Resources.URLScenes;
+import Main.Services.UserService;
+import SharedResources.URLScenes;
+import SharedResources.Utils.Connector.ConnectionUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import Main.Entities.UserSession;
-import Main.Services.UserService;
-import utils.Utils.Connector.ConnectionUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,7 +29,7 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
     @FXML
-    private Label lblErrors;
+    private Label lblErrors, btnForgot;
 
     @FXML
     private TextField txtUsername;
@@ -43,21 +38,12 @@ public class LoginController implements Initializable {
     private TextField txtPassword;
 
     @FXML
-    private Button btnSignin;
-
-    @FXML
-    private Label btnForgot;
-
-    @FXML
-    private Button btnFB;
-
-    @FXML
-    private Button btnSignup;
+    private Button btnSignin,btnSignup;
 
     private UserService userService = UserService.getInstace();
     private Connection con ;
-
     private Alert a = new Alert(AlertType.ERROR);
+
     @FXML
     public void handleButtonAction(MouseEvent event) {
 
@@ -95,6 +81,16 @@ public class LoginController implements Initializable {
                     a.setContentText("ReactorsFX");
                     a.show();
                     break;
+            }
+        }
+        if (event.getSource() == btnSignup){
+            try {
+                AnchorPane a = FXMLLoader.load(getClass().getResource(URLScenes.register));
+                Group group = (Group) ((Node)event.getSource()).getParent().getParent().getParent().getParent();
+                group.getChildren().clear();
+                group.getChildren().add(a);
+            } catch (IOException ex){
+                ex.printStackTrace();
             }
         }
     }
