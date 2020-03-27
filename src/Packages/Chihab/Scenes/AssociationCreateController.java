@@ -5,7 +5,6 @@ import Main.Services.UserService;
 import Packages.Chihab.Custom.AutoCompleteBox;
 import Packages.Chihab.Custom.ComboBoxAutoComplete;
 import Packages.Chihab.Models.Association;
-import SharedResources.URLServer;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTimePicker;
 import javafx.beans.binding.Bindings;
@@ -16,19 +15,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import org.apache.commons.net.ftp.FTPClient;
 
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -57,40 +51,9 @@ public class AssociationCreateController implements Initializable {
         this.association = new Association();
     }
 
-    private static void uploadFile(File file, String directory) throws IOException {
-        FTPClient ftpClient = new FTPClient();
-        try {
-            ftpClient.connect(URLServer.ftpServerLink, URLServer.ftpSocketPort);
-            ftpClient.login(URLServer.ftpUser, URLServer.ftpPassword);
-            ftpClient.enterLocalPassiveMode();
-            ftpClient.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-            // TODO : set file name as file.getName() + UUID.randomUUID
-            String firstRemoteFile = directory + "/" + file.getName() + UUID.randomUUID();
-            InputStream inputStream = new FileInputStream(file);
-            System.out.println("Start uploading first file");
-            boolean done = ftpClient.storeFile(firstRemoteFile, inputStream);
-            inputStream.close();
-            if (done) {
-                System.out.println("The first file is uploaded successfully.");
-            }
-        } catch (IOException ex) {
-            throw ex;
-        } finally {
-            try {
-                if (ftpClient.isConnected()) {
-                    ftpClient.logout();
-                    ftpClient.disconnect();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
     // TODO : implement the maps mcThingy
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         BooleanBinding nomFieldValid = Bindings.createBooleanBinding(() -> !checkValidStringInput(nomInput.getText(), false, 6, 30), nomInput.textProperty());
         BooleanBinding descriptionFieldValid = Bindings.createBooleanBinding(() -> !checkValidStringInput(descriptionInput.getText(), true, 6, 255), descriptionInput.textProperty());
         BooleanBinding zipFieldValid = Bindings.createBooleanBinding(() -> !zipInput.getText().matches(".*\\d.*") || zipInput.getText().length() != 4, zipInput.textProperty());
@@ -101,7 +64,6 @@ public class AssociationCreateController implements Initializable {
         villeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> association.setVille(newValue));
         villeComboBox.setTooltip(new Tooltip());
         new AutoCompleteBox<String>(villeComboBox);
-
         try {
             managerComboBox.getItems().addAll(FXCollections.observableArrayList((Collection<? extends String>) UserService.getInstace().listUsers().stream().filter(u -> !u.isAdmin()).map(User::getUsername).collect(Collectors.toCollection(ArrayList::new))));
             managerComboBox.setVisibleRowCount(6);

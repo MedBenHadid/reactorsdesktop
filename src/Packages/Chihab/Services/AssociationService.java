@@ -13,7 +13,7 @@ public class AssociationService {
     private Connection connection;
 
     public int create(Association a, int categoryId, int managerId) throws SQLException {
-        String sql ="INSERT INTO association " +
+        PreparedStatement st = connection.prepareStatement("INSERT INTO association " +
                 "(`id`, " +
                 "`domaine_id`, " +
                 "`id_manager`, " +
@@ -29,9 +29,9 @@ public class AssociationService {
                 "`longitude`, " +
                 "`approuved`, " +
                 "`description`) " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement st;
-        st = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                , Statement.RETURN_GENERATED_KEYS
+        );
         st.setInt(1, a.getId());
         st.setInt(2, categoryId);
         st.setInt(3, managerId);
@@ -56,9 +56,7 @@ public class AssociationService {
 
     public ObservableList<Association> readAll() throws SQLException {
         ObservableList<Association> ms = FXCollections.observableArrayList();
-        String req = "SELECT * FROM association";
-        PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareStatement(req);
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM association");
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             Association a = resultSetToAssociation(resultSet);
@@ -70,23 +68,21 @@ public class AssociationService {
     }
 
     public void update(Association m) throws SQLException {
-        String req =
-                "UPDATE association SET " +
-                        "nom=?" +
-                        ",telephone=?" +
-                        ",horaire_travail=?" +
-                        ",photo_agence=?" +
-                        ",piece_justificatif=?" +
-                        ",rue=?" +
-                        ",code_postal=?" +
-                        ",ville=?" +
-                        ",latitude=?" +
-                        ",longitude=?" +
-                        ",approuved=?" +
-                        ",description=?" +
-                        "WHERE id=?";
-        PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareStatement(req);
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE association SET " +
+                "nom=?" +
+                ",telephone=?" +
+                ",horaire_travail=?" +
+                ",photo_agence=?" +
+                ",piece_justificatif=?" +
+                ",rue=?" +
+                ",code_postal=?" +
+                ",ville=?" +
+                ",latitude=?" +
+                ",longitude=?" +
+                ",approuved=?" +
+                ",description=?" +
+                "WHERE id=?"
+        );
         preparedStatement.setString(1, m.getNom());
         preparedStatement.setInt(2, m.getTelephone());
         preparedStatement.setString(3, m.getHoraireTravail());
@@ -104,9 +100,7 @@ public class AssociationService {
     }
 
     public void delete(Association m) throws SQLException {
-        String req = "DELETE FROM association WHERE id=?";
-        PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareStatement(req);
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM association WHERE id=?");
         preparedStatement.setInt(1, m.getId());
         preparedStatement.executeUpdate();
     }
@@ -164,5 +158,19 @@ public class AssociationService {
     public static AssociationService getInstace() {
         if(instance == null) { instance = new AssociationService(); }
         return instance;
+    }
+
+    public Association readAssociationBy(int id) {
+        try {
+            PreparedStatement pt = connection.prepareStatement("SELECT * FROM association WHERE id = ?");
+            pt.setInt(1, id);
+            ResultSet rs = pt.executeQuery();
+            if (rs.next()) {
+                return resultSetToAssociation(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

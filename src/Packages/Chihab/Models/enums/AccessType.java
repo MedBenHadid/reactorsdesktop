@@ -5,12 +5,16 @@ public enum AccessType {
     READ,
     DELIVER;
 
-    public static AccessType getRole(int accessType) {
+    public static int getRole(AccessType accessType) {
         switch (accessType) {
-            case 1:return WRITE;
-            case 2: return READ;
-            case 3:return DELIVER;
-            default:return READ;
+            case WRITE:
+                return 1;
+            case READ:
+                return 2;
+            case DELIVER:
+                return 3;
+            default:
+                return 2;
         }
     }
 }

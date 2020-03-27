@@ -23,9 +23,7 @@ public class CategoryService {
     }
 
     public int create(Category category) throws SQLException {
-        String sql ="INSERT INTO category (name,description) VALUES (?,?)";
-        PreparedStatement st;
-        st = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement st = connection.prepareStatement("INSERT INTO category (name,description) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
         st.setString(1, category.getNom());
         st.setString(2, category.getDescription());
         st.executeUpdate();
@@ -37,10 +35,7 @@ public class CategoryService {
 
     public ObservableList<Category> readAll() throws SQLException {
         ObservableList<Category> categoriesItems = FXCollections.observableArrayList();
-        String req = "SELECT * FROM category";
-        PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareStatement(req);
-        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = connection.prepareStatement("SELECT * FROM category").executeQuery();
         while (resultSet.next()) {
             categoriesItems.add(resultSetToCategory(resultSet));
         }
@@ -49,7 +44,7 @@ public class CategoryService {
     }
 
 
-    Category readById(int id) throws SQLException {
+    public Category readById(int id) throws SQLException {
         PreparedStatement pt = connection.prepareStatement("SELECT * FROM category WHERE id = ?");
         pt.setInt(1, id);
         ResultSet rs = pt.executeQuery();
@@ -61,9 +56,7 @@ public class CategoryService {
     }
 
     public void update(Category c) throws SQLException {
-        String req = "UPDATE category SET name=?,description=?WHERE id=?";
-        PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareStatement(req);
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE category SET name=?,description=?WHERE id=?");
         preparedStatement.setString(1, c.getNom());
         preparedStatement.setString(2, c.getDescription());
         preparedStatement.setInt(3, c.getId());
@@ -71,9 +64,7 @@ public class CategoryService {
     }
 
     public void delete(Category c) throws SQLException {
-        String req = "DELETE FROM category WHERE id=?";
-        PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareStatement(req);
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM category WHERE id=?");
         preparedStatement.setInt(1, c.getId());
         preparedStatement.executeUpdate();
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXProgressBar?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
@@ -96,6 +97,8 @@
                         </VBox.margin>
                     </TableView>
                 </VBox>
+                <JFXProgressBar fx:id="progressBar" visible="false" AnchorPane.leftAnchor="0.0"
+                                AnchorPane.rightAnchor="0.0"/>
             </AnchorPane>
         </Tab>
     </TabPane>

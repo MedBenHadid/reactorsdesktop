@@ -6,6 +6,8 @@ import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
+import com.jfoenix.controls.JFXProgressBar;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -18,13 +20,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -49,7 +51,6 @@ public class AssociationsController implements Initializable {
     private TableColumn<Association, Number> idCol;
     @FXML
     private TableColumn<User, String> managerCol;
-    FTPInterface ftpInterface;
     @FXML
     private TextField inputName, inputCity;
     @FXML
@@ -62,12 +63,16 @@ public class AssociationsController implements Initializable {
     private Button addButton;
     @FXML
     private TableColumn<Association, Boolean> statusCol;
-
+    FTPInterface ftpInterface;
+    @FXML
+    private JFXProgressBar progressBar;
     public AssociationsController() {
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
-            e.printStackTrace();
+            Alert ftpAlert = new Alert(Alert.AlertType.WARNING);
+            ftpAlert.setContentText("Error connecting to FTP server");
+            ftpAlert.show();
         }
     }
     @Override
@@ -213,6 +218,7 @@ public class AssociationsController implements Initializable {
                 pieceButton.setOnAction(event -> {
                     try {
                         File file = ftpInterface.downloadFile(URLServer.associationPieceDir + a.getPieceJustificatif(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+
                         if (!Desktop.isDesktopSupported())
                             return;
                         Desktop desktop = Desktop.getDesktop();
@@ -227,7 +233,7 @@ public class AssociationsController implements Initializable {
                                 Level.SEVERE, null, e
                         );
                         Alert connAlert = new Alert(Alert.AlertType.WARNING);
-                        connAlert.setContentText("Veuillez assurer la connexion");
+                        connAlert.setContentText("Error whilst fetching " + a.getPieceJustificatif() + " from FTP server");
                         connAlert.show();
                     }
 
@@ -235,6 +241,7 @@ public class AssociationsController implements Initializable {
             }
         });
         // Piece justificative section
+        progressBar.visibleProperty().bind(Bindings.createBooleanBinding(Platform::isNestedLoopRunning));
         // Profile Section
         associationTableView.setRowFactory(tv -> {
             TableRow<Association> row = new TableRow<>();
@@ -250,8 +257,8 @@ public class AssociationsController implements Initializable {
                         AssociationProfileController controller = new AssociationProfileController(rowData);
                         loader.setController(controller);
                         try {
-                            FlowPane flowPane = loader.load();
-                            tab.setContent(flowPane);
+                            ScrollPane scrollPane = loader.load();
+                            tab.setContent(scrollPane);
                             tab.setClosable(true);
                             tabPane.getTabs().add(tab);
                         } catch (IOException e) {
