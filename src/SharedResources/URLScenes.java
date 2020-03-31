@@ -16,9 +16,6 @@ public class URLScenes {
     final public static String associationSuperAdminDashboard = chihab + "Mission.fxml";
     final public static String associationProfile = chihab + "MissionProfile.fxml";
     final public static String associationCreate = chihab + "MissionCreate.fxml";
-    final public static String associationSuperAdminDashboard = chihab + "AssociationsBackoffice.fxml";
-    final public static String associationProfile = chihab + "AssociationProfileShow.fxml";
-    final public static String associationCreate = chihab + "AssociationCreate.fxml";
     // Memberships
     final public static String addMembershipSelectUSer = chihab + "MembershipCreate.fxml";
     // Category
