@@ -1,6 +1,6 @@
 package Packages.Nasri.enums;
 
-public enum HebergementState {
+public enum HebergementStatus {
     inProcess,
     done
 }

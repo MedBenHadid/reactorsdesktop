@@ -1,19 +1,20 @@
 package Packages.Nasri.models;
 
-import Packages.Nasri.enums.HebergementState;
+import Packages.Nasri.enums.HebergementStatus;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class HebergementOffer {
     private int id;
+    private int userId;
     private String description;
     private String governorat;
     private int numberRooms;
     private int duration; // in months
-    private Timestamp creationDate;
-    private HebergementState state;
+    private LocalDateTime creationDate;
+    private HebergementStatus state;
     private String telephone;
     private String image; // file path
 
@@ -21,18 +22,26 @@ public class HebergementOffer {
 
     }
 
-    public HebergementOffer(int id, String description, String governorat,
-                            int numberRooms, int duration, Timestamp creationDate,
-                            HebergementState state, String telephone, String image) {
+    public HebergementOffer(int id, int userId, String description, String governorat,
+                            int numberRooms, int duration,
+                            HebergementStatus state, String telephone, String image) {
         this.id = id;
+        this.userId = userId;
         this.description = description;
         this.governorat = governorat;
         this.numberRooms = numberRooms;
         this.duration = duration;
-        this.creationDate = creationDate;
+        this.creationDate = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
         this.state = state;
         this.telephone = telephone;
         this.image = image;
+    }
+
+    public HebergementOffer(int id, int userId, String description, String governorat,
+                            int numberRooms, int duration, LocalDateTime creationDate,
+                            HebergementStatus state, String telephone, String image) {
+        this(id, userId, description, governorat, numberRooms, duration, state, telephone, image);
+        this.creationDate = creationDate;
     }
 
 
@@ -77,19 +86,19 @@ public class HebergementOffer {
         this.duration = duration;
     }
 
-    public Timestamp getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Timestamp creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
-    public HebergementState getState() {
+    public HebergementStatus getState() {
         return state;
     }
 
-    public void setState(HebergementState state) {
+    public void setState(HebergementStatus state) {
         this.state = state;
     }
 
@@ -109,9 +118,17 @@ public class HebergementOffer {
         this.image = image;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(id, description,governorat, numberRooms, duration, creationDate, state, telephone, image);
+        return Objects.hash(id, userId, description,governorat, numberRooms, duration, creationDate, state, telephone, image);
     }
 
     @Override
@@ -121,7 +138,7 @@ public class HebergementOffer {
                 + "Governorat: " + governorat + "\n"
                 + "Number of rooms: " + numberRooms + "\n"
                 + "Duration: " + duration + "\n"
-                + "State: " + (state == HebergementState.inProcess ? "inProcess" : "Done") + "\n"
+                + "State: " + (state == HebergementStatus.inProcess ? "inProcess" : "Done") + "\n"
                 + "Telephone: " + telephone + "\n";
 
         return hebergementOfferStr;

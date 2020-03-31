@@ -1,32 +1,36 @@
 package Packages.Nasri.models;
 
 import Packages.Nasri.enums.CivilStatus;
-import Packages.Nasri.enums.HebergementState;
+import Packages.Nasri.enums.HebergementStatus;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class HebergementRequest {
     private int id;
+    private int userId;
     private String name;
     private String description;
     private String region;
-    private HebergementState state;
+    private HebergementStatus state;
     private String nativeCountry;
-    private Timestamp arrivalDate;
+    private LocalDateTime arrivalDate;
     private String passportNumber;
     private CivilStatus civilStatus;
+    private int childrenNumber;
     private String telephone;
-    private Timestamp creationDate;
+    private LocalDateTime creationDate;
     private boolean isAnonymous;
 
     public HebergementRequest() {}
 
-    public HebergementRequest(int id, String name, String description, String region,
-                              HebergementState state, String nativeCountry,
-                              Timestamp arrivalDate, String passportNumber, CivilStatus civilStatus,
-                              String telephone, Timestamp creationDate, boolean isAnonymous) {
+    public HebergementRequest(int id, int userId, String description, String region,
+                              HebergementStatus state, String nativeCountry,
+                              LocalDateTime arrivalDate, String passportNumber, CivilStatus civilStatus,
+                              int childrenNumber, String name, String telephone, boolean isAnonymous) {
         this.id = id;
+        this.userId = userId;
         this.name = name;
         this.description = description;
         this.region = region;
@@ -35,15 +39,26 @@ public class HebergementRequest {
         this.arrivalDate = arrivalDate;
         this.passportNumber = passportNumber;
         this.civilStatus = civilStatus;
+        this.childrenNumber = childrenNumber;
         this.telephone = telephone;
-        this.creationDate = creationDate;
+        this.creationDate = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
         this.isAnonymous = isAnonymous;
+    }
+
+    public HebergementRequest(int id, int userId, String description, String region,
+                              HebergementStatus state, String nativeCountry,
+                              LocalDateTime arrivalDate, String passportNumber, CivilStatus civilStatus,
+                              int childrenNumber, String name, String telephone, LocalDateTime creationDate, boolean isAnonymous) {
+        this(id, userId, description, region,
+                state, nativeCountry, arrivalDate,
+                passportNumber, civilStatus, childrenNumber, name, telephone, isAnonymous);
+        this.creationDate = creationDate;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, region, state, nativeCountry,
-                arrivalDate, passportNumber, civilStatus, telephone, creationDate, isAnonymous);
+        return Objects.hash(id, userId, name, description, region, state, nativeCountry,
+                arrivalDate, passportNumber, civilStatus, childrenNumber, telephone, creationDate, isAnonymous);
     }
 
     @Override
@@ -52,11 +67,12 @@ public class HebergementRequest {
                 + "Name: " + name + "\n"
                 + "Description: " + description + "\n"
                 + "Region: " + region + "\n"
-                + "State: " + (state == HebergementState.inProcess ? "inProcess" : "Done") + "\n"
+                + "State: " + (state == HebergementStatus.inProcess ? "inProcess" : "Done") + "\n"
                 + "Native country: " + nativeCountry + "\n"
                 + "Arrival date: " + arrivalDate + "\n"
                 + "Passport number: " + passportNumber + "\n"
                 + "Civil status: " + (civilStatus == CivilStatus.Married ? "Married" : "Single") + "\n"
+                + "Children number: " + childrenNumber + "\n"
                 + "Telephone: " + telephone + "\n"
                 + "Creation date: " + creationDate + "\n"
                 + "Anonymous: " + isAnonymous;
@@ -96,11 +112,11 @@ public class HebergementRequest {
         this.region = region;
     }
 
-    public HebergementState getState() {
+    public HebergementStatus getState() {
         return state;
     }
 
-    public void setState(HebergementState state) {
+    public void setState(HebergementStatus state) {
         this.state = state;
     }
 
@@ -112,11 +128,11 @@ public class HebergementRequest {
         this.nativeCountry = nativeCountry;
     }
 
-    public Timestamp getArrivalDate() {
+    public LocalDateTime getArrivalDate() {
         return arrivalDate;
     }
 
-    public void setArrivalDate(Timestamp arrivalDate) {
+    public void setArrivalDate(LocalDateTime arrivalDate) {
         this.arrivalDate = arrivalDate;
     }
 
@@ -144,11 +160,11 @@ public class HebergementRequest {
         this.telephone = telephone;
     }
 
-    public Timestamp getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Timestamp creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -158,5 +174,21 @@ public class HebergementRequest {
 
     public void setAnonymous(boolean anonymous) {
         isAnonymous = anonymous;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getChildrenNumber() {
+        return childrenNumber;
+    }
+
+    public void setChildrenNumber(int childrenNumber) {
+        this.childrenNumber = childrenNumber;
     }
 }
