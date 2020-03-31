@@ -1,15 +1,14 @@
 package Packages.Chihab.Scenes;
 
 import Packages.Chihab.Models.Association;
-import Packages.Chihab.Models.Membership;
 import Packages.Chihab.Services.MembershipService;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,13 +25,12 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AssociationProfileController implements Initializable {
+public class AssociationProfileShowController implements Initializable {
     @FXML
     Label nameLabel, descriptionLabel, numeroLabel;
     @FXML
@@ -40,19 +38,18 @@ public class AssociationProfileController implements Initializable {
     @FXML
     JFXToggleButton statusToggleButton;
     @FXML
-    TreeView<Membership> membresTreeView;
-    @FXML
     Button afficherPieceButton;
     @FXML
     WebView mapWebView;
     @FXML
     JFXSpinner spinner;
-    //private Desktop desktop = Desktop.getDesktop();
+    @FXML
+    JFXButton addMember;
     FTPInterface ftpInterface;
     private MembershipService membershipService = MembershipService.getInstace();
     private Association a;
 
-    public AssociationProfileController() {
+    public AssociationProfileShowController() {
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
@@ -60,16 +57,13 @@ public class AssociationProfileController implements Initializable {
         }
     }
 
-
-
-
     /**
      * Accepts an Association type and stores it to specific instance variables
      * in order to show its profile ( Preferably in a new TabPane )
      *
      * @param association
      */
-    public AssociationProfileController(Association association) {
+    public AssociationProfileShowController(Association association) {
         this.a = association;
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
@@ -89,49 +83,44 @@ public class AssociationProfileController implements Initializable {
 
         statusToggleButton.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
             if (aBoolean) {
-                Dialog confDialog = new TextInputDialog("");
+                Dialog<String> confDialog = new TextInputDialog("");
                 confDialog.setContentText("Veuillez indiquer la raison :");
                 Optional<String> result = confDialog.showAndWait();
                 if (result.isPresent()) {
                     String entered = result.get();
-                    System.out.println(entered);
+                    System.out.println(a.isApprouved());
                     // TODO : Disable
                     // TODO : Send email with reason {entered}
                 } else {
                     statusToggleButton.selectedProperty().setValue(true);
-
+                    // TODO : Send confirmation email
                 }
             }
         });
         mapWebView.setVisible(false);
         mapWebView.getEngine().load(this.getClass().getResource("/Packages/Chihab/Scenes/WebView/showAssociationLocation.html").toString());
         mapWebView.getEngine().getLoadWorker().stateProperty().addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                        if (newValue == Worker.State.SUCCEEDED) {
-                            spinner.setVisible(false);
-                            mapWebView.setVisible(true);
-                            mapWebView.getEngine().executeScript("initMap(" + a.getLat() + "," + a.getLon() + ")");
-                            Document document = mapWebView.getEngine().getDocument();
-                            System.out.println(document.getElementById("lat").getTextContent());
-                        }
+                (ChangeListener<? super Worker.State>) (observable, oldValue, newValue) -> {
+                    if (newValue == Worker.State.SUCCEEDED) {
+                        spinner.setVisible(false);
+                        mapWebView.setVisible(true);
+                        mapWebView.getEngine().executeScript("initMap(" + a.getLat() + "," + a.getLon() + ")");
+                        Document document = mapWebView.getEngine().getDocument();
+                        System.out.println(document.getElementById("lat_association").getTextContent());
                     }
                 }
         );
 
-        try {
-            TreeItem<Membership> root = new TreeItem<>(membershipService.readAll().get(0));
-            membresTreeView.setRoot(root);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // membershipService.readAll()
+        addMember.setOnAction(actionEvent -> {
+
+        });
         try {
             File imageAss = ftpInterface.downloadFile(URLServer.associationImageDir + a.getPhotoAgence(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
             imageImageView.setImage(new Image(imageAss.toURI().toString()));
         } catch (IOException e) {
             Logger.getLogger(
-                    AssociationProfileController.class.getName()).log(
+                    AssociationProfileShowController.class.getName()).log(
                     Level.SEVERE, "Error whilst fetching image", e
             );
             Alert photoMissing = new Alert(Alert.AlertType.WARNING);
@@ -150,7 +139,7 @@ public class AssociationProfileController implements Initializable {
                 }
             } catch (Exception e) {
                 Logger.getLogger(
-                        AssociationsController.class.getName()).log(
+                        AssociationsBackofficeController.class.getName()).log(
                         Level.SEVERE, null, e
                 );
                 Alert connAlert = new Alert(Alert.AlertType.WARNING);

@@ -40,7 +40,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AssociationsController implements Initializable {
+public class AssociationsBackofficeController implements Initializable {
     @FXML
     private TableView<Association> associationTableView;
     @FXML
@@ -66,7 +66,8 @@ public class AssociationsController implements Initializable {
     FTPInterface ftpInterface;
     @FXML
     private JFXProgressBar progressBar;
-    public AssociationsController() {
+
+    public AssociationsBackofficeController() {
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
@@ -118,7 +119,7 @@ public class AssociationsController implements Initializable {
                             AssociationService.getInstace().update(current);
                         } catch (SQLException e) {
                             Logger.getLogger(
-                                    AssociationsController.class.getName()).log(
+                                    AssociationsBackofficeController.class.getName()).log(
                                     Level.INFO, null, e
                             );
                             showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
@@ -137,7 +138,7 @@ public class AssociationsController implements Initializable {
                             AssociationService.getInstace().update(current);
                         } catch (SQLException e) {
                             Logger.getLogger(
-                                    AssociationsController.class.getName()).log(
+                                    AssociationsBackofficeController.class.getName()).log(
                                     Level.INFO, null, e
                             );
                             showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
@@ -156,7 +157,7 @@ public class AssociationsController implements Initializable {
                             AssociationService.getInstace().update(current);
                         } catch (SQLException e) {
                             Logger.getLogger(
-                                    AssociationsController.class.getName()).log(
+                                    AssociationsBackofficeController.class.getName()).log(
                                     Level.INFO, null, e
                             );
                             showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
@@ -193,7 +194,7 @@ public class AssociationsController implements Initializable {
                                 showDialog(Alert.AlertType.CONFIRMATION, "", "", "Association supprimée !!");
                             } catch (SQLException e) {
                                 Logger.getLogger(
-                                        AssociationsController.class.getName()).log(
+                                        AssociationsBackofficeController.class.getName()).log(
                                         Level.INFO, null, e
                                 );
                                 showDialog(Alert.AlertType.ERROR, "Suppression échoué", "Raison : Reference", "Domaine ne peut pas étre supprimé!");
@@ -229,7 +230,7 @@ public class AssociationsController implements Initializable {
                         // TODO : Implement a print functionality using desktop.print()
                     } catch (Exception e) {
                         Logger.getLogger(
-                                AssociationsController.class.getName()).log(
+                                AssociationsBackofficeController.class.getName()).log(
                                 Level.SEVERE, null, e
                         );
                         Alert connAlert = new Alert(Alert.AlertType.WARNING);
@@ -254,7 +255,7 @@ public class AssociationsController implements Initializable {
                         tab.setText("Association : " + rowData.getNom());
                         tab.setClosable(true);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationProfile));
-                        AssociationProfileController controller = new AssociationProfileController(rowData);
+                        AssociationProfileShowController controller = new AssociationProfileShowController(rowData);
                         loader.setController(controller);
                         try {
                             ScrollPane scrollPane = loader.load();
@@ -263,7 +264,7 @@ public class AssociationsController implements Initializable {
                             tabPane.getTabs().add(tab);
                         } catch (IOException e) {
                             Logger.getLogger(
-                                    AssociationsController.class.getName()).log(
+                                    AssociationsBackofficeController.class.getName()).log(
                                     Level.WARNING, null, e
                             );
                             e.printStackTrace();
@@ -296,7 +297,7 @@ public class AssociationsController implements Initializable {
                 });
             } catch (IOException ex) {
                 Logger.getLogger(
-                        AssociationsController.class.getName()).log(
+                        AssociationsBackofficeController.class.getName()).log(
                         Level.WARNING, null, e
                 );
                 ex.printStackTrace();

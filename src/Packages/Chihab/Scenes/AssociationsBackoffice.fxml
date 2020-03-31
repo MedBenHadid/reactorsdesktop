@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="Packages.Chihab.Scenes.AssociationsController">
+            fx:controller="Packages.Chihab.Scenes.AssociationsBackofficeController">
     <TabPane fx:id="tabPane" side="BOTTOM" tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0"
              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Tab fx:id="associationListTab" text="Associations">

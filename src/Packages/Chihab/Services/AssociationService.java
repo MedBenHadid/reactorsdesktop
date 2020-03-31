@@ -51,7 +51,7 @@ public class AssociationService {
         ResultSet rs = st.getGeneratedKeys();
         if (rs.next())
             return rs.getInt(1);
-        return 0;
+        return -1;
     }
 
     public ObservableList<Association> readAll() throws SQLException {

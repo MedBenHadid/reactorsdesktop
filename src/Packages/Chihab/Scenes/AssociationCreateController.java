@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTimePicker;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,7 +38,7 @@ public class AssociationCreateController implements Initializable {
     @FXML
     private TextArea descriptionInput;
     @FXML
-    private JFXButton registerButton, createButton;
+    private JFXButton validateButton;
     @FXML
     private Button photoButton, pieceButton;
     @FXML
@@ -64,46 +65,55 @@ public class AssociationCreateController implements Initializable {
         villeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> association.setVille(newValue));
         villeComboBox.setTooltip(new Tooltip());
         new AutoCompleteBox<String>(villeComboBox);
-        try {
-            managerComboBox.getItems().addAll(FXCollections.observableArrayList((Collection<? extends String>) UserService.getInstace().listUsers().stream().filter(u -> !u.isAdmin()).map(User::getUsername).collect(Collectors.toCollection(ArrayList::new))));
-            managerComboBox.setVisibleRowCount(6);
-            managerComboBox.setTooltip(new Tooltip());
-            new ComboBoxAutoComplete<>(managerComboBox);
-        } catch (Exception e) {
-            Logger.getLogger(
-                    AssociationCreateController.class.getName()).log(
-                    Level.SEVERE, null, e
-            );
-            e.printStackTrace();
+        if (1 == 2)
+            try {
+                managerComboBox.getItems().addAll(FXCollections.observableArrayList((Collection<? extends String>) UserService.getInstace().readAll().stream().filter(u -> !u.isAdmin()).map(User::getUsername).collect(Collectors.toCollection(ArrayList::new))));
+                managerComboBox.setVisibleRowCount(6);
+                managerComboBox.setTooltip(new Tooltip());
+                new ComboBoxAutoComplete<>(managerComboBox);
+            } catch (Exception e) {
+                Logger.getLogger(
+                        AssociationCreateController.class.getName()).log(
+                        Level.SEVERE, null, e
+                );
+                e.printStackTrace();
+            }
+        else {
+            managerComboBox.setVisible(false);
         }
+
 
         // Piece justificative
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Veuillez choisir la photo de l'association");
+        SimpleBooleanProperty pieceValid = new SimpleBooleanProperty(false);
         pieceButton.setOnAction(e -> {
+            pieceValid.set(false);
             File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
             if (file != null) {
                 String[] names = ImageIO.getReaderFormatNames();
                 //ImageIO.read(file);
-                boolean isValidExt = false;
                 for (String exst : names) {
                     if (file.getName().endsWith(exst) || file.getName().endsWith(".pdf") || file.getName().endsWith(".doc") || file.getName().endsWith(".docx")) {
-
                         association.setPieceJustificatif(file.getName());
-                        isValidExt = true;
+                        pieceValid.set(true);
+                        System.out.println("Valid");
                         break;
                     }
                 }
-                if (!isValidExt) {
+                if (!pieceValid.get()) {
                     Alert pieceAlert = new Alert(Alert.AlertType.WARNING);
                     pieceAlert.setContentText("Veuillez choisir un document avec un format supporté");
                     pieceAlert.showAndWait();
                 }
             }
         });
+
         fileChooser.setTitle("Veuillez choisir la piece justificative de l'association");
         photoButton.setTooltip(new Tooltip("Veuillez choisir la photo de l'association"));
+        SimpleBooleanProperty photoValid = new SimpleBooleanProperty(false);
         photoButton.setOnAction(e -> {
+            photoValid.set(false);
             File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
             if (file != null) {
                 String[] names = ImageIO.getReaderFormatNames();
@@ -111,17 +121,19 @@ public class AssociationCreateController implements Initializable {
                 for (String exst : names) {
                     if (file.getName().endsWith(exst)) {
                         // TODO : upload to server
-
                         association.setPhotoAgence(association.getNom() + file.getName());
+                        photoValid.set(true);
                         break;
                     }
                 }
-            } else {
+            }
+            if (!photoValid.get()) {
                 Alert pieceAlert = new Alert(Alert.AlertType.WARNING);
-                pieceAlert.setContentText("Veuillez choisir un document avec un format supporté");
+                pieceAlert.setContentText("Veuillez choisir une photo avec un format supporté");
                 pieceAlert.showAndWait();
             }
         });
+
         de.valueProperty().setValue(LocalTime.now());
         de.valueProperty().addListener(a -> {
             vers.setValue(de.getValue().plusHours(1));
@@ -131,8 +143,7 @@ public class AssociationCreateController implements Initializable {
                 de.setValue(de.getValue().minusHours(1));
         });
         vers.onHiddenProperty().setValue(event -> {
-            int compValue = de.getValue().compareTo(vers.getValue());
-            if (compValue != -1) {
+            if (de.getValue().compareTo(vers.getValue()) != -1) {
                 Alert dateTimeAlert = new Alert(Alert.AlertType.WARNING);
                 dateTimeAlert.setContentText("Veuillez choisir une date supérieure a la date d'ouverture");
                 dateTimeAlert.showAndWait();
@@ -142,8 +153,7 @@ public class AssociationCreateController implements Initializable {
             }
         });
         // TODO : Check Ville is not null on Register/Create
-        createButton.disableProperty().bind(versTimeFieldValid);
-        registerButton.disableProperty().bind(nomFieldValid.or(descriptionFieldValid.or(zipFieldValid.or(rueFieldValid.or(phoneNumberFieldValid.or(versTimeFieldValid))))));
+        validateButton.disableProperty().bind(nomFieldValid.or(descriptionFieldValid.or(zipFieldValid.or(rueFieldValid.or(phoneNumberFieldValid.or(versTimeFieldValid.or(pieceValid.not())))))));
 
 
         //    return managerComboBox.getItems().stream().filter(ap -> ap.getEmail().equals(string)).findFirst().orElse(null);
