@@ -1,8 +1,8 @@
-package Packages.Chihab.Scenes;
+package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
-import Main.Entities.UserSession;
 import Packages.Chihab.Models.Association;
+import Packages.Chihab.Scenes.AssociationProfileController;
 import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
@@ -41,7 +41,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AssociationsController implements Initializable {
+public class MissionController implements Initializable {
     @FXML
     private TableView<Association> associationTableView;
     @FXML
@@ -67,7 +67,7 @@ public class AssociationsController implements Initializable {
     FTPInterface ftpInterface;
     @FXML
     private JFXProgressBar progressBar;
-    public AssociationsController() {
+    public MissionController() {
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
@@ -119,7 +119,7 @@ public class AssociationsController implements Initializable {
                             AssociationService.getInstace().update(current);
                         } catch (SQLException e) {
                             Logger.getLogger(
-                                    AssociationsController.class.getName()).log(
+                                    MissionController.class.getName()).log(
                                     Level.INFO, null, e
                             );
                             showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
@@ -138,7 +138,7 @@ public class AssociationsController implements Initializable {
                             AssociationService.getInstace().update(current);
                         } catch (SQLException e) {
                             Logger.getLogger(
-                                    AssociationsController.class.getName()).log(
+                                    MissionController.class.getName()).log(
                                     Level.INFO, null, e
                             );
                             showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
@@ -157,7 +157,7 @@ public class AssociationsController implements Initializable {
                             AssociationService.getInstace().update(current);
                         } catch (SQLException e) {
                             Logger.getLogger(
-                                    AssociationsController.class.getName()).log(
+                                    MissionController.class.getName()).log(
                                     Level.INFO, null, e
                             );
                             showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
@@ -194,7 +194,7 @@ public class AssociationsController implements Initializable {
                                 showDialog(Alert.AlertType.CONFIRMATION, "", "", "Association supprimée !!");
                             } catch (SQLException e) {
                                 Logger.getLogger(
-                                        AssociationsController.class.getName()).log(
+                                        MissionController.class.getName()).log(
                                         Level.INFO, null, e
                                 );
                                 showDialog(Alert.AlertType.ERROR, "Suppression échoué", "Raison : Reference", "Domaine ne peut pas étre supprimé!");
@@ -230,7 +230,7 @@ public class AssociationsController implements Initializable {
                         // TODO : Implement a print functionality using desktop.print()
                     } catch (Exception e) {
                         Logger.getLogger(
-                                AssociationsController.class.getName()).log(
+                                MissionController.class.getName()).log(
                                 Level.SEVERE, null, e
                         );
                         Alert connAlert = new Alert(Alert.AlertType.WARNING);
@@ -264,7 +264,7 @@ public class AssociationsController implements Initializable {
                             tabPane.getTabs().add(tab);
                         } catch (IOException e) {
                             Logger.getLogger(
-                                    AssociationsController.class.getName()).log(
+                                    MissionController.class.getName()).log(
                                     Level.WARNING, null, e
                             );
                             e.printStackTrace();
@@ -297,7 +297,7 @@ public class AssociationsController implements Initializable {
                 });
             } catch (IOException ex) {
                 Logger.getLogger(
-                        AssociationsController.class.getName()).log(
+                        MissionController.class.getName()).log(
                         Level.WARNING, null, e
                 );
                 ex.printStackTrace();
