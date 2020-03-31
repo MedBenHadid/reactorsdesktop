@@ -2,7 +2,8 @@ package Packages.Mohamed.Scenes;
 
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Models.Membership;
-import Packages.Chihab.Scenes.AssociationsController;
+// import commented by nasri because you can't import Packages.Chihab.Scenes.AssociationProfileController
+//import Packages.Chihab.Scenes.AssociationsController;
 import Packages.Chihab.Services.MembershipService;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
@@ -150,10 +151,11 @@ public class MissionProfileController implements Initializable {
                     file.deleteOnExit();
                 }
             } catch (Exception e) {
-                Logger.getLogger(
-                        AssociationsController.class.getName()).log(
-                        Level.SEVERE, null, e
-                );
+                // import commented by nasri because you can't import Packages.Chihab.Scenes.AssociationProfileController
+//                Logger.getLogger(
+//                        AssociationsController.class.getName()).log(
+//                        Level.SEVERE, null, e
+//                );
                 Alert connAlert = new Alert(Alert.AlertType.WARNING);
                 connAlert.setContentText("Error whilst fetching " + a.getPieceJustificatif() + " from FTP server");
                 connAlert.show();
