@@ -65,7 +65,7 @@ public class MissionCreateController implements Initializable {
         villeComboBox.setTooltip(new Tooltip());
         new AutoCompleteBox<String>(villeComboBox);
         try {
-            managerComboBox.getItems().addAll(FXCollections.observableArrayList((Collection<? extends String>) UserService.getInstace().listUsers().stream().filter(u -> !u.isAdmin()).map(User::getUsername).collect(Collectors.toCollection(ArrayList::new))));
+            managerComboBox.getItems().addAll(FXCollections.observableArrayList((Collection<? extends String>) UserService.getInstace().readAll().stream().filter(u -> !u.isAdmin()).map(User::getUsername).collect(Collectors.toCollection(ArrayList::new))));
             managerComboBox.setVisibleRowCount(6);
             managerComboBox.setTooltip(new Tooltip());
             new ComboBoxAutoComplete<>(managerComboBox);

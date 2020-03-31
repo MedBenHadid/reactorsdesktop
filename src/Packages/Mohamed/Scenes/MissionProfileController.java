@@ -2,7 +2,7 @@ package Packages.Mohamed.Scenes;
 
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Models.Membership;
-import Packages.Chihab.Scenes.AssociationsController;
+import Packages.Chihab.Scenes.AssociationsBackofficeController;
 import Packages.Chihab.Services.MembershipService;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
@@ -151,7 +151,7 @@ public class MissionProfileController implements Initializable {
                 }
             } catch (Exception e) {
                 Logger.getLogger(
-                        AssociationsController.class.getName()).log(
+                        MissionProfileController.class.getName()).log(
                         Level.SEVERE, null, e
                 );
                 Alert connAlert = new Alert(Alert.AlertType.WARNING);
