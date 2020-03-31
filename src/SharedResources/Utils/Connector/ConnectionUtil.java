@@ -15,7 +15,7 @@ public class ConnectionUtil {
     private ConnectionUtil() {
         String dbDriver = "jdbc:mysql:";
         String dbHost = "//localhost";
-        String dbName = "/pidb";
+        String dbName = "/reactorsdb";
         String dbUser = "root";
         String dbPort = ":3306";
         String dbPassword = "";
