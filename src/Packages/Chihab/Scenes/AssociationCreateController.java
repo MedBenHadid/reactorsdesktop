@@ -87,6 +87,7 @@ public class AssociationCreateController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Veuillez choisir la photo de l'association");
         SimpleBooleanProperty pieceValid = new SimpleBooleanProperty(false);
+        System.out.println("FUCK YOU GIT");
         pieceButton.setOnAction(e -> {
             pieceValid.set(false);
             File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
