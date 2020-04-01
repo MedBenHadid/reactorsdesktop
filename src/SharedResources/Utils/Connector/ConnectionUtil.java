@@ -8,6 +8,11 @@ import java.util.logging.Logger;
 public class ConnectionUtil {
 
     public Connection conn;
+
+    public Connection getConnection() {
+        return conn;
+    }
+
     private Statement statement;
 
     private static ConnectionUtil db;
@@ -15,14 +20,15 @@ public class ConnectionUtil {
     private ConnectionUtil() {
         String dbDriver = "jdbc:mysql:";
         String dbHost = "//localhost";
-        String dbName = "/reactorsdb";
+        String dbName = "/pidb";
+        String supportForUTC = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
         String dbUser = "root";
         String dbPort = ":3306";
         String dbPassword = "";
         String driver = "com.mysql.cj.jdbc.Driver";
         try {
             Class.forName(driver);
-            this.conn = DriverManager.getConnection(dbDriver + dbHost + dbPort + dbName, dbUser, dbPassword);
+            this.conn = DriverManager.getConnection(dbDriver + dbHost + dbPort + dbName+ supportForUTC, dbUser, dbPassword);
         }
         catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Connection Failed! Check output console");
