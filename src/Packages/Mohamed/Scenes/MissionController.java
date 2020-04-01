@@ -2,7 +2,7 @@ package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
 import Packages.Chihab.Models.Association;
-import Packages.Chihab.Scenes.AssociationProfileController;
+import Packages.Chihab.Scenes.AssociationProfileShowController;
 import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
@@ -255,7 +255,7 @@ public class MissionController implements Initializable {
                         tab.setText("Association : " + rowData.getNom());
                         tab.setClosable(true);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationProfile));
-                        AssociationProfileController controller = new AssociationProfileController(rowData);
+                        AssociationProfileShowController controller = new AssociationProfileShowController(rowData);
                         loader.setController(controller);
                         try {
                             ScrollPane scrollPane = loader.load();

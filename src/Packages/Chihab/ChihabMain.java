@@ -64,7 +64,7 @@ public class ChihabMain extends Application implements Initializable {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = load(getClass().getResource(URLScenes.associationCreate));
+        Parent root = load(getClass().getResource(URLScenes.associationSuperAdminDashboard));
         stage.initStyle(StageStyle.DECORATED);
         stage.setTitle("ReactorsFX : La bénévolat en desktop");
         // Louled ken fadetkom set them both to false

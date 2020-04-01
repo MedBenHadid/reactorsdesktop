@@ -1,7 +1,6 @@
 package Packages.Chihab.Scenes;
 
 import Main.Entities.User;
-import Main.Entities.UserSession;
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
@@ -90,7 +89,7 @@ public class AssociationsBackofficeController implements Initializable {
             e.printStackTrace();
         }
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        descCol.setCellValueFactory(new PropertyValueFactory<>("descript ion"));
         villeCol.setCellValueFactory(new PropertyValueFactory<>("ville"));
         managerCol.setCellValueFactory(new PropertyValueFactory<>("managerUserName"));
         domaineCol.setCellValueFactory(new PropertyValueFactory<>("domaineNom"));

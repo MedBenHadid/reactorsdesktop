@@ -13,17 +13,14 @@ public class URLScenes {
     // Chihab
     final private static String chihab = "/Packages/Chihab/Scenes/";
     // Association
-    final public static String associationSuperAdminDashboard = chihab + "Mission.fxml";
-    final public static String associationProfile = chihab + "MissionProfile.fxml";
-    final public static String associationCreate = chihab + "MissionCreate.fxml";
+    final public static String associationSuperAdminDashboard = chihab + "AssociationsBackoffice.fxml";
+    final public static String associationProfile = chihab + "AssociationProfileShow.fxml";
+    final public static String associationCreate = chihab + "AssociationCreate.fxml";
     // Memberships
     final public static String addMembershipSelectUSer = chihab + "MembershipCreate.fxml";
     // Category
     final public static String domaines = chihab + "Domaines.fxml";
-    // User
-    //
-    //
-    // Chihab
+    // Mohamed
     final private static String med= "/Packages/Mohamed/Controller/";
     // Association
     final public static String missionDashbord = med + "Missions.fxml";

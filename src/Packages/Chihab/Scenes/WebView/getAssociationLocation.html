@@ -53,6 +53,9 @@
                     $('#emplacement_lng').val(evt.latLng.lng());
                     document.getElementById('lat_association').value = evt.latLng.lat();
                     document.getElementById('lng_association').value = evt.latLng.lng();
+                    window.association.setLat(evt.latLng.lat());
+                    window.association.setLon(evt.latLng.lng());
+
                 });
             }, function () {
                 //handleLocationError(true, infoWindow, map.getCenter());
@@ -81,6 +84,8 @@
             google.maps.event.addListener(marker, 'dragend', function (evt) {
                 document.getElementById('lat_association').value = evt.latLng.lat();
                 document.getElementById('lng_association').value = evt.latLng.lng();
+                window.association.setLat(evt.latLng.lat());
+                window.association.setLon(evt.latLng.lng());
                 //document.getElementById('current').innerHTML = '<p>Marker dropped: Current Lat: ' + evt.latLng.lat().toFixed(3) + ' Current Lng: ' + evt.latLng.lng().toFixed(3) + '</p>';
             });
             alert('Error: The Geolocation service failed.');
