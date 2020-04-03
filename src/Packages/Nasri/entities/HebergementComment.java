@@ -1,4 +1,4 @@
-package Packages.Nasri.models;
+package Packages.Nasri.entities;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

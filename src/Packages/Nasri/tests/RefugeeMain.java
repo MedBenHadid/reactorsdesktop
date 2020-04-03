@@ -1,27 +1,40 @@
 package Packages.Nasri.tests;
 
-import Packages.Nasri.enums.CivilStatus;
-import Packages.Nasri.enums.HebergementStatus;
-import Packages.Nasri.models.HebergementComment;
-import Packages.Nasri.models.HebergementOffer;
-import Packages.Nasri.models.HebergementRequest;
-import Packages.Nasri.services.ServiceHebergementComment;
-import Packages.Nasri.services.ServiceHebergementOffer;
-import Packages.Nasri.services.ServiceHebergementRequest;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-import java.time.LocalDateTime;
+import java.net.URL;
 
-public class RefugeeMain {
+public class RefugeeMain extends Application {
+    private URL mainAdminScene = getClass().getResource("/Packages/Nasri/ui/views/admin/Main.fxml");
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/Packages/Nasri/ui/views/admin/Main.fxml"));
+
+        Scene scene = new Scene(root);
+
+        primaryStage.setScene(scene);
+
+        primaryStage.setMaximized(true);
+
+        primaryStage.show();
+    }
+
+    @Override
+    public void init() throws Exception {
+        super.init();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+    }
+
     public static void main(String[] args) {
-        HebergementComment hebergementComment =
-                new HebergementComment(2, 73, 10, "blahx", LocalDateTime.now());
-
-        ServiceHebergementComment sHebCom = new ServiceHebergementComment();
-        sHebCom.add(hebergementComment);
-        sHebCom.add(hebergementComment);
-
-        for (HebergementComment heberComment : sHebCom.get()) {
-            System.out.println(heberComment);
-        }
+        launch(args);
     }
 }

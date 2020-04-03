@@ -2,8 +2,7 @@ package Packages.Nasri.services;
 
 import Packages.Nasri.enums.CivilStatus;
 import Packages.Nasri.enums.HebergementStatus;
-import Packages.Nasri.models.HebergementOffer;
-import Packages.Nasri.models.HebergementRequest;
+import Packages.Nasri.entities.HebergementRequest;
 import Packages.Nasri.utils.Helpers;
 import SharedResources.Utils.Connector.ConnectionUtil;
 

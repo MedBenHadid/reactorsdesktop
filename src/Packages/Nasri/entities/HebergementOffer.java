@@ -1,4 +1,4 @@
-package Packages.Nasri.models;
+package Packages.Nasri.entities;
 
 import Packages.Nasri.enums.HebergementStatus;
 
