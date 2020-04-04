@@ -1,5 +1,6 @@
 package Packages.Nasri.tests;
 
+import SharedResources.URLScenes;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,17 +10,19 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 public class RefugeeMain extends Application {
-    private URL mainAdminScene = getClass().getResource("/Packages/Nasri/ui/views/admin/Main.fxml");
+    private final URL scene = getClass().getResource(URLScenes.refugeesUserUpdateHebergementRequestScene);
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/Packages/Nasri/ui/views/admin/Main.fxml"));
+        Parent root = FXMLLoader.load(scene);
 
         Scene scene = new Scene(root);
 
         primaryStage.setScene(scene);
 
-        primaryStage.setMaximized(true);
+        primaryStage.centerOnScreen();
+        primaryStage.setResizable(false);
 
         primaryStage.show();
     }

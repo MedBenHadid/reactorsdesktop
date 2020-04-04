@@ -31,4 +31,28 @@ public class URLScenes {
     //
     //
 
+
+
+
+
+
+
+    // Nasri - Refugees
+    final public static String refugeesDashboardMainScene = "/Packages/Nasri/ui/views/admin/Main.fxml";
+    final public static String refugeesAdminAddHebergementOfferScene
+            = "/Packages/Nasri/ui/views/admin/AddHebergementOffer.fxml";
+    final public static String refugeesAdminUpdateHebergementOfferScene
+            = "/Packages/Nasri/ui/views/admin/UpdateHebergementOffer.fxml";
+    final public static String refugeesAdminAddHebergementRequestScene
+            = "/Packages/Nasri/ui/views/admin/AddHebergementRequest.fxml";
+    final public static String refugeesAdminUpdateHebergementRequestScene
+            = "/Packages/Nasri/ui/views/admin/UpdateHebergementRequest.fxml";
+    final public static String refugeesUserAddHebergementOfferScene
+            = "/Packages/Nasri/ui/views/user/AddHebergementOffer.fxml";
+    final public static String refugeesUserUpdateHebergementOfferScene
+            = "/Packages/Nasri/ui/views/user/UpdateHebergementOffer.fxml";
+    final public static String refugeesUserAddHebergementRequestScene
+            = "/Packages/Nasri/ui/views/user/AddHebergementRequest.fxml";
+    final public static String refugeesUserUpdateHebergementRequestScene
+            = "/Packages/Nasri/ui/views/user/UpdateHebergementRequest.fxml";
 }

@@ -1,0 +1,31 @@
+.root {
+    -fx-background-color: #F0F4F8;
+    -fx-font-size: 16px;
+}
+
+#titleContainer {
+    -fx-alignment: center;
+    -fx-padding: 12px;
+}
+
+#mainTitleLabel {
+    -fx-text-fill: #044E54;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+#titleLabel {
+    -fx-text-fill: #044E54;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.inputLabel {
+
+}
+
+.imageContainer {
+    -fx-border-color: gray;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+}

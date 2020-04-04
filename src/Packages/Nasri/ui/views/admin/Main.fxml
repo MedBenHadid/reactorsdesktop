@@ -8,23 +8,27 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1025.0" prefWidth="1746.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1025.0" prefWidth="1746.0" styleClass="root" stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TabPane layoutX="200.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane layoutX="-2.0" prefHeight="1025.0" prefWidth="1795.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab text="Offres d'hébérgements">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="441.0" layoutY="38.0" mnemonicParsing="false" text="Rechercher" />
-                        <TextField layoutX="14.0" layoutY="38.0" prefHeight="25.0" prefWidth="420.0" />
-                        <Label layoutX="14.0" layoutY="14.0" text="Liste des offres d'hébérgements" />
-                        <Button layoutX="1592.0" layoutY="38.0" mnemonicParsing="false" text="Ajouter" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="38.0" />
-                        <Button layoutX="1666.0" layoutY="38.0" mnemonicParsing="false" text="Rafraichir" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="38.0" />
-                        <TableView layoutX="14.0" layoutY="79.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="79.0">
+                        <HBox id="titleContainer" layoutX="-47.0" layoutY="17.0" prefHeight="27.0" prefWidth="1746.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label id="titleLabel" text="Liste des offres d'hébérgements" />
+                           </children>
+                        </HBox>
+                        <Button layoutX="466.0" layoutY="91.0" mnemonicParsing="false" text="Rechercher" />
+                        <TextField layoutX="37.0" layoutY="91.0" prefHeight="25.0" prefWidth="420.0" />
+                        <Button layoutX="1535.0" layoutY="81.0" mnemonicParsing="false" text="Ajouter" AnchorPane.rightAnchor="137.0" AnchorPane.topAnchor="81.0" />
+                        <Button layoutX="1620.0" layoutY="81.0" mnemonicParsing="false" text="Rafraichir" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="81.0" />
+                        <TableView layoutX="37.0" layoutY="153.0" prefHeight="606.0" prefWidth="1495.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="153.0">
                           <columns>
-                            <TableColumn prefWidth="38.0" text="Id" />
                             <TableColumn prefWidth="154.0" text="Nom d'utilisateur" />
                               <TableColumn prefWidth="154.0" text="Description" />
                               <TableColumn prefWidth="222.0" text="Governorat" />
@@ -34,6 +38,7 @@
                               <TableColumn prefWidth="170.0" text="Téléphone" />
                               <TableColumn prefWidth="242.0" text="Image" />
                               <TableColumn prefWidth="296.0" text="Actions" />
+                            <TableColumn prefWidth="38.0" text="Id" />
                           </columns>
                         </TableView>
                      </children></AnchorPane>
