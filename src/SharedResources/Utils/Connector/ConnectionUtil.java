@@ -20,7 +20,7 @@ public class ConnectionUtil {
     private ConnectionUtil() {
         String dbDriver = "jdbc:mysql:";
         String dbHost = "//localhost";
-        String dbName = "/pidb";
+        String dbName = "/reactorsdb";
         String supportForUTC = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
         String dbUser = "root";
         String dbPort = ":3306";

@@ -18,8 +18,9 @@ public class RequeteService implements IService<Requete> {
     @Override
     public void add(Requete requete) {
         try {
-            String query = "INSERT INTO requete (Sujet, Description, DernierMAJ, Statut, Statut, Type ) VALUES ('" +
-                    requete.getSujet()+"','" + requete.getDescription()+"','" +requete.getDerniermaj()+"','" +requete.getStatut()+"','" + requete.getType() + "')";
+            String query = "INSERT INTO requete (user_id,Sujet, Description, DernierMAJ, Statut, Type ) " +
+                    " VALUES ('" + requete.getUser() + "','"  + requete.getSujet()+ "','" + requete.getDescription() + "','"
+                    +requete.getDerniermaj()+"','" +requete.getStatut()+"','" + requete.getType() + "')";
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
             System.out.println("Requete added !");

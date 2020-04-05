@@ -15,8 +15,8 @@ public class Requete {
 
     public Requete() { }
 
-    public Requete(int id, int rponse, String sujet, String description, Date derniermaj, int statut, int type) {
-        this.id = id;
+    public Requete( int user, int rponse, String sujet, String description, Date derniermaj, int statut, int type) {
+        this.user = user;
         this.rponse = rponse;
         this.sujet = sujet;
         this.description = description;
