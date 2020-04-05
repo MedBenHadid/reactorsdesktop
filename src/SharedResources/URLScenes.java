@@ -47,6 +47,7 @@ public class URLScenes {
             = "/Packages/Nasri/ui/views/admin/AddHebergementRequest.fxml";
     final public static String refugeesAdminUpdateHebergementRequestScene
             = "/Packages/Nasri/ui/views/admin/UpdateHebergementRequest.fxml";
+    final public static String refugeesUserMainScene = "/Packages/Nasri/ui/views/user/Main.fxml";
     final public static String refugeesUserAddHebergementOfferScene
             = "/Packages/Nasri/ui/views/user/AddHebergementOffer.fxml";
     final public static String refugeesUserUpdateHebergementOfferScene
