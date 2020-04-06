@@ -74,8 +74,8 @@ public class ServiceHebergementOffer implements IService<HebergementOffer> {
     }
 
     @Override
-    public List<HebergementOffer> get() {
-        List<HebergementOffer> list = new ArrayList<>();
+    public ArrayList<HebergementOffer> get() {
+        ArrayList<HebergementOffer> list = new ArrayList<>();
 
         try {
             String query = "SELECT * FROM hebergement";

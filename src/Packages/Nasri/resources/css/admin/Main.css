@@ -29,3 +29,25 @@
     -fx-border-width: 1;
     -fx-border-style: solid;
 }
+
+.deleteButton, .updateButton {
+    -fx-padding: 6px;
+    -fx-border-radius: 10px;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+}
+
+
+.deleteButton {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    /*-fx-border-color: red;*/
+}
+
+.updateButton {
+    -fx-text-fill: #1DB386;
+    /*-fx-border-color: #1DB386;*/
+}

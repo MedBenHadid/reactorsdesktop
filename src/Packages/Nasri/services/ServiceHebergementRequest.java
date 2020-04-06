@@ -88,30 +88,14 @@ public class ServiceHebergementRequest implements IService<HebergementRequest> {
     }
 
     @Override
-    public List<HebergementRequest> get() {
-        List<HebergementRequest> list = new ArrayList<>();
+    public ArrayList<HebergementRequest> get() {
+        ArrayList<HebergementRequest> list = new ArrayList<>();
 
         try {
             String query = "SELECT * FROM hebergement_request";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-//                list.add(new HebergementRequest(
-//                        resultSet.getInt(1),
-//                        resultSet.getInt(2),
-//                        resultSet.getString(3),
-//                        resultSet.getString(4),
-//                        CivilStatus.values()[resultSet.getInt(5)],
-//                        resultSet.getString(6),
-//                        Helpers.convertDateToLocalDateTime(resultSet.getDate(7),
-//                        resultSet.getString(8),
-//                        CivilStatus.values()[resultSet.getInt(9)],
-//                        resultSet.getInt(10),
-//                        resultSet.getString(11),
-//                        resultSet.getString(12),
-//                        Helpers.convertDateToLocalDateTime(resultSet.getDate(13)) ,
-//                        resultSet.getBoolean(14)
-//                ));
                 list.add(new HebergementRequest(
                         resultSet.getInt(1),
                         resultSet.getInt(2),

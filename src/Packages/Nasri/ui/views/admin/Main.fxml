@@ -4,13 +4,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1025.0" prefWidth="1746.0" styleClass="root" stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1025.0" prefWidth="1746.0" styleClass="root" stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Packages.Nasri.ui.controllers.admin.MainController">
    <children>
       <TabPane layoutX="-2.0" prefHeight="1025.0" prefWidth="1795.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
@@ -23,24 +22,11 @@
                               <Label id="titleLabel" text="Liste des offres d'hébérgements" />
                            </children>
                         </HBox>
-                        <Button layoutX="466.0" layoutY="91.0" mnemonicParsing="false" text="Rechercher" />
-                        <TextField layoutX="37.0" layoutY="91.0" prefHeight="25.0" prefWidth="420.0" />
-                        <Button layoutX="1535.0" layoutY="81.0" mnemonicParsing="false" text="Ajouter" AnchorPane.rightAnchor="137.0" AnchorPane.topAnchor="81.0" />
-                        <Button layoutX="1620.0" layoutY="81.0" mnemonicParsing="false" text="Rafraichir" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="81.0" />
-                        <TableView layoutX="37.0" layoutY="153.0" prefHeight="606.0" prefWidth="1495.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="153.0">
-                          <columns>
-                            <TableColumn prefWidth="154.0" text="Nom d'utilisateur" />
-                              <TableColumn prefWidth="154.0" text="Description" />
-                              <TableColumn prefWidth="222.0" text="Governorat" />
-                              <TableColumn prefWidth="139.0" text="Nombre de chambres" />
-                              <TableColumn prefWidth="130.0" text="Durée (mois)" />
-                              <TableColumn prefWidth="172.0" text="Etat" />
-                              <TableColumn prefWidth="170.0" text="Téléphone" />
-                              <TableColumn prefWidth="242.0" text="Image" />
-                              <TableColumn prefWidth="296.0" text="Actions" />
-                            <TableColumn prefWidth="38.0" text="Id" />
-                          </columns>
-                        </TableView>
+                        <Button layoutX="466.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleSearchHebergementOffersButtonAction" text="Rechercher" />
+                        <TextField fx:id="searchInputHebergementOffer" layoutX="37.0" layoutY="91.0" prefHeight="25.0" prefWidth="420.0" AnchorPane.leftAnchor="37.0" AnchorPane.topAnchor="91.0" />
+                        <Button layoutX="1535.0" layoutY="81.0" mnemonicParsing="false" onAction="#handleAddHebergementAddButtonAction" text="Ajouter" AnchorPane.rightAnchor="137.0" AnchorPane.topAnchor="91.0" />
+                        <Button layoutX="1620.0" layoutY="81.0" mnemonicParsing="false" onAction="#handleRefreshHebergementOffersButtonAction" text="Rafraichir" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="91.0" />
+                        <TableView fx:id="hebergementOffersTable" layoutX="37.0" layoutY="153.0" prefHeight="606.0" prefWidth="1495.0" styleClass="offersTable" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="153.0" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -48,27 +34,16 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="441.0" layoutY="38.0" mnemonicParsing="false" text="Rechercher" />
-                        <TextField layoutX="14.0" layoutY="38.0" prefHeight="25.0" prefWidth="420.0" />
-                        <Label layoutX="14.0" layoutY="14.0" text="Liste des demandes d'hébérgements" />
-                        <Button mnemonicParsing="false" text="Ajouter" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="38.0" />
-                        <Button layoutX="1666.0" layoutY="38.0" mnemonicParsing="false" text="Rafraichir" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="38.0" />
-                        <TableView layoutX="14.0" layoutY="79.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="79.0">
-                           <columns>
-                              <TableColumn prefWidth="38.0" text="Id" />
-                              <TableColumn prefWidth="154.0" text="Nom d'utilisateur" />
-                              <TableColumn prefWidth="154.0" text="Nom de demandeur" />
-                              <TableColumn prefWidth="146.0" text="Description" />
-                              <TableColumn prefWidth="141.0" text="Region" />
-                              <TableColumn prefWidth="151.0" text="Pays d'origine" />
-                              <TableColumn prefWidth="155.0" text="Data d'arrivée" />
-                              <TableColumn prefWidth="109.0" text="Etat" />
-                              <TableColumn prefWidth="170.0" text="Numéro de passport" />
-                              <TableColumn prefWidth="136.0" text="Etat Civil" />
-                              <TableColumn prefWidth="136.0" text="Téléphone" />
-                              <TableColumn prefWidth="227.0" text="Actions" />
-                           </columns>
-                        </TableView>
+                        <HBox id="titleContainer" prefHeight="27.0" prefWidth="1746.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <children>
+                              <Label id="titleLabel" text="Liste des demandes d'hébérgements" />
+                           </children>
+                        </HBox>
+                        <Button layoutX="466.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleSearchHebergementRequestsButtonAction" text="Rechercher" />
+                        <TextField fx:id="searchInputHebergementRequest" layoutX="14.0" layoutY="38.0" prefHeight="25.0" prefWidth="420.0" AnchorPane.leftAnchor="37.0" AnchorPane.topAnchor="91.0" />
+                        <Button layoutX="1534.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleAddHebergementRequestButtonAction" text="Ajouter" AnchorPane.rightAnchor="138.0" AnchorPane.topAnchor="91.0" />
+                        <Button layoutX="1585.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleRefreshHebergementRequestsButtonAction" text="Rafraichir" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="91.0" />
+                        <TableView fx:id="hebergementRequestsTable" layoutX="53.0" layoutY="178.0" prefHeight="628.0" prefWidth="1518.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="153.0" />
                      </children>
                   </AnchorPane>
                </content>

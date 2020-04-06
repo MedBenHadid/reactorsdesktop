@@ -63,8 +63,8 @@ public class ServiceHebergementComment implements IService<HebergementComment> {
     }
 
     @Override
-    public List<HebergementComment> get() {
-        List<HebergementComment> list = new ArrayList<>();
+    public ArrayList<HebergementComment> get() {
+        ArrayList<HebergementComment> list = new ArrayList<>();
 
         try {
             String query = "SELECT * FROM comment";
