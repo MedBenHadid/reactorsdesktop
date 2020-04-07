@@ -15,7 +15,16 @@ public class Requete {
 
     public Requete() { }
 
-    public Requete( int user, int rponse, String sujet, String description, Date derniermaj, int statut, int type) {
+    public Requete(int id, String sujet, String description, Date derniermaj, int statut, int type) {
+        this.id = id;
+        this.sujet = sujet;
+        this.description = description;
+        this.derniermaj = derniermaj;
+        this.statut = statut;
+        this.type = type;
+    }
+
+    public Requete(int user, int rponse, String sujet, String description, Date derniermaj, int statut, int type) {
         this.user = user;
         this.rponse = rponse;
         this.sujet = sujet;
@@ -25,7 +34,7 @@ public class Requete {
         this.type = type;
     }
 
-    public Requete(int id, int user, int rponse, String sujet, String description, Date derniermaj, int statut, int type) {
+    public Requete(int id, int user, int rponse, String sujet,  Date derniermaj, int statut, int type, String description) {
         this.id = id;
         this.user = user;
         this.rponse = rponse;

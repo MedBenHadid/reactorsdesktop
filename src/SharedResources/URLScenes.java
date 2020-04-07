@@ -30,5 +30,7 @@ public class URLScenes {
     //
     //
     //
+    //ramy stuff
+    final public static String Requetefxml = "/Packages/Ramy/views/Requete.fxml" ;
 
 }

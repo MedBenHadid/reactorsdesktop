@@ -1,5 +1,6 @@
 package Packages.Ramy.Services;
 
+
 import SharedResources.Utils.Connector.ConnectionUtil ;
 import Packages.Ramy.Models.Requete;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class RequeteService implements IService<Requete> {
     Connection connection = ConnectionUtil.conDB().getConnection();
+
 
 
     @Override
@@ -73,10 +75,10 @@ public class RequeteService implements IService<Requete> {
                         resultSet.getInt(2),
                         resultSet.getInt(3),
                         resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getDate(6),
+                        resultSet.getDate(5),
+                        resultSet.getInt(6),
                         resultSet.getInt(7),
-                        resultSet.getInt(8)));
+                        resultSet.getString(8)));
             }
 
         } catch (SQLException ex) {
