@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="545.0" styleClass="root" stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="545.0" styleClass="root" stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Packages.Nasri.ui.controllers.admin.AddHebergementOfferControlller">
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
    </padding>
@@ -20,14 +20,14 @@
       <Label layoutX="14.0" layoutY="264.0" prefHeight="17.0" prefWidth="116.0" styleClass="inputLabel" text="Durée (mois):" />
       <Label layoutX="14.0" layoutY="224.0" prefWidth="126.0" styleClass="inputLabel" text="Governorat: " />
       <Label layoutX="15.0" layoutY="304.0" styleClass="inputLabel" text="Téléphone: " />
-      <TextField layoutX="218.0" layoutY="70.0" prefHeight="25.0" prefWidth="310.0" />
-      <TextArea layoutX="218.0" layoutY="110.0" prefHeight="65.0" prefWidth="310.0" />
-      <TextField layoutX="218.0" layoutY="178.0" prefHeight="25.0" prefWidth="310.0" />
-      <TextField layoutX="218.0" layoutY="218.0" prefHeight="25.0" prefWidth="310.0" />
-      <TextField layoutX="218.0" layoutY="258.0" prefHeight="25.0" prefWidth="310.0" />
-      <TextField layoutX="218.0" layoutY="298.0" prefHeight="25.0" prefWidth="310.0" />
-      <Button layoutX="11.0" layoutY="392.0" mnemonicParsing="false" text="Ajouter" />
-      <Button layoutX="91.0" layoutY="392.0" mnemonicParsing="false" text="Réinitialiser" />
-      <Button layoutX="218.0" layoutY="340.0" mnemonicParsing="false" text="Parcourir" />
+      <TextField fx:id="userIdInput" layoutX="218.0" layoutY="70.0" prefHeight="25.0" prefWidth="310.0" promptText="userIdInput" />
+      <TextArea fx:id="descriptionInput" layoutX="218.0" layoutY="110.0" prefHeight="65.0" prefWidth="310.0" promptText="descriptionInput" />
+      <TextField fx:id="numberRoomsInput" layoutX="218.0" layoutY="178.0" prefHeight="25.0" prefWidth="310.0" promptText="numberRooms" />
+      <TextField fx:id="governoratInput" layoutX="218.0" layoutY="218.0" prefHeight="25.0" prefWidth="310.0" promptText="governoratInput" />
+      <TextField fx:id="durationInput" layoutX="218.0" layoutY="258.0" prefHeight="25.0" prefWidth="310.0" promptText="durationInput" />
+      <TextField fx:id="telephoneInput" layoutX="218.0" layoutY="298.0" prefHeight="25.0" prefWidth="310.0" promptText="telephoneInput" />
+      <Button layoutX="11.0" layoutY="392.0" mnemonicParsing="false" onAction="#addButton" text="Ajouter" />
+      <Button layoutX="91.0" layoutY="392.0" mnemonicParsing="false" onAction="#resetButton" text="Réinitialiser" />
+      <Button layoutX="218.0" layoutY="340.0" mnemonicParsing="false" onAction="#brownForPictureButton" text="Parcourir" />
    </children>
 </AnchorPane>

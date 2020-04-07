@@ -10,7 +10,8 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 public class RefugeeMain extends Application {
-    private final URL scene = getClass().getResource(URLScenes.refugeesDashboardMainScene);
+//    private final URL scene = getClass().getResource(URLScenes.refugeesDashboardMainScene);
+private final URL scene = getClass().getResource(URLScenes.refugeesDashboardMainScene);
 
 
     @Override

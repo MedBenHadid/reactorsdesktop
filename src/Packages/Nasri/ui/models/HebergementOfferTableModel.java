@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HebergementOfferTableModel {
+    private int id;
     private int userId;
     private String description;
     private String governorat;
@@ -20,6 +21,7 @@ public class HebergementOfferTableModel {
     public HebergementOfferTableModel() {}
 
     private HebergementOfferTableModel(HebergementOffer entity) {
+        this.id = entity.getId();
         this.userId = entity.getId();
         this.description = entity.getDescription();
         this.governorat = entity.getGovernorat();
@@ -37,6 +39,14 @@ public class HebergementOfferTableModel {
         }
 
         return models;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUserId() {

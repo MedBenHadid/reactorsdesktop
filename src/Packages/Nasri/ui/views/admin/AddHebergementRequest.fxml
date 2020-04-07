@@ -9,7 +9,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="545.0" styleClass="root" stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="545.0" styleClass="root" stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Packages.Nasri.ui.controllers.admin.AddHebergementRequestController">
     <padding>
         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
     </padding>
@@ -20,24 +20,24 @@
         <Label layoutX="13.0" layoutY="228.0" styleClass="inputLabel" text="Region:" />
         <Label layoutX="12.0" layoutY="437.0" styleClass="inputLabel" text="Date d'arrivée" />
         <Label layoutX="14.0" layoutY="272.0" styleClass="inputLabel" text="Pays d'origine: " />
-        <TextField layoutX="218.0" layoutY="70.0" prefHeight="25.0" prefWidth="310.0" />
-        <TextArea layoutX="218.0" layoutY="152.0" prefHeight="65.0" prefWidth="310.0" />
-        <TextField layoutX="218.0" layoutY="222.0" prefHeight="25.0" prefWidth="310.0" />
-        <TextField layoutX="218.0" layoutY="263.0" prefHeight="25.0" prefWidth="310.0" />
-        <TextField layoutX="218.0" layoutY="305.0" prefHeight="25.0" prefWidth="310.0" />
-        <Button layoutX="11.0" layoutY="573.0" mnemonicParsing="false" text="Ajouter" />
-        <Button layoutX="90.0" layoutY="573.0" mnemonicParsing="false" text="Réinitialiser" />
+        <TextField fx:id="userIdInput" layoutX="218.0" layoutY="70.0" prefHeight="25.0" prefWidth="310.0" promptText="userIdInput" />
+        <TextArea fx:id="descriptionInput" layoutX="218.0" layoutY="152.0" prefHeight="65.0" prefWidth="310.0" promptText="descriptionInput" />
+        <TextField fx:id="regionInput" layoutX="218.0" layoutY="222.0" prefHeight="25.0" prefWidth="310.0" promptText="regionInput" />
+        <TextField fx:id="nativeCountryInput" layoutX="218.0" layoutY="263.0" prefHeight="25.0" prefWidth="310.0" promptText="nativeCountryInput" />
+        <TextField fx:id="passportInput" layoutX="218.0" layoutY="305.0" prefHeight="25.0" prefWidth="310.0" promptText="passportInput" />
+        <Button layoutX="11.0" layoutY="573.0" mnemonicParsing="false" onAction="#addButton" text="Ajouter" />
+        <Button layoutX="90.0" layoutY="573.0" mnemonicParsing="false" onAction="#resetButton" text="Réinitialiser" />
       <Label layoutX="12.0" layoutY="311.0" styleClass="inputLabel" text="Numero de passport : " />
       <Label layoutX="12.0" layoutY="353.0" styleClass="inputLabel" text="Etat civil: " />
       <Label layoutX="13.0" layoutY="395.0" styleClass="inputLabel" text="Nombre d'enfants" />
       <Label layoutX="14.0" layoutY="117.0" styleClass="inputLabel" text="Nom de demandeur: " />
       <Label layoutX="13.0" layoutY="479.0" styleClass="inputLabel" text="Téléphone: " />
       <Label layoutX="14.0" layoutY="522.0" styleClass="inputLabel" text="Anonymat: " />
-      <TextField layoutX="218.0" layoutY="111.0" prefHeight="25.0" prefWidth="310.0" />
-      <TextField layoutX="218.0" layoutY="389.0" prefHeight="25.0" prefWidth="310.0" />
-      <TextField layoutX="218.0" layoutY="473.0" prefHeight="25.0" prefWidth="310.0" />
-      <ComboBox layoutX="218.0" layoutY="347.0" prefHeight="37.0" prefWidth="310.0" />
-      <ComboBox layoutX="218.0" layoutY="516.0" prefHeight="37.0" prefWidth="310.0" />
-      <DatePicker layoutX="218.0" layoutY="431.0" prefWidth="310.0" />
+      <TextField fx:id="nameInput" layoutX="218.0" layoutY="111.0" prefHeight="25.0" prefWidth="310.0" promptText="nameInput" />
+      <TextField fx:id="numberChildrenInput" layoutX="218.0" layoutY="389.0" prefHeight="25.0" prefWidth="310.0" promptText="numberChildrenInput" />
+      <TextField fx:id="telephoneInput" layoutX="218.0" layoutY="473.0" prefHeight="25.0" prefWidth="310.0" promptText="telephoneInput" />
+      <ComboBox fx:id="civilStatusInput" layoutX="218.0" layoutY="347.0" prefHeight="37.0" prefWidth="310.0" promptText="civilStatusInput" />
+      <ComboBox fx:id="anonymityInput" layoutX="218.0" layoutY="516.0" prefHeight="37.0" prefWidth="310.0" promptText="anynomityInput" />
+      <DatePicker fx:id="arrivalDateInput" layoutX="218.0" layoutY="431.0" prefWidth="310.0" promptText="arrivalDateInput" />
     </children>
 </AnchorPane>

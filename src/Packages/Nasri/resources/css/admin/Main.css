@@ -31,6 +31,7 @@
 }
 
 .deleteButton, .updateButton {
+    -fx-spacing: 6px;
     -fx-padding: 6px;
     -fx-border-radius: 10px;
 }
@@ -41,13 +42,9 @@
 
 
 .deleteButton {
-    -fx-background-color: red;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    /*-fx-border-color: red;*/
+    -fx-text-fill: red;
 }
 
 .updateButton {
     -fx-text-fill: #1DB386;
-    /*-fx-border-color: #1DB386;*/
 }

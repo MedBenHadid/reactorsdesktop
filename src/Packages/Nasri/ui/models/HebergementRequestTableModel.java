@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class HebergementRequestTableModel {
+    private int id;
     private int userId;
     private String name;
     private String description;
@@ -20,6 +21,7 @@ public class HebergementRequestTableModel {
     public HebergementRequestTableModel() {}
 
     public HebergementRequestTableModel(HebergementRequest entity) {
+        this.id = entity.getId();
         this.userId = entity.getUserId();
         this.name = entity.getName();
         this.description = entity.getDescription();
@@ -39,6 +41,14 @@ public class HebergementRequestTableModel {
         }
 
         return models;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUserId() {

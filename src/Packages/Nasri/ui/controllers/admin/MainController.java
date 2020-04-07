@@ -4,19 +4,27 @@ import Packages.Nasri.services.ServiceHebergementOffer;
 import Packages.Nasri.services.ServiceHebergementRequest;
 import Packages.Nasri.ui.models.HebergementOfferTableModel;
 import Packages.Nasri.ui.models.HebergementRequestTableModel;
+import SharedResources.URLScenes;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -167,7 +175,13 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    protected void handleAddHebergementAddButtonAction() {
+    protected void handleAddHebergementOfferButtonAction() throws IOException {
+        URL url = getClass().getResource(URLScenes.refugeesAdminAddHebergementOfferScene);
+        Parent root = FXMLLoader.load(url);
+        Scene scene = new Scene(root);
+        Stage addHebergementOfferStage = new Stage();
+        addHebergementOfferStage.setScene(scene);
+        addHebergementOfferStage.show();
         System.out.println("handleAddHebergementAddButtonAction clicked");
     }
 
@@ -175,7 +189,6 @@ public class MainController implements Initializable {
     protected void handleRefreshHebergementOffersButtonAction() {
         this.hebergementOffersTable.setItems(FXCollections.observableArrayList());
         this.loadOffersTable();
-        System.out.println("handleRefreshHebergementOffersButtonAction clicked");
     }
 
     @FXML
@@ -184,117 +197,147 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    protected void handleAddHebergementRequestButtonAction() {
-        System.out.println("handleAddHebergementRequestButtonAction clicked");
+    protected void handleAddHebergementRequestButtonAction() throws IOException {
+        URL url = getClass().getResource(URLScenes.refugeesAdminAddHebergementRequestScene);
+        Parent root = FXMLLoader.load(url);
+        Scene scene = new Scene(root);
+        Stage addHebergementRequestStage = new Stage();
+        addHebergementRequestStage.setScene(scene);
+        addHebergementRequestStage.show();
     }
 
     @FXML
     protected void handleRefreshHebergementRequestsButtonAction() {
         this.hebergementRequestsTable.setItems(FXCollections.observableArrayList());
         this.loadRequestsTable();
-        System.out.println("handleRefreshHebergementRequestsButtonAction clicked");
     }
 
     // code from: https://riptutorial.com/javafx/example/27946/add-button-to-tableview
     private void addButtonToOffersTable() {
-        TableColumn<HebergementOfferTableModel, Void> colBtn = new TableColumn("Actions");
+        // I can't fix why this method keeps adding everytime i hit refresh it keep adding a new column of Action buttons, even though i try to empty the table
+        // this is a hacky fix -- test on the number of column that shoudln't be > 8
+        if (hebergementOffersTable.getColumns().size() <= 8) {
+            TableColumn<HebergementOfferTableModel, Void> colBtn = new TableColumn("Actions");
 
-        Callback<TableColumn<HebergementOfferTableModel, Void>, TableCell<HebergementOfferTableModel, Void>> cellFactory
-                = new Callback<TableColumn<HebergementOfferTableModel, Void>, TableCell<HebergementOfferTableModel, Void>>() {
-            @Override
-            public TableCell<HebergementOfferTableModel, Void> call(final TableColumn<HebergementOfferTableModel, Void> param) {
-                final TableCell<HebergementOfferTableModel, Void> cell = new TableCell<HebergementOfferTableModel, Void>() {
+            Callback<TableColumn<HebergementOfferTableModel, Void>, TableCell<HebergementOfferTableModel, Void>> cellFactory
+                    = new Callback<TableColumn<HebergementOfferTableModel, Void>, TableCell<HebergementOfferTableModel, Void>>() {
+                @Override
+                public TableCell<HebergementOfferTableModel, Void> call(final TableColumn<HebergementOfferTableModel, Void> param) {
+                    final TableCell<HebergementOfferTableModel, Void> cell = new TableCell<HebergementOfferTableModel, Void>() {
 
-                    private final Button updateButton = new Button("Modifier");
+                        private final Button updateButton = new Button("Modifier");
 
-                    {
-                        updateButton.getStyleClass().add("updateButton");
-                        updateButton.setOnAction((ActionEvent event) -> {
-                            HebergementOfferTableModel data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data);
-                        });
-                    }
-
-                    private final Button deleteButton = new Button("Supprimer");
-
-                    {
-                        deleteButton.getStyleClass().add("deleteButton");
-                        deleteButton.setOnAction((ActionEvent event) -> {
-                            HebergementOfferTableModel data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data);
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            HBox buttonsContainer = new HBox();
-                            buttonsContainer.setSpacing(10);
-                            buttonsContainer.getChildren().addAll(updateButton, deleteButton);
-                            setGraphic(buttonsContainer);
+                        {
+                            updateButton.getStyleClass().add("updateButton");
+                            updateButton.setOnAction((ActionEvent event) -> {
+                                HebergementOfferTableModel data = getTableView().getItems().get(getIndex());
+                                System.out.println("selectedData: " + data.getId());
+                                //open updateOffer stage;
+                            });
                         }
-                    }
-                };
-                return cell;
-            }
-        };
 
-        colBtn.setCellFactory(cellFactory);
+                        private final Button deleteButton = new Button("Supprimer");
 
-        hebergementOffersTable.getColumns().add(colBtn);
+                        {
+                            deleteButton.getStyleClass().add("deleteButton");
+                            deleteButton.setOnAction((ActionEvent event) -> {
+                                HebergementOfferTableModel data = getTableView().getItems().get(getIndex());
+                                System.out.println("selectedData: " + data.getId());
+                                //open deleteOffer stage;
+                                Alert alert =
+                                        new Alert(Alert.AlertType.WARNING, "Vous êtes sure ?", ButtonType.YES, ButtonType.CANCEL);
+                                Optional<ButtonType> result = alert.showAndWait();
+                                if (result.get() == ButtonType.YES) {
+                                    ServiceHebergementOffer serviceHebergementOffer = new ServiceHebergementOffer();
+                                    serviceHebergementOffer.delete(data.getId());
+                                    handleRefreshHebergementOffersButtonAction();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void updateItem(Void item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                            } else {
+                                HBox buttonsContainer = new HBox();
+                                buttonsContainer.setSpacing(10);
+                                buttonsContainer.getChildren().addAll(updateButton, deleteButton);
+                                setGraphic(buttonsContainer);
+                            }
+                        }
+                    };
+                    return cell;
+                }
+            };
+
+            colBtn.setCellFactory(cellFactory);
+
+            hebergementOffersTable.getColumns().add(colBtn);
+        }
     }
     private void addButtonToRequestTable() {
-        TableColumn<HebergementRequestTableModel, Void> colBtn = new TableColumn("Actions");
+        // I can't fix why this method keeps adding everytime i hit refresh it keep adding a new column of Action buttons, even though i try to empty the table
+        // this is a hacky fix -- test on the number of column that shoudln't be > 8
+        if (hebergementRequestsTable.getColumns().size() <= 10) {
+            TableColumn<HebergementRequestTableModel, Void> colBtn = new TableColumn("Actions");
 
+            Callback<TableColumn<HebergementRequestTableModel, Void>, TableCell<HebergementRequestTableModel, Void>> cellFactory
+                    = new Callback<TableColumn<HebergementRequestTableModel, Void>, TableCell<HebergementRequestTableModel, Void>>() {
+                @Override
+                public TableCell<HebergementRequestTableModel, Void> call(final TableColumn<HebergementRequestTableModel, Void> param) {
+                    final TableCell<HebergementRequestTableModel, Void> cell = new TableCell<HebergementRequestTableModel, Void>() {
 
-        Callback<TableColumn<HebergementRequestTableModel, Void>, TableCell<HebergementRequestTableModel, Void>> cellFactory
-                = new Callback<TableColumn<HebergementRequestTableModel, Void>, TableCell<HebergementRequestTableModel, Void>>() {
-            @Override
-            public TableCell<HebergementRequestTableModel, Void> call(final TableColumn<HebergementRequestTableModel, Void> param) {
-                final TableCell<HebergementRequestTableModel, Void> cell = new TableCell<HebergementRequestTableModel, Void>() {
+                        private final Button updateButton = new Button("Modifier");
 
-                    private final Button updateButton = new Button("Modifier");
-                    {
-                        updateButton.getStyleClass().add("updateButton");
-                        updateButton.setOnAction((ActionEvent event) -> {
-                            HebergementRequestTableModel data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data);
-                        });
-                    }
-
-
-                    private final Button deleteButton = new Button("Supprimer");
-
-                    {
-                        deleteButton.getStyleClass().add("deleteButton");
-                        deleteButton.setOnAction((ActionEvent event) -> {
-                            HebergementRequestTableModel data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data);
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            HBox buttonsContainer = new HBox();
-                            buttonsContainer.setSpacing(10);
-                            buttonsContainer.getChildren().addAll(updateButton, deleteButton);
-                            setGraphic(buttonsContainer);
+                        {
+                            updateButton.getStyleClass().add("updateButton");
+                            updateButton.setOnAction((ActionEvent event) -> {
+                                HebergementRequestTableModel data = getTableView().getItems().get(getIndex());
+                                System.out.println("selectedData: " + data.getId());
+                            });
                         }
-                    }
-                };
-                return cell;
-            }
-        };
 
-        colBtn.setCellFactory(cellFactory);
 
-        hebergementRequestsTable.getColumns().add(colBtn);
+                        private final Button deleteButton = new Button("Supprimer");
+
+                        {
+                            deleteButton.getStyleClass().add("deleteButton");
+                            deleteButton.setOnAction((ActionEvent event) -> {
+                                HebergementRequestTableModel data = getTableView().getItems().get(getIndex());
+                                System.out.println("selectedData: " + data.getId());
+                                Alert alert =
+                                        new Alert(Alert.AlertType.WARNING, "Vous êtes sure ?", ButtonType.YES, ButtonType.CANCEL);
+                                Optional<ButtonType> result = alert.showAndWait();
+                                if (result.get() == ButtonType.YES) {
+                                    ServiceHebergementRequest serviceHebergementRequest = new ServiceHebergementRequest();
+                                    serviceHebergementRequest.delete(data.getId());
+                                    handleRefreshHebergementRequestsButtonAction();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void updateItem(Void item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                            } else {
+                                HBox buttonsContainer = new HBox();
+                                buttonsContainer.setSpacing(10);
+                                buttonsContainer.getChildren().addAll(updateButton, deleteButton);
+                                setGraphic(buttonsContainer);
+                            }
+                        }
+                    };
+                    return cell;
+                }
+            };
+
+            colBtn.setCellFactory(cellFactory);
+
+            hebergementRequestsTable.getColumns().add(colBtn);
+        }
     }
 }
