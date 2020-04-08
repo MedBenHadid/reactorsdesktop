@@ -10,11 +10,11 @@ public class Don {
     private String phone ;
     private String creationDate ;
     private int ups ;
-    private Double lat,lon;
+    private String lat,lon;
     private String image ;
     private Category category;
 
-    public Don(int id, String title, String description, String address, String phone, String creationDate, int ups, Double lat, Double lon, String image, Category category) {
+    public Don(int id, String title, String description, String address, String phone, String creationDate, int ups, String lat, String lon, String image, Category category) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -87,19 +87,19 @@ public class Don {
         this.ups = ups;
     }
 
-    public Double getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(Double lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 
-    public Double getLon() {
+    public String getLon() {
         return lon;
     }
 
-    public void setLon(Double lon) {
+    public void setLon(String lon) {
         this.lon = lon;
     }
 
