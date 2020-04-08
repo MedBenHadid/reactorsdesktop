@@ -1,4 +1,4 @@
-package Packages.Chihab.Scenes;
+package Packages.Chihab.Controllers;
 
 import Main.Entities.User;
 import Main.Services.UserService;

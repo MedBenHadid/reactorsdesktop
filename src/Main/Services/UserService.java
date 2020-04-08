@@ -51,6 +51,7 @@ public class UserService {
         u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
         u.getProfile().setImage(rs.getString("image"));
         //u.getProfile().setAdresse();
+        u.getProfile().setImage(rs.getString("image"));
         u.getProfile().setNom(rs.getString("nom"));
         u.getProfile().setPrenom(rs.getString("prenom"));
         return u;

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.JFXScrollPane?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
@@ -48,17 +50,17 @@
                               </Label>
                                <JFXSpinner fx:id="spinner"/>
                                <WebView fx:id="mapWebView" prefWidth="-1.0"/>
-                               <HBox>
-                                   <children>
-                                       <Label text="Membres :"/>
-                                       <JFXButton fx:id="addMember" text="Ajouter un membre">
-                                           <HBox.margin>
-                                               <Insets bottom="50.0" left="810.0"/>
-                                           </HBox.margin>
-                                       </JFXButton>
-                                   </children>
-                               </HBox>
-                               <JFXTreeView fx:id="membresTreeView"/>
+                               <ScrollPane>
+                                   <content>
+                                       <AnchorPane minHeight="0.0" minWidth="0.0">
+                                           <children>
+                                               <VBox fx:id="membersVbox" alignment="CENTER"
+                                                     AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                                           </children>
+                                       </AnchorPane>
+                                   </content>
+                               </ScrollPane>
                            </children>
                            <VBox.margin>
                                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>

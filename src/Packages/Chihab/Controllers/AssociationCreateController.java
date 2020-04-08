@@ -1,4 +1,4 @@
-package Packages.Chihab.Scenes;
+package Packages.Chihab.Controllers;
 
 import Main.Entities.User;
 import Main.Services.UserService;
@@ -65,8 +65,23 @@ public class AssociationCreateController implements Initializable {
     private File photo, piece;
     private Association association;
     private FTPInterface ftpInterface;
+    private boolean isRegisterPage = false;
     public AssociationCreateController() {
         this.association = new Association();
+        try {
+            this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
+        } catch (IOException e) {
+            Alert ftpAlert = new Alert(Alert.AlertType.WARNING);
+            ftpAlert.setContentText("Error connecting to FTP server");
+            ftpAlert.show();
+        }
+    }
+
+    public AssociationCreateController(User manager) {
+        // TODO : Used when registering
+        this.association = new Association();
+        this.association.setManager(manager);
+        this.isRegisterPage = true;
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
@@ -108,22 +123,25 @@ public class AssociationCreateController implements Initializable {
             });
             new ComboBoxAutoComplete<>(managerComboBox);
             // TODO : Set its visibility based on logged in user's role
-            managerComboBox.getItems().addAll(UserService.getInstace().readAll().stream().filter(u -> !u.isAdmin()).collect(Collectors.toCollection(ArrayList::new)));
-            managerComboBox.setVisibleRowCount(6);
-            managerComboBox.setTooltip(new Tooltip());
-            managerComboBox.setConverter(new StringConverter<>() {
-                @Override
-                public String toString(User user) {
-                    return user.getEmail();
-                }
+            if (isRegisterPage)
+                managerComboBox.setVisible(false);
+            else {
+                managerComboBox.getItems().addAll(UserService.getInstace().readAll().stream().filter(u -> !u.isAdmin()).collect(Collectors.toCollection(ArrayList::new)));
+                managerComboBox.setVisibleRowCount(6);
+                managerComboBox.setTooltip(new Tooltip());
+                managerComboBox.setConverter(new StringConverter<>() {
+                    @Override
+                    public String toString(User user) {
+                        return user.getEmail();
+                    }
 
-                @Override
-                public User fromString(String s) {
-                    return managerComboBox.getItems().stream().filter(user -> user.getEmail().equals(s)).findFirst().get();
-                }
-            });
-            new ComboBoxAutoComplete<>(managerComboBox);
-
+                    @Override
+                    public User fromString(String s) {
+                        return managerComboBox.getItems().stream().filter(user -> user.getEmail().equals(s)).findFirst().get();
+                    }
+                });
+                new ComboBoxAutoComplete<>(managerComboBox);
+            }
 
         } catch (Exception e) {
             Logger.getLogger(
@@ -169,7 +187,7 @@ public class AssociationCreateController implements Initializable {
         );
 
 
-        fileChooser.setTitle("Veuillez choisir la piece justificative de l'association");
+        fileChooser.setTitle("Veuillez choisir la photo de l'association");
         photoButton.setTooltip(new Tooltip("Veuillez choisir la photo de l'association"));
         SimpleBooleanProperty photoValid = new SimpleBooleanProperty(false);
         photoButton.setOnAction(e -> {
@@ -211,28 +229,32 @@ public class AssociationCreateController implements Initializable {
             }
         });
         // TODO : Check manager is not null on Register/Create
-        validateButton.disableProperty().bind(nomFieldValid.or(descriptionFieldValid.or(zipFieldValid.or(rueFieldValid.or(phoneNumberFieldValid.or(versTimeFieldValid.or(pieceValid.not().or(photoValid.not().or(villeComboSelected)))))))));
+        BooleanBinding managerSelected;
+        if (isRegisterPage)
+            managerSelected = Bindings.createBooleanBinding(() -> false);
+        else
+            managerSelected = Bindings.createBooleanBinding(() -> managerComboBox.getSelectionModel().getSelectedIndex() == -1, managerComboBox.valueProperty());
+
+        validateButton.disableProperty().bind(nomFieldValid.or(descriptionFieldValid.or(zipFieldValid.or(rueFieldValid.or(phoneNumberFieldValid.or(versTimeFieldValid.or(pieceValid.not().or(photoValid.not().or(villeComboSelected.or(managerSelected))))))))));
 
         validateButton.setOnAction(actionEvent -> {
             association.setLat(Double.valueOf(((Association) window.getMember("association")).getLat()));
             association.setLon(Double.valueOf(((Association) window.getMember("association")).getLon()));
-            if (1 == 1)
-                association.setApprouved(false);
-            else
+            if (!isRegisterPage) {
+                association.setManager(managerComboBox.getValue());
                 association.setApprouved(true);
-
+            } else {
+                association.setApprouved(false);
+            }
             association.setRue(rueInput.getText());
             association.setVille(villeComboBox.getValue());
             association.setCodePostal(Integer.parseInt(zipInput.getText()));
             association.setNom(nomInput.getText());
             association.setDescription(descriptionInput.getText());
-            association.setManager(managerComboBox.getValue());
             association.setDomaine(domaineComboBox.getValue());
             association.setTelephone(Integer.parseInt(phoneNumberInput.getText()));
             association.setPhotoAgence(photo.getName());
             association.setPieceJustificatif(piece.getName());
-
-
             try {
                 ftpInterface.fileUpload(piece, URLServer.associationPieceDir);
                 ftpInterface.fileUpload(photo, URLServer.associationImageDir);

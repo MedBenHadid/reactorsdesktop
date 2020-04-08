@@ -1,9 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-            xmlns="http://javafx.com/javafx"
-            fx:controller="Packages.Chihab.Scenes.AssociationProfileUpdateController"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXScrollPane?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fx:id="scrollPane" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" xmlns="http://javafx.com/javafx/11.0.1">
+    <content>
+        <AnchorPane fx:id="rootPane" minHeight="0.0" minWidth="0.0" prefWidth="1200.0">
+            <children>
+                <JFXScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                               AnchorPane.topAnchor="0.0">
+                    <children>
+                        <VBox alignment="CENTER">
+                            <children>
+                                <ImageView fx:id="imageImageView" fitHeight="250.0" fitWidth="400.0" pickOnBounds="true"
+                                           preserveRatio="true"/>
+                                <JFXToggleButton fx:id="statusToggleButton"/>
+                                <Button fx:id="photoButton" mnemonicParsing="false" prefWidth="200.0"
+                                        text="Modifier photo">
+                                    <VBox.margin>
+                                        <Insets/>
+                                    </VBox.margin>
+                                </Button>
+                                <Button fx:id="pieceButton" mnemonicParsing="false" prefWidth="200.0"
+                                        text="Afficher piece justificative">
+                                    <VBox.margin>
+                                        <Insets/>
+                                    </VBox.margin>
+                                </Button>
+                                <Button fx:id="modpieceButton" mnemonicParsing="false" prefWidth="200.0"
+                                        text="Modifier piece justificative"/>
+                                <VBox alignment="CENTER">
+                                    <children>
+                                        <TextField fx:id="nomInput" promptText="Nom de l'association"/>
+                                        <TextArea fx:id="descriptionInput" promptText="Description de l'association"/>
+                                        <TextField fx:id="zipInput" minHeight="4.0" minWidth="4.0" prefWidth="100.0"
+                                                   promptText="Code postale"/>
+                                        <TextField fx:id="rueInput" promptText="Rue"/>
+                                        <TextField fx:id="phoneNumberInput" promptText="Numéro de téléphone"/>
+                                        <ComboBox fx:id="villeComboBox" prefWidth="200.0" promptText="Ville">
+                                            <VBox.margin>
+                                                <Insets/>
+                                            </VBox.margin>
+                                        </ComboBox>
+                                        <WebView fx:id="gmapWebView" prefHeight="200.0" prefWidth="-1.0"/>
+                                        <ComboBox fx:id="domaineComboBox" prefWidth="200.0"
+                                                  promptText="Domaine d'activité"/>
+                                        <JFXButton fx:id="validateButton" text="Modifier"/>
+                                    </children>
+                                </VBox>
+                                <ScrollPane>
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0">
+                                            <children>
+                                                <VBox fx:id="membersVbox" alignment="CENTER"
+                                                      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                            <padding>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+                            </padding>
+                        </VBox>
+                    </children>
+                </JFXScrollPane>
+            </children>
+        </AnchorPane>
+    </content>
+</ScrollPane>

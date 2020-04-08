@@ -1,16 +1,18 @@
-package Packages.Chihab.Scenes;
+package Packages.Chihab.Controllers;
 
 import Packages.Chihab.Models.Association;
+import Packages.Chihab.Models.Membership;
 import Packages.Chihab.Services.MembershipService;
+import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
@@ -18,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import org.w3c.dom.Document;
 
@@ -25,6 +28,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -44,7 +48,8 @@ public class AssociationProfileShowController implements Initializable {
     @FXML
     JFXSpinner spinner;
     @FXML
-    JFXButton addMember;
+    VBox membersVbox;
+
     FTPInterface ftpInterface;
     private MembershipService membershipService = MembershipService.getInstace();
     private Association a;
@@ -68,9 +73,7 @@ public class AssociationProfileShowController implements Initializable {
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
-            Alert ftpAlert = new Alert(Alert.AlertType.WARNING);
-            ftpAlert.setContentText("Error connecting to FTP server");
-            ftpAlert.show();
+            // TODO : Log
         }
     }
 
@@ -78,7 +81,7 @@ public class AssociationProfileShowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         nameLabel.setText(a.getNom());
         descriptionLabel.setText(a.getDescription());
-        numeroLabel.setText(String.valueOf(a.getTelephone()));
+        numeroLabel.setText(a.getTelephone() + " " + a.getVille() + " " + a.getRue() + " " + a.getCodePostal() + " " + a.getHoraireTravail());
         statusToggleButton.selectedProperty().bindBidirectional(new SimpleBooleanProperty(a.isApprouved()));
 
         statusToggleButton.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
@@ -111,10 +114,6 @@ public class AssociationProfileShowController implements Initializable {
                 }
         );
 
-        // membershipService.readAll()
-        addMember.setOnAction(actionEvent -> {
-
-        });
         try {
             File imageAss = ftpInterface.downloadFile(URLServer.associationImageDir + a.getPhotoAgence(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
             imageImageView.setImage(new Image(imageAss.toURI().toString()));
@@ -147,6 +146,18 @@ public class AssociationProfileShowController implements Initializable {
                 connAlert.show();
             }
         });
+        FXMLLoader loader = null;
+        try {
+            for (Membership m : membershipService.readAll()) {
+                loader = new FXMLLoader(getClass().getResource(URLScenes.memberShipItem));
+                MemberItemController controller = new MemberItemController(m);
+                loader.setController(controller);
+                membersVbox.getChildren().add(loader.load());
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

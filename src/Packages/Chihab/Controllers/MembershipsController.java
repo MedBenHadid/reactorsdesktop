@@ -1,4 +1,4 @@
-package Packages.Chihab.Scenes;
+package Packages.Chihab.Controllers;
 
 public class MembershipsController {
 }

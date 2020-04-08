@@ -1,4 +1,4 @@
-package Packages.Chihab.Scenes;
+package Packages.Chihab.Controllers;
 
 import Main.Entities.User;
 import Packages.Chihab.Models.Association;
@@ -89,7 +89,7 @@ public class AssociationsBackofficeController implements Initializable {
             e.printStackTrace();
         }
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        descCol.setCellValueFactory(new PropertyValueFactory<>("descript ion"));
+        descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         villeCol.setCellValueFactory(new PropertyValueFactory<>("ville"));
         managerCol.setCellValueFactory(new PropertyValueFactory<>("managerUserName"));
         domaineCol.setCellValueFactory(new PropertyValueFactory<>("domaineNom"));
@@ -254,8 +254,8 @@ public class AssociationsBackofficeController implements Initializable {
                         tab.setUserData(rowData.getId());
                         tab.setText("Association : " + rowData.getNom());
                         tab.setClosable(true);
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationProfile));
-                        AssociationProfileShowController controller = new AssociationProfileShowController(rowData);
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationUpdateProfile));
+                        AssociationProfileUpdateController controller = new AssociationProfileUpdateController(rowData);
                         loader.setController(controller);
                         try {
                             ScrollPane scrollPane = loader.load();
