@@ -2,6 +2,7 @@ package Packages.Mohamed.Scenes;
 
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Models.Membership;
+import Packages.Chihab.Scenes.AssociationsBackofficeController;
 import Packages.Chihab.Services.MembershipService;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
