@@ -1,8 +1,8 @@
 package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
+import Packages.Chihab.Controllers.AssociationProfileShowController;
 import Packages.Chihab.Models.Association;
-import Packages.Chihab.Scenes.AssociationProfileShowController;
 import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;

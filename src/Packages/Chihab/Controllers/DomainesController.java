@@ -43,11 +43,11 @@ public class DomainesController implements Initializable {
     @FXML
     private Tab newTab;
 
-    private UserSession userSession = UserSession.getInstace();
+    private final UserSession userSession = UserSession.getInstace();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList catList = FXCollections.observableArrayList();
+        ObservableList<Category> catList = FXCollections.observableArrayList();
         try {
             catList.addAll(CategoryService.getInstace().readAll());
         } catch (SQLException e) {
@@ -59,10 +59,6 @@ public class DomainesController implements Initializable {
         }
         nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-        /**
-         * Initializing components reserved for Super admin (Create Tab , Update event handlers, Delete button and event handler)
-         */
-
         if (1 == 1) {
             newTab.setDisable(false);
             deleteOption.setVisible(true);
@@ -70,9 +66,6 @@ public class DomainesController implements Initializable {
             idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
             nomCol.setCellFactory(TextFieldTableCell.forTableColumn());
             descCol.setCellFactory(TextFieldTableCell.forTableColumn());
-            /**
-             * Update section
-             */
             // Update name event handler
             nomCol.setOnEditCommit(
                     categoryStringCellEditEvent -> {
@@ -156,13 +149,11 @@ public class DomainesController implements Initializable {
         TextFields.bindAutoCompletion(input, catTV.getItems().stream().map(Category::getNom).toArray());
         FilteredList<Category> filtered = new FilteredList<>(catTV.getItems(), e -> true);
         input.setOnKeyReleased(e -> {
-            input.textProperty().addListener((observableValue, s, t1) -> {
-                filtered.setPredicate(category -> {
-                    if (t1 == null || t1.isEmpty())
-                        return true;
-                    return category.getNom().toLowerCase().startsWith(t1.toLowerCase());
-                });
-                });
+            input.textProperty().addListener((observableValue, s, t1) -> filtered.setPredicate(category -> {
+                if (t1 == null || t1.isEmpty())
+                    return true;
+                return category.getNom().toLowerCase().startsWith(t1.toLowerCase());
+            }));
             SortedList<Category> sortedList = new SortedList<>(filtered);
             sortedList.comparatorProperty().bind(catTV.comparatorProperty());
             catTV.setItems(sortedList);

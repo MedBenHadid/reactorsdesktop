@@ -6,8 +6,9 @@ import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXProgressBar;
-import javafx.application.Platform;
+import com.jfoenix.controls.JFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -21,7 +22,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -48,11 +48,9 @@ public class AssociationsBackofficeController implements Initializable {
     @FXML
     private TableColumn<Association, String> nomCol, descCol, villeCol, domaineCol;
     @FXML
-    private TableColumn<Association, Number> idCol;
-    @FXML
     private TableColumn<User, String> managerCol;
     @FXML
-    private TextField inputName, inputCity;
+    private JFXTextField inputName, inputCity;
     @FXML
     private Label size;
     @FXML
@@ -60,7 +58,7 @@ public class AssociationsBackofficeController implements Initializable {
     @FXML
     private Tab associationListTab;
     @FXML
-    private Button addButton;
+    private JFXButton addButton;
     @FXML
     private TableColumn<Association, Boolean> statusCol;
     FTPInterface ftpInterface;
@@ -78,7 +76,7 @@ public class AssociationsBackofficeController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO 1: Based on role, disable { addButton, idCol's view, deleteOption, managerCol, statusCol}
+        // TODO 1: Based on role, disable { addButton, deleteOption, managerCol, statusCol}
         associationListTab.setClosable(false);
         //addButton.setVisible(false);
         ObservableList<Association> associationList = FXCollections.observableArrayList();
@@ -95,12 +93,8 @@ public class AssociationsBackofficeController implements Initializable {
         domaineCol.setCellValueFactory(new PropertyValueFactory<>("domaineNom"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("approuved"));
         associationTableView.setItems(associationList);
-        /**
-         * Start of Super Admin section
-         */
+
         deleteOption.setVisible(true);
-        idCol.setVisible(true);
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomCol.setCellFactory(TextFieldTableCell.forTableColumn());
         descCol.setCellFactory(TextFieldTableCell.forTableColumn());
         villeCol.setCellFactory(ComboBoxTableCell.forTableColumn(
@@ -242,7 +236,7 @@ public class AssociationsBackofficeController implements Initializable {
             }
         });
         // Piece justificative section
-        progressBar.visibleProperty().bind(Bindings.createBooleanBinding(Platform::isNestedLoopRunning));
+        //progressBar.progressProperty().bind(loadDataTask.progressProperty());
         // Profile Section
         associationTableView.setRowFactory(tv -> {
             TableRow<Association> row = new TableRow<>();
@@ -283,6 +277,7 @@ public class AssociationsBackofficeController implements Initializable {
                 Scene scene = new Scene(createAssociation);
                 stage.setScene(scene);
                 stage.show();
+                addButton.setDisable(true);
                 stage.setOnCloseRequest(ev -> {
                     // TODO : switch this to child, for readability and to avoid the infamous bug
                     Alert confAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -290,10 +285,11 @@ public class AssociationsBackofficeController implements Initializable {
                     confAlert.setContentText("Etes vous sure de vouloir quitter ?");
                     Optional<ButtonType> result = confAlert.showAndWait();
                     if (result.isPresent())
-                        if (result.get() == ButtonType.OK)
+                        if (result.get() == ButtonType.OK) {
+                            addButton.setDisable(false);
                             stage.close();
-                        else
-                            System.out.println("Cancel clicked, but ORACLE Y U DO DIS");
+                        } else if (result.get() == ButtonType.CANCEL)
+                            ev.consume();
                 });
             } catch (IOException ex) {
                 Logger.getLogger(
@@ -304,20 +300,16 @@ public class AssociationsBackofficeController implements Initializable {
             }
         });
         // Add association section
-        /**
-         * End of Super Admin section
-         */
+
         // Search by name bindings
         TextFields.bindAutoCompletion(inputName, associationTableView.getItems().stream().map(Association::getNom).toArray());
         FilteredList<Association> filteredName = new FilteredList<>(associationTableView.getItems(), e -> true);
         inputName.setOnKeyReleased(e -> {
-            inputName.textProperty().addListener((observableValue, s, t1) -> {
-                filteredName.setPredicate(association -> {
-                    if (t1 == null || t1.isEmpty())
-                        return true;
-                    return association.getNom().toLowerCase().startsWith(t1.toLowerCase());
-                });
-            });
+            inputName.textProperty().addListener((observableValue, s, t1) -> filteredName.setPredicate(association -> {
+                if (t1 == null || t1.isEmpty())
+                    return true;
+                return association.getNom().toLowerCase().startsWith(t1.toLowerCase());
+            }));
             SortedList<Association> sortedListName = new SortedList<>(filteredName);
             sortedListName.comparatorProperty().bind(associationTableView.comparatorProperty());
             associationTableView.setItems(sortedListName);
@@ -326,13 +318,11 @@ public class AssociationsBackofficeController implements Initializable {
         TextFields.bindAutoCompletion(inputCity, associationTableView.getItems().stream().map(Association::getVille).toArray());
         FilteredList<Association> filteredCity = new FilteredList<>(associationTableView.getItems(), e -> true);
         inputCity.setOnKeyReleased(e -> {
-            inputCity.textProperty().addListener((observableValue, s, t1) -> {
-                filteredCity.setPredicate(association -> {
-                    if (t1 == null || t1.isEmpty())
-                        return true;
-                    return association.getVille().toLowerCase().startsWith(t1.toLowerCase());
-                });
-            });
+            inputCity.textProperty().addListener((observableValue, s, t1) -> filteredCity.setPredicate(association -> {
+                if (t1 == null || t1.isEmpty())
+                    return true;
+                return association.getVille().toLowerCase().startsWith(t1.toLowerCase());
+            }));
             SortedList<Association> sortedCityList = new SortedList<>(filteredCity);
             sortedCityList.comparatorProperty().bind(associationTableView.comparatorProperty());
             associationTableView.setItems(sortedCityList);
@@ -340,7 +330,7 @@ public class AssociationsBackofficeController implements Initializable {
         // TODO : Search by manager
         // TODO : Client view of association list, render items inside HBox whilst passing association instance to that item, i hope you fucker know what i'm talking about when you wake up
         // Label for displaying number of current associations bindings
-        size.textProperty().bind(Bindings.size((associationList)).asString("Associations : %d"));
+        size.textProperty().bind(Bindings.size((associationList)).asString("%d associations inscrits"));
     }
 
 

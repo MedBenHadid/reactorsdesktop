@@ -2,6 +2,8 @@ package Packages.Chihab.Controllers;
 
 import Main.Entities.User;
 import Main.Services.UserService;
+import Packages.Chihab.Controllers.Custom.RegexValidator;
+import Packages.Chihab.Controllers.Custom.StringLengthValidator;
 import Packages.Chihab.Custom.AutoCompleteBox;
 import Packages.Chihab.Custom.ComboBoxAutoComplete;
 import Packages.Chihab.Models.Association;
@@ -10,21 +12,24 @@ import Packages.Chihab.Services.AssociationService;
 import Packages.Chihab.Services.CategoryService;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTimePicker;
+import com.jfoenix.controls.*;
+import com.jfoenix.validation.NumberValidator;
+import com.jfoenix.validation.RequiredFieldValidator;
+import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
-import javafx.util.StringConverter;
 import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
 
@@ -46,19 +51,15 @@ public class AssociationCreateController implements Initializable {
     @FXML
     private AnchorPane rootPane;
     @FXML
-    private TextField nomInput, rueInput, zipInput, phoneNumberInput;
+    private JFXTextField nomInput, rueInput, zipInput, phoneNumberInput;
     @FXML
-    private TextArea descriptionInput;
+    private JFXTextArea descriptionInput;
     @FXML
     private JFXButton validateButton;
     @FXML
-    private Button photoButton, pieceButton;
+    private JFXButton photoButton, pieceButton;
     @FXML
-    private ComboBox<String> villeComboBox;
-    @FXML
-    private ComboBox<User> managerComboBox;
-    @FXML
-    private ComboBox<Category> domaineComboBox;
+    private JFXComboBox<String> villeComboBox, managerComboBox, domaineComboBox;
     @FXML
     private WebView gmapWebView;
 
@@ -66,6 +67,7 @@ public class AssociationCreateController implements Initializable {
     private Association association;
     private FTPInterface ftpInterface;
     private boolean isRegisterPage = false;
+
     public AssociationCreateController() {
         this.association = new Association();
         try {
@@ -78,78 +80,134 @@ public class AssociationCreateController implements Initializable {
     }
 
     public AssociationCreateController(User manager) {
-        // TODO : Used when registering
-        this.association = new Association();
+        // INFO : Used when registering
+        new AssociationCreateController();
         this.association.setManager(manager);
+        managerComboBox.setVisible(false);
         this.isRegisterPage = true;
-        try {
-            this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
-        } catch (IOException e) {
-            Alert ftpAlert = new Alert(Alert.AlertType.WARNING);
-            ftpAlert.setContentText("Error connecting to FTP server");
-            ftpAlert.show();
-        }
     }
 
     // TODO : implement the maps mcThingy
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        BooleanBinding nomFieldValid = Bindings.createBooleanBinding(() -> !checkValidStringInput(nomInput.getText(), false, 6, 30), nomInput.textProperty());
-        BooleanBinding descriptionFieldValid = Bindings.createBooleanBinding(() -> !checkValidStringInput(descriptionInput.getText(), true, 6, 255), descriptionInput.textProperty());
-        BooleanBinding zipFieldValid = Bindings.createBooleanBinding(() -> !zipInput.getText().matches(".*\\d.*") || zipInput.getText().length() != 4, zipInput.textProperty());
-        BooleanBinding phoneNumberFieldValid = Bindings.createBooleanBinding(() -> !phoneNumberInput.getText().matches(".*\\d.*") || phoneNumberInput.getText().length() != 8, phoneNumberInput.textProperty());
-        BooleanBinding versTimeFieldValid = Bindings.createBooleanBinding(() -> !vers.valueProperty().isNotNull().get(), vers.valueProperty());
-        BooleanBinding rueFieldValid = Bindings.createBooleanBinding(() -> rueValidCheck(rueInput.getText()), rueInput.textProperty());
-        BooleanBinding villeComboSelected = Bindings.createBooleanBinding(() -> villeComboBox.getSelectionModel().getSelectedIndex() == -1, villeComboBox.valueProperty());
-        villeComboBox.setItems(FXCollections.observableArrayList("Ariana", "Béja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"));
-        villeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> association.setVille(newValue));
-        villeComboBox.setTooltip(new Tooltip());
-        new AutoCompleteBox<String>(villeComboBox);
-        System.out.println();
-        try {
-            domaineComboBox.getItems().addAll(CategoryService.getInstace().readAll());
-            domaineComboBox.setVisibleRowCount(6);
-            domaineComboBox.setTooltip(new Tooltip());
-            domaineComboBox.setConverter(new StringConverter<>() {
-                @Override
-                public String toString(Category c) {
-                    return c.getNom();
-                }
+        RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator("Champ manquant");
 
-                @Override
-                public Category fromString(String s) {
-                    return domaineComboBox.getItems().stream().filter(c -> c.getNom().equals(s)).findFirst().get();
-                }
-            });
-            new ComboBoxAutoComplete<>(managerComboBox);
-            // TODO : Set its visibility based on logged in user's role
-            if (isRegisterPage)
-                managerComboBox.setVisible(false);
-            else {
-                managerComboBox.getItems().addAll(UserService.getInstace().readAll().stream().filter(u -> !u.isAdmin()).collect(Collectors.toCollection(ArrayList::new)));
-                managerComboBox.setVisibleRowCount(6);
-                managerComboBox.setTooltip(new Tooltip());
-                managerComboBox.setConverter(new StringConverter<>() {
-                    @Override
-                    public String toString(User user) {
-                        return user.getEmail();
-                    }
+        // Nom input validation
+        vers.getValidators().add(requiredFieldValidator);
+        vers.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!t1) vers.validate();
+        });
+        nomInput.getValidators().addAll(new RegexValidator("Veuillez saisir un nom dont la taille est comprise entre 3 et 30", "^[\\w\\s]{3,30}$"));
+        nomInput.focusedProperty().addListener((o, a, t) -> {
+            if (!t) nomInput.validate();
+            if (nomInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
+                association.setNom(nomInput.getText());
+        });
+        nomInput.setOnKeyTyped(keyEvent -> nomInput.validate());
 
-                    @Override
-                    public User fromString(String s) {
-                        return managerComboBox.getItems().stream().filter(user -> user.getEmail().equals(s)).findFirst().get();
-                    }
-                });
-                new ComboBoxAutoComplete<>(managerComboBox);
+        // Description validation
+        descriptionInput.getValidators().addAll(new RegexValidator("Veuillez saisir une description valide 3-255", "^[\\w\\s]{3,255}$"), requiredFieldValidator);
+        descriptionInput.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!t1) {
+                descriptionInput.validate();
             }
+        });
+        descriptionInput.setOnKeyTyped(keyEvent -> {
+            if (!descriptionInput.getText().isEmpty())
+                descriptionInput.validate();
+            if (!descriptionInput.getText().isEmpty())
+                if (descriptionInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
+                    association.setDescription(descriptionInput.getText());
+        });
+        // Phone validation
+        phoneNumberInput.getValidators().addAll(new NumberValidator("Veuillez saisir un numéro valide numérique"), new StringLengthValidator(8, 0, "Veuillez saisir un numéro dont la taille est "), requiredFieldValidator);
+        phoneNumberInput.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!t1) {
+                phoneNumberInput.validate();
+                if (!phoneNumberInput.getText().isEmpty())
+                    if (phoneNumberInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
+                        association.setTelephone(Integer.parseInt(phoneNumberInput.getText()));
+            }
+        });
+        phoneNumberInput.setOnKeyTyped(keyEvent -> {
+            if (!phoneNumberInput.getText().isEmpty())
+                phoneNumberInput.validate();
+        });
+        // You get the gist of this dummy, gonna stop with the comments i'm tired
+        rueInput.getValidators().addAll(new StringLengthValidator(8, -1, "La taille doit etre supérieure a"), requiredFieldValidator);
+        rueInput.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!t1) {
+                rueInput.validate();
+            }
+        });
+        //Zip validation
+        zipInput.getValidators().addAll(new RegexValidator("Veuillez saisir un code postale valide", "^[0-9]{4}?$"), requiredFieldValidator);
+        zipInput.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!t1) {
+                zipInput.validate();
+            }
+        });
 
+        BooleanBinding nomFieldValid = Bindings.createBooleanBinding(() -> nomInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors), nomInput.getValidators());
+        BooleanBinding descriptionFieldValid = Bindings.createBooleanBinding(() -> descriptionInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors), descriptionInput.getValidators());
+        BooleanBinding zipFieldValid = Bindings.createBooleanBinding(() -> zipInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors), zipInput.getValidators());
+        BooleanBinding phoneNumberFieldValid = Bindings.createBooleanBinding(() -> phoneNumberInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors), phoneNumberInput.getValidators());
+        BooleanBinding versTimeFieldValid = Bindings.createBooleanBinding(() -> vers.getValidators().stream().noneMatch(ValidatorBase::getHasErrors), vers.getValidators());
+        BooleanBinding rueFieldValid = Bindings.createBooleanBinding(() -> rueInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors), rueInput.getValidators());
+        BooleanBinding villeComboSelected = Bindings.createBooleanBinding(() -> villeComboBox.getValidators().stream().noneMatch(ValidatorBase::getHasErrors), villeComboBox.getValidators());
+
+
+        villeComboBox.setItems(FXCollections.observableArrayList("Ariana", "Béja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"));
+        villeComboBox.setTooltip(new Tooltip("Sélectionner la ville de votre association"));
+        new AutoCompleteBox<String>(villeComboBox);
+        villeComboBox.getValidators().add(requiredFieldValidator);
+        villeComboBox.setOnAction(actionEvent -> {
+            villeComboBox.validate();
+            if (villeComboBox.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
+                association.setVille(villeComboBox.getValue());
+        });
+
+
+        ObservableList<User> managers = null;
+        ObservableList<Category> domaines = null;
+        try {
+            if (!isRegisterPage)
+                managers = UserService.getInstace().readAll().stream().filter(u -> !u.isAdmin()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+            domaines = CategoryService.getInstace().readAll();
         } catch (Exception e) {
             Logger.getLogger(
                     AssociationCreateController.class.getName()).log(
-                    Level.SEVERE, null, e
+                    Level.SEVERE, null, e.getCause()
             );
             e.printStackTrace();
+        } finally {
+            // TODO : Add regex
+            assert domaines != null;
+            domaineComboBox.getItems().addAll(domaines.stream().map(Category::getNom).collect(Collectors.toCollection(ArrayList::new)));
+            domaineComboBox.getValidators().add(requiredFieldValidator);
+            ObservableList<User> finalManagers = managers;
+            ObservableList<Category> finalDomaines = domaines;
+            domaineComboBox.setOnHiding(event -> {
+                domaineComboBox.validate();
+                if (domaineComboBox.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
+                    association.setDomaine(finalDomaines.stream().filter(s -> s.getNom().equals(domaineComboBox.getValue())).findFirst().get());
+            });
+
+            domaineComboBox.setVisibleRowCount(6);
+            domaineComboBox.setTooltip(new Tooltip("Sélectionner le domaine d'activité de votre association"));
+            new ComboBoxAutoComplete<>(domaineComboBox);
+            if (isRegisterPage)
+                managerComboBox.setVisible(false);
+            else {
+                managerComboBox.getItems().addAll(managers.stream().map(User::getEmail).collect(Collectors.toCollection(ArrayList::new)));
+                managerComboBox.setVisibleRowCount(6);
+                domaineComboBox.setTooltip(new Tooltip("Sélectionner le manager de l'association"));
+                new ComboBoxAutoComplete<>(managerComboBox);
+                managerComboBox.getValidators().add(requiredFieldValidator);
+                managerComboBox.setOnMouseClicked(mouseEvent -> managerComboBox.validate());
+            }
         }
+
         // Piece justificative
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Veuillez choisir la photo de l'association");
@@ -211,9 +269,7 @@ public class AssociationCreateController implements Initializable {
         });
 
         de.valueProperty().setValue(LocalTime.now());
-        de.valueProperty().addListener(a -> {
-            vers.setValue(de.getValue().plusHours(1));
-        });
+        de.valueProperty().addListener(a -> vers.setValue(de.getValue().plusHours(1)));
         vers.valueProperty().addListener((observableValue, localTime, t1) -> {
             if (t1.getHour() == de.getValue().getHour())
                 de.setValue(de.getValue().minusHours(1));
@@ -235,23 +291,37 @@ public class AssociationCreateController implements Initializable {
         else
             managerSelected = Bindings.createBooleanBinding(() -> managerComboBox.getSelectionModel().getSelectedIndex() == -1, managerComboBox.valueProperty());
 
-        validateButton.disableProperty().bind(nomFieldValid.or(descriptionFieldValid.or(zipFieldValid.or(rueFieldValid.or(phoneNumberFieldValid.or(versTimeFieldValid.or(pieceValid.not().or(photoValid.not().or(villeComboSelected.or(managerSelected))))))))));
-
+        validateButton.disableProperty().bind(
+                nomFieldValid.or(
+                        descriptionFieldValid.or(
+                                zipFieldValid.or(
+                                        rueFieldValid.or(
+                                                phoneNumberFieldValid.or(
+                                                        versTimeFieldValid
+                                                                .or(pieceValid.not()
+                                                                        .or(photoValid.not()
+                                                                                .or(villeComboSelected
+                                                                                        .or(managerSelected)
+                                                                                )
+                                                                        )
+                                                                )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        );
         validateButton.setOnAction(actionEvent -> {
             association.setLat(Double.valueOf(((Association) window.getMember("association")).getLat()));
             association.setLon(Double.valueOf(((Association) window.getMember("association")).getLon()));
-            if (!isRegisterPage) {
-                association.setManager(managerComboBox.getValue());
-                association.setApprouved(true);
-            } else {
-                association.setApprouved(false);
-            }
+            //association.setManager(managerComboBox.getValue());
+            association.setApprouved(!isRegisterPage);
             association.setRue(rueInput.getText());
             association.setVille(villeComboBox.getValue());
             association.setCodePostal(Integer.parseInt(zipInput.getText()));
             association.setNom(nomInput.getText());
             association.setDescription(descriptionInput.getText());
-            association.setDomaine(domaineComboBox.getValue());
+            //association.setDomaine(domaineComboBox.getValue());
             association.setTelephone(Integer.parseInt(phoneNumberInput.getText()));
             association.setPhotoAgence(photo.getName());
             association.setPieceJustificatif(piece.getName());
@@ -261,28 +331,10 @@ public class AssociationCreateController implements Initializable {
                 AssociationService.getInstace().create(association);
             } catch (IOException | SQLException ex) {
                 ex.printStackTrace();
+            } finally {
+                System.out.println("close it now bitch");
             }
 
         });
-    }
-
-    boolean rueValidCheck(String rue) {
-        if (!rue.isBlank() && rue.length() > 8) {
-            if (rue.contains(" ")) {
-                return !rue.substring(0, rue.indexOf(' ')).matches(".*\\d.*");
-            }
-        }
-        return true;
-    }
-
-    boolean checkValidStringInput(String input, Boolean isAlphaNumerical, int minLength, int maxLength) {
-        if (input.isEmpty() || input.isBlank()) {
-            return false;
-        } else if (input.length() > maxLength || input.length() < minLength) {
-            return false;
-        } else if (!isAlphaNumerical) {
-            return !input.matches(".*\\d.*");
-        }
-        return true;
     }
 }

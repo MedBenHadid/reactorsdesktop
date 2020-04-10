@@ -2,7 +2,6 @@ package Packages.Mohamed.Scenes;
 
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Models.Membership;
-import Packages.Chihab.Scenes.AssociationsBackofficeController;
 import Packages.Chihab.Services.MembershipService;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
@@ -50,7 +49,7 @@ public class MissionProfileController implements Initializable {
     JFXSpinner spinner;
     //private Desktop desktop = Desktop.getDesktop();
     FTPInterface ftpInterface;
-    private MembershipService membershipService = MembershipService.getInstace();
+    private final MembershipService membershipService = MembershipService.getInstace();
     private Association a;
 
     public MissionProfileController() {
