@@ -102,4 +102,24 @@ public class ServiceHebergementOffer implements IService<HebergementOffer> {
 
         return list;
     }
+
+    public String getUserName(int userId) {
+        String userName = null;
+
+        try {
+            String query = "SELECT user.username FROM hebergement, user WHERE hebergement.user_id = ? " +
+                    " and hebergement.user_id = user.id";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            if (resultSet != null) {
+                userName = resultSet.getString(1);
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        }
+
+        return userName;
+    }
 }

@@ -30,21 +30,26 @@
     -fx-border-style: solid;
 }
 
-.deleteButton, .updateButton {
+.table-column {
+    -fx-pref-width: 150px;
+}
+
+.deleteButton {
     -fx-spacing: 6px;
     -fx-padding: 6px;
     -fx-border-radius: 10px;
+    -fx-text-fill: red;
 }
 
 .button:hover {
     -fx-cursor: hand;
 }
 
-
-.deleteButton {
-    -fx-text-fill: red;
+.actionsButtonsContainer {
+    -fx-spacing: 10px;
+    -fx-alignment: center;
 }
-
-.updateButton {
-    -fx-text-fill: #1DB386;
+.xyz {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 200px;
 }

@@ -14,14 +14,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.awt.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -39,8 +45,8 @@ public class MainController implements Initializable {
 
     // Offers table collumns
     @FXML
-    private TableColumn<HebergementOfferTableModel, String> userIdOffersTableCol
-            = new TableColumn<>("Id utilisateur");
+    private TableColumn<HebergementOfferTableModel, String> userNameOffersTableCol
+            = new TableColumn<>("Nom d'utilisateur");
     @FXML
     private TableColumn<HebergementOfferTableModel, String> descriptionOffersTableCol
             = new TableColumn<>("Descirption");
@@ -67,7 +73,7 @@ public class MainController implements Initializable {
 
     // Requests Table columns
     @FXML
-    private TableColumn<HebergementRequestTableModel, String> userIdRequestTableCol
+    private TableColumn<HebergementRequestTableModel, String> userNameRequestTableCol
             = new TableColumn<>("Nom d'utilisateur");
     @FXML
     private TableColumn<HebergementRequestTableModel, String> demanderNameRequestTableCol
@@ -83,7 +89,7 @@ public class MainController implements Initializable {
             = new TableColumn<>("Pays d'origine");
     @FXML
     private TableColumn<HebergementRequestTableModel, String> arrivalDateRequestTableCol
-            = new TableColumn<>("Pays d'origine");
+            = new TableColumn<>("Date d'arrivée");
     @FXML
     private TableColumn<HebergementRequestTableModel, String> stateRequestTableCol
             = new TableColumn<>("Etat");
@@ -115,35 +121,68 @@ public class MainController implements Initializable {
         hebergementRequestObservables = FXCollections.observableArrayList();
 
         // setting up the OffersTable columns
-        userIdOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
+        userNameOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
         descriptionOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         governoratOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("governorat"));
         numberRoomsOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("numberRooms"));
         durationOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
         stateOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("state"));
         telephoneOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+
+//        imageOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("image"));
         imageOffersTableCol.setCellValueFactory(new PropertyValueFactory<>("image"));
+        imageOffersTableCol.setCellFactory(column -> {
+            TableCell<HebergementOfferTableModel, String> cell = new TableCell<HebergementOfferTableModel, String>() {
+                private final ImageView imageView = new ImageView();
+
+                @Override
+                protected void updateItem(String filePath, boolean empty) {
+                    if (filePath != null) {
+                        try {
+                            Image image = new Image(new FileInputStream(filePath));
+                            ImageView imageView = new ImageView(image);
+
+                            imageView.setFitHeight(300);
+                            imageView.setFitWidth(200);
+                            imageView.setPreserveRatio(true);
+
+                            if (empty) {
+                                setGraphic(null);
+                            } else {
+                                setGraphic(imageView);
+                            }
+                        } catch (FileNotFoundException e) {
+                            System.out.println(e.getMessage() + ": " + filePath);
+                        }
+                    }
+                }
+            };
+
+            return cell;
+        });
 
         hebergementOffersTable.getColumns()
-                .addAll(userIdOffersTableCol, descriptionOffersTableCol, governoratOffersTableCol,
+                .addAll(userNameOffersTableCol, descriptionOffersTableCol, governoratOffersTableCol,
                         numberRoomsOffersTableCol, durationOffersTableCol, stateOffersTableCol,
                         telephoneOffersTableCol, imageOffersTableCol);
 
 
         // setting up the RequestsTable Columns
-        userIdRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
+        userNameRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
         demanderNameRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         descriptionRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         regionRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("region"));
         nativeCountryRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("nativeCountry"));
+
         arrivalDateRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
+
         stateRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("state"));
         passportNumberRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("passportNumber"));
         civilStateRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("civilState"));
         telephoneRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
 
         hebergementRequestsTable.getColumns()
-                .addAll(userIdRequestTableCol, demanderNameRequestTableCol, descriptionRequestTableCol,
+                .addAll(userNameRequestTableCol, demanderNameRequestTableCol, descriptionRequestTableCol,
                         regionRequestTableCol, nativeCountryRequestTableCol, arrivalDateRequestTableCol, stateRequestTableCol,
                         passportNumberRequestTableCol, civilStateRequestTableCol, telephoneRequestTableCol
                         );
@@ -225,16 +264,6 @@ public class MainController implements Initializable {
                 public TableCell<HebergementOfferTableModel, Void> call(final TableColumn<HebergementOfferTableModel, Void> param) {
                     final TableCell<HebergementOfferTableModel, Void> cell = new TableCell<HebergementOfferTableModel, Void>() {
 
-                        private final Button updateButton = new Button("Modifier");
-
-                        {
-                            updateButton.getStyleClass().add("updateButton");
-                            updateButton.setOnAction((ActionEvent event) -> {
-                                HebergementOfferTableModel data = getTableView().getItems().get(getIndex());
-                                System.out.println("selectedData: " + data.getId());
-                                //open updateOffer stage;
-                            });
-                        }
 
                         private final Button deleteButton = new Button("Supprimer");
 
@@ -262,8 +291,8 @@ public class MainController implements Initializable {
                                 setGraphic(null);
                             } else {
                                 HBox buttonsContainer = new HBox();
-                                buttonsContainer.setSpacing(10);
-                                buttonsContainer.getChildren().addAll(updateButton, deleteButton);
+                                buttonsContainer.getStyleClass().add("actionsButtonsContainer");
+                                buttonsContainer.getChildren().add(deleteButton);
                                 setGraphic(buttonsContainer);
                             }
                         }
@@ -288,20 +317,7 @@ public class MainController implements Initializable {
                 @Override
                 public TableCell<HebergementRequestTableModel, Void> call(final TableColumn<HebergementRequestTableModel, Void> param) {
                     final TableCell<HebergementRequestTableModel, Void> cell = new TableCell<HebergementRequestTableModel, Void>() {
-
-                        private final Button updateButton = new Button("Modifier");
-
-                        {
-                            updateButton.getStyleClass().add("updateButton");
-                            updateButton.setOnAction((ActionEvent event) -> {
-                                HebergementRequestTableModel data = getTableView().getItems().get(getIndex());
-                                System.out.println("selectedData: " + data.getId());
-                            });
-                        }
-
-
                         private final Button deleteButton = new Button("Supprimer");
-
                         {
                             deleteButton.getStyleClass().add("deleteButton");
                             deleteButton.setOnAction((ActionEvent event) -> {
@@ -325,8 +341,8 @@ public class MainController implements Initializable {
                                 setGraphic(null);
                             } else {
                                 HBox buttonsContainer = new HBox();
-                                buttonsContainer.setSpacing(10);
-                                buttonsContainer.getChildren().addAll(updateButton, deleteButton);
+                                buttonsContainer.getStyleClass().add("actionsButtonsContainer");
+                                buttonsContainer.getChildren().add(deleteButton);
                                 setGraphic(buttonsContainer);
                             }
                         }

@@ -1,18 +1,23 @@
 package Packages.Nasri.ui.models;
 
 import Packages.Nasri.entities.HebergementRequest;
+import Packages.Nasri.services.ServiceHebergementRequest;
+import Packages.Nasri.utils.Helpers;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class HebergementRequestTableModel {
     private int id;
     private int userId;
+    private String userName;
     private String name;
     private String description;
     private String region;
     private String nativeCountry;
-    private LocalDateTime arrivalDate;
+    private String arrivalDate;
     private String state;
     private String passportNumber;
     private String civilState;
@@ -27,17 +32,24 @@ public class HebergementRequestTableModel {
         this.description = entity.getDescription();
         this.region = entity.getRegion();
         this.nativeCountry = entity.getNativeCountry();
-        this.arrivalDate = entity.getArrivalDate();
-        this.state = entity.getState().name();
+        this.arrivalDate = DateTimeFormatter.ISO_LOCAL_DATE.format(entity.getArrivalDate());
+        // DateTimeFormatter.ISO_LOCAL_DATE.format(entity.getArrivalDate());
+        this.state = Helpers.convertHebergementStateToFrench(entity.getState().name());
         this.passportNumber = entity.getPassportNumber();
-        this.civilState = entity.getCivilStatus().name();
+        this.civilState = Helpers.convertCivilStateToFrench(entity.getCivilStatus().name());
         this.telephone = entity.getTelephone();
+    }
+
+    public HebergementRequestTableModel(HebergementRequest entity, String userName) {
+        this(entity);
+        this.userName = userName;
     }
 
     public static ArrayList<HebergementRequestTableModel> get(ArrayList<HebergementRequest> entities) {
         ArrayList<HebergementRequestTableModel> models = new ArrayList<HebergementRequestTableModel>();
         for (HebergementRequest entity : entities) {
-            models.add(new HebergementRequestTableModel(entity));
+            String userName = new ServiceHebergementRequest().getUserName(entity.getUserId());
+            models.add(new HebergementRequestTableModel(entity, userName));
         }
 
         return models;
@@ -57,6 +69,14 @@ public class HebergementRequestTableModel {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getName() {
@@ -91,11 +111,11 @@ public class HebergementRequestTableModel {
         this.nativeCountry = nativeCountry;
     }
 
-    public LocalDateTime getArrivalDate() {
+    public String getArrivalDate() {
         return arrivalDate;
     }
 
-    public void setArrivalDate(LocalDateTime arrivalDate) {
+    public void setArrivalDate(String arrivalDate) {
         this.arrivalDate = arrivalDate;
     }
 

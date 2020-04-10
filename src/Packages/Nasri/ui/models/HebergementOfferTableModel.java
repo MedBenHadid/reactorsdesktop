@@ -2,6 +2,9 @@ package Packages.Nasri.ui.models;
 
 import Packages.Nasri.entities.HebergementOffer;
 import Packages.Nasri.entities.HebergementRequest;
+import Packages.Nasri.services.ServiceHebergementOffer;
+import Packages.Nasri.services.ServiceHebergementRequest;
+import Packages.Nasri.utils.Helpers;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -10,6 +13,7 @@ import java.util.List;
 public class HebergementOfferTableModel {
     private int id;
     private int userId;
+    private String userName;
     private String description;
     private String governorat;
     private int numberRooms;
@@ -27,15 +31,21 @@ public class HebergementOfferTableModel {
         this.governorat = entity.getGovernorat();
         this.numberRooms = entity.getNumberRooms();
         this.duration = entity.getDuration();
-        this.state = entity.getState().name();
+        this.state = Helpers.convertHebergementStateToFrench(entity.getState().name());
         this.telephone = entity.getTelephone();
         this.image = entity.getImage();
+    }
+
+    private HebergementOfferTableModel(HebergementOffer entity, String userName) {
+        this(entity);
+        this.userName = userName;
     }
 
     public static ArrayList<HebergementOfferTableModel> get(ArrayList<HebergementOffer> entities) {
         ArrayList<HebergementOfferTableModel> models = new ArrayList<HebergementOfferTableModel>();
         for (HebergementOffer entity : entities) {
-            models.add(new HebergementOfferTableModel(entity));
+            String userName = new ServiceHebergementOffer().getUserName(entity.getUserId());
+            models.add(new HebergementOfferTableModel(entity, userName));
         }
 
         return models;
@@ -55,6 +65,14 @@ public class HebergementOfferTableModel {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getDescription() {
