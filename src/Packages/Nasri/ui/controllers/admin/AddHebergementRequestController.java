@@ -12,18 +12,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.apache.tomcat.jni.Local;
 
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class AddHebergementRequestController implements Initializable {
-
-    @FXML
-    TextField userIdInput;
     @FXML
     TextField nameInput;
     @FXML
@@ -48,7 +43,12 @@ public class AddHebergementRequestController implements Initializable {
     @FXML
     protected void addButton() {
         HebergementRequest hebergementRequest = new HebergementRequest();
-        hebergementRequest.setUserId(Integer.parseInt(userIdInput.getText()));
+
+        // 72 is a temporary value of user_id
+        // users module is not integrated yet
+        hebergementRequest.setUserId(72);
+
+
         hebergementRequest.setName(nameInput.getText());
         hebergementRequest.setDescription(descriptionInput.getText());
         hebergementRequest.setRegion(regionInput.getText());
@@ -71,7 +71,7 @@ public class AddHebergementRequestController implements Initializable {
     }
 
     private void close() {
-        final Stage stage = (Stage)userIdInput.getScene().getWindow();
+        final Stage stage = (Stage)descriptionInput.getScene().getWindow();
         stage.close();
     }
 

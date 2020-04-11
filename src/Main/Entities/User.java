@@ -1,6 +1,6 @@
 package Main.Entities;
 
-import Packages.Chihab.Models.enums.RoleEnum;
+//import Packages.Chihab.Models.enums.RoleEnum;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import de.ailis.pherialize.MixedArray;
 
@@ -92,51 +92,51 @@ public class User extends RecursiveTreeObject<User> {
         this.last_login = last_login;
     }
 
-    public User(String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.banned = false;
-        this.enabled = true;
-        this.roles = new MixedArray();
-        this.roles.put(0, RoleEnum.ROLE_CLIENT);
-        this.profile = new Profile();
-    }
-    public void setApprouved(Boolean approuved) {
-        this.approuved = approuved;
-    }
-
-    public boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-    public boolean isAdmin() {
-        return this.roles.contains(RoleEnum.ROLE_SUPER_ADMIN);
-    }
-    public boolean isAssociationAdmin() {
-        return this.roles.contains(RoleEnum.ROLE_ADMIN_ASSOCIATION);
-    }
-    public boolean isMember() { return this.roles.contains(RoleEnum.ROLE_MEMBER); }
-    public boolean isClient() {
-        return this.roles.contains(RoleEnum.ROLE_CLIENT);
-    }
-
-    public boolean getApprouved() {
-        return approuved;
-    }
-
-    public void addRole(RoleEnum role) {
-        this.roles.put(this.roles.keySet().size(), role);
-    }
-    public User() {
-        this.profile = new Profile();
-    }
-
-    public void removeRole(RoleEnum role) {
-        // TODO
-    }
+//    public User(String email, String username, String password) {
+//        this.email = email;
+//        this.username = username;
+//        this.password = password;
+//        this.banned = false;
+//        this.enabled = true;
+//        this.roles = new MixedArray();
+//        this.roles.put(0, RoleEnum.ROLE_CLIENT);
+//        this.profile = new Profile();
+//    }
+//    public void setApprouved(Boolean approuved) {
+//        this.approuved = approuved;
+//    }
+//
+//    public boolean getEnabled() {
+//        return enabled;
+//    }
+//
+//    public void setEnabled(boolean enabled) {
+//        this.enabled = enabled;
+//    }
+//    public boolean isAdmin() {
+//        return this.roles.contains(RoleEnum.ROLE_SUPER_ADMIN);
+//    }
+//    public boolean isAssociationAdmin() {
+//        return this.roles.contains(RoleEnum.ROLE_ADMIN_ASSOCIATION);
+//    }
+//    public boolean isMember() { return this.roles.contains(RoleEnum.ROLE_MEMBER); }
+//    public boolean isClient() {
+//        return this.roles.contains(RoleEnum.ROLE_CLIENT);
+//    }
+//
+//    public boolean getApprouved() {
+//        return approuved;
+//    }
+//
+//    public void addRole(RoleEnum role) {
+//        this.roles.put(this.roles.keySet().size(), role);
+//    }
+//    public User() {
+//        this.profile = new Profile();
+//    }
+//
+//    public void removeRole(RoleEnum role) {
+//        // TODO
+//    }
 
 }

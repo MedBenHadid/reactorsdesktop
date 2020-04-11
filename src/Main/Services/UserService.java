@@ -11,94 +11,94 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 
 public class UserService {
-    private static UserService instance;
-    // TODO : Update profile
-    // TODO : Update
-    private Connection connection;
-
-    private UserService() {
-        connection = ConnectionUtil.conDB().conn;
-    }
-
-    public static UserService getInstace() {
-        if(instance == null) {
-            instance = new UserService();
-        }
-        return instance;
-    }
-
-
-    public boolean validateLogin(String credential, String password) throws SQLException {
-        String sql = "SELECT * FROM user Where username =? OR  email =? ";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setString(1, credential);
-        preparedStatement.setString(2, credential);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if (resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password"))) {
-            UserSession.getInstace(UserService.getInstace().resultSetToUser(resultSet));
-        }
-        return UserSession.getInstace() != null;
-    }
-
-
-    private User resultSetToUser(ResultSet rs) throws SQLException {
-        User u = new User();
-        u.setId(rs.getInt("id"));
-        u.setUsername(rs.getString("username"));
-        u.setEmail(rs.getString("email"));
-        u.setEnabled(rs.getBoolean("enabled"));
-        u.setLast_login(rs.getTimestamp("last_login"));
-        u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
-        u.getProfile().setImage(rs.getString("image"));
-        //u.getProfile().setAdresse();
-        u.getProfile().setNom(rs.getString("nom"));
-        u.getProfile().setPrenom(rs.getString("prenom"));
-        return u;
-    }
-
-    public int create(User u) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("insert into user (username,username_canonical,email,email_canonical,enabled,password,roles,banned) values (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, u.getUsername());
-        preparedStatement.setString(2, u.getUsername());
-        preparedStatement.setString(3, u.getEmail());
-        preparedStatement.setString(4, u.getEmail());
-        preparedStatement.setBoolean(5, u.getEnabled());
-        preparedStatement.setString(6, u.getPassword());
-        preparedStatement.setString(7, Pherialize.serialize(u.getRoles()));
-        preparedStatement.setBoolean(8, u.getBanned());
-        preparedStatement.executeUpdate();
-
-        ResultSet rs = preparedStatement.getGeneratedKeys();
-        if (rs.next())
-            return rs.getInt(1);
-        return -1;
-    }
-
-    public User readUserBy(int id) throws SQLException {
-        PreparedStatement pt = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
-        pt.setInt(1, id);
-        ResultSet rs = pt.executeQuery();
-        if (rs.next()) {
-            return resultSetToUser(rs);
-        }
-        return null;
-    }
-
-    public ObservableList<User> readAll() throws SQLException {
-        ObservableList<User> users = FXCollections.observableArrayList();
-        PreparedStatement pt = connection.prepareStatement("SELECT * FROM user");
-        ResultSet rs = pt.executeQuery();
-        while (rs.next()) {
-            users.add(resultSetToUser(rs));
-        }
-        return users;
-    }
-
-    public void delete(User user) throws SQLException {
-        PreparedStatement ps;
-        ps = connection.prepareStatement("DELETE FROM user WHERE id=?");
-        ps.setInt(1, user.getId());
-        ps.executeUpdate();
-    }
+//    private static UserService instance;
+//    // TODO : Update profile
+//    // TODO : Update
+//    private Connection connection;
+//
+//    private UserService() {
+//        connection = ConnectionUtil.conDB().conn;
+//    }
+//
+//    public static UserService getInstace() {
+//        if(instance == null) {
+//            instance = new UserService();
+//        }
+//        return instance;
+//    }
+//
+//
+//    public boolean validateLogin(String credential, String password) throws SQLException {
+//        String sql = "SELECT * FROM user Where username =? OR  email =? ";
+//        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+//        preparedStatement.setString(1, credential);
+//        preparedStatement.setString(2, credential);
+//        ResultSet resultSet = preparedStatement.executeQuery();
+//        if (resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password"))) {
+//            UserSession.getInstace(UserService.getInstace().resultSetToUser(resultSet));
+//        }
+//        return UserSession.getInstace() != null;
+//    }
+//
+//
+//    private User resultSetToUser(ResultSet rs) throws SQLException {
+//        User u = new User();
+//        u.setId(rs.getInt("id"));
+//        u.setUsername(rs.getString("username"));
+//        u.setEmail(rs.getString("email"));
+//        u.setEnabled(rs.getBoolean("enabled"));
+//        u.setLast_login(rs.getTimestamp("last_login"));
+//        u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
+//        u.getProfile().setImage(rs.getString("image"));
+//        //u.getProfile().setAdresse();
+//        u.getProfile().setNom(rs.getString("nom"));
+//        u.getProfile().setPrenom(rs.getString("prenom"));
+//        return u;
+//    }
+//
+//    public int create(User u) throws SQLException {
+//        PreparedStatement preparedStatement = connection.prepareStatement("insert into user (username,username_canonical,email,email_canonical,enabled,password,roles,banned) values (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+//        preparedStatement.setString(1, u.getUsername());
+//        preparedStatement.setString(2, u.getUsername());
+//        preparedStatement.setString(3, u.getEmail());
+//        preparedStatement.setString(4, u.getEmail());
+//        preparedStatement.setBoolean(5, u.getEnabled());
+//        preparedStatement.setString(6, u.getPassword());
+//        preparedStatement.setString(7, Pherialize.serialize(u.getRoles()));
+//        preparedStatement.setBoolean(8, u.getBanned());
+//        preparedStatement.executeUpdate();
+//
+//        ResultSet rs = preparedStatement.getGeneratedKeys();
+//        if (rs.next())
+//            return rs.getInt(1);
+//        return -1;
+//    }
+//
+//    public User readUserBy(int id) throws SQLException {
+//        PreparedStatement pt = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
+//        pt.setInt(1, id);
+//        ResultSet rs = pt.executeQuery();
+//        if (rs.next()) {
+//            return resultSetToUser(rs);
+//        }
+//        return null;
+//    }
+//
+//    public ObservableList<User> readAll() throws SQLException {
+//        ObservableList<User> users = FXCollections.observableArrayList();
+//        PreparedStatement pt = connection.prepareStatement("SELECT * FROM user");
+//        ResultSet rs = pt.executeQuery();
+//        while (rs.next()) {
+//            users.add(resultSetToUser(rs));
+//        }
+//        return users;
+//    }
+//
+//    public void delete(User user) throws SQLException {
+//        PreparedStatement ps;
+//        ps = connection.prepareStatement("DELETE FROM user WHERE id=?");
+//        ps.setInt(1, user.getId());
+//        ps.executeUpdate();
+//    }
 
 }

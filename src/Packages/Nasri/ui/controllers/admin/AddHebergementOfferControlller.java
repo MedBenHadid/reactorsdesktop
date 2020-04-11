@@ -17,8 +17,6 @@ import java.util.ResourceBundle;
 
 public class AddHebergementOfferControlller implements Initializable {
     @FXML
-    TextField userIdInput;
-    @FXML
     TextArea descriptionInput;
     @FXML
     TextField numberRoomsInput;
@@ -34,12 +32,11 @@ public class AddHebergementOfferControlller implements Initializable {
 
     @FXML
     protected void brownForPictureButton() {
-        File selectedFile = imageFileChooser.showOpenDialog(userIdInput.getScene().getWindow());
+        File selectedFile = imageFileChooser.showOpenDialog(numberRoomsInput.getScene().getWindow());
         this.imageFilePath = selectedFile.getAbsolutePath();
     }
     @FXML
     protected void resetButton() {
-        userIdInput.setText("");
         descriptionInput.setText("");
         numberRoomsInput.setText("");
         governoratInput.setText("");
@@ -49,7 +46,12 @@ public class AddHebergementOfferControlller implements Initializable {
     @FXML
     protected void addButton() {
         HebergementOffer hebergementOffer = new HebergementOffer();
-        hebergementOffer.setUserId(Integer.parseInt(userIdInput.getText()));
+
+        // 72 is a temporary value of user_id
+        // users module is not integrated yet
+        hebergementOffer.setUserId(72);
+
+
         hebergementOffer.setDescription(descriptionInput.getText());
         hebergementOffer.setNumberRooms(Integer.parseInt(numberRoomsInput.getText()));
         hebergementOffer.setGovernorat(governoratInput.getText());
@@ -64,7 +66,7 @@ public class AddHebergementOfferControlller implements Initializable {
     }
 
     private void close() {
-        final Stage stage = (Stage)userIdInput.getScene().getWindow();
+        final Stage stage = (Stage)descriptionInput.getScene().getWindow();
         stage.close();
     }
 
