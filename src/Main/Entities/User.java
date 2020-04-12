@@ -122,4 +122,8 @@ public class User extends RecursiveTreeObject<User> {
         this.profile = new Profile();
     }
 
+    @Override
+    public String toString() {
+        return  username ;
+    }
 }
