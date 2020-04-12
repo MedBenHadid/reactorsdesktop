@@ -91,7 +91,7 @@ public class AssociationCreateController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator("Champ manquant");
-
+        System.out.println();
         // Nom input validation
         vers.getValidators().add(requiredFieldValidator);
         vers.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
