@@ -2,6 +2,7 @@ package Packages.Mohamed.Scenes;
 
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Models.Membership;
+import Packages.Chihab.Scenes.AssociationsController;
 import Packages.Chihab.Services.MembershipService;
 import Packages.Mohamed.Entities.Mission;
 import SharedResources.URLServer;
@@ -50,7 +51,7 @@ public class MissionProfileController implements Initializable {
     JFXSpinner spinner;
     //private Desktop desktop = Desktop.getDesktop();
     FTPInterface ftpInterface;
-    private final MembershipService membershipService = MembershipService.getInstace();
+    private MembershipService membershipService = MembershipService.getInstace();
     private Association a;
 
     public MissionProfileController() {
@@ -152,7 +153,7 @@ public class MissionProfileController implements Initializable {
                 }
             } catch (Exception e) {
                 Logger.getLogger(
-                        MissionProfileController.class.getName()).log(
+                        AssociationsController.class.getName()).log(
                         Level.SEVERE, null, e
                 );
                 Alert connAlert = new Alert(Alert.AlertType.WARNING);

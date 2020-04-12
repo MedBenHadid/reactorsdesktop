@@ -12,7 +12,7 @@ public class AssociationService {
     private static AssociationService instance;
     private Connection connection;
 
-    public int create(Association a) throws SQLException {
+    public int create(Association a, int categoryId, int managerId) throws SQLException {
         PreparedStatement st = connection.prepareStatement("INSERT INTO association " +
                 "(`id`, " +
                 "`domaine_id`, " +
@@ -32,9 +32,9 @@ public class AssociationService {
                         "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
                 , Statement.RETURN_GENERATED_KEYS
         );
-        st.setNull(1, 1);
-        st.setInt(2, a.getDomaine().getId());
-        st.setInt(3, a.getManager().getId());
+        st.setInt(1, a.getId());
+        st.setInt(2, categoryId);
+        st.setInt(3, managerId);
         st.setString(4, a.getNom());
         st.setInt(5, a.getTelephone());
         st.setString(6, a.getHoraireTravail());
@@ -51,7 +51,7 @@ public class AssociationService {
         ResultSet rs = st.getGeneratedKeys();
         if (rs.next())
             return rs.getInt(1);
-        return -1;
+        return 0;
     }
 
     public ObservableList<Association> readAll() throws SQLException {

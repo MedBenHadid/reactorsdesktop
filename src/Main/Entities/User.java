@@ -11,7 +11,7 @@ public class User extends RecursiveTreeObject<User> {
     private int id;
     private String username, email, password;
     private Timestamp last_login;
-    private boolean enabled, approuved, banned;
+    private Boolean enabled,approuved,banned;
     private MixedArray roles;
     private Profile profile;
 
@@ -92,26 +92,20 @@ public class User extends RecursiveTreeObject<User> {
         this.last_login = last_login;
     }
 
-    public User(String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.banned = false;
-        this.enabled = true;
-        this.roles = new MixedArray();
-        this.roles.put(0, RoleEnum.ROLE_CLIENT);
-        this.profile = new Profile();
-    }
-    public void setApprouved(Boolean approuved) {
-        this.approuved = approuved;
-    }
-
-    public boolean getEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Boolean getApprouved() {
+        return approuved;
+    }
+
+    public void setApprouved(Boolean approuved) {
+        this.approuved = approuved;
     }
     public boolean isAdmin() {
         return this.roles.contains(RoleEnum.ROLE_SUPER_ADMIN);
@@ -124,19 +118,12 @@ public class User extends RecursiveTreeObject<User> {
         return this.roles.contains(RoleEnum.ROLE_CLIENT);
     }
 
-    public boolean getApprouved() {
-        return approuved;
-    }
-
-    public void addRole(RoleEnum role) {
-        this.roles.put(this.roles.keySet().size(), role);
-    }
     public User() {
         this.profile = new Profile();
     }
 
-    public void removeRole(RoleEnum role) {
-        // TODO
+    @Override
+    public String toString() {
+        return  username ;
     }
-
 }

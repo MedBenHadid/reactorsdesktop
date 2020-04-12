@@ -15,8 +15,8 @@ import java.util.stream.Stream;
 public class ComboBoxAutoComplete<T> {
 
     String filter = "";
-    private final ComboBox<T> cmb;
-    private final ObservableList<T> originalItems;
+    private ComboBox<T> cmb;
+    private ObservableList<T> originalItems;
 
     public ComboBoxAutoComplete(ComboBox<T> cmb) {
         this.cmb = cmb;
@@ -59,8 +59,7 @@ public class ComboBoxAutoComplete<T> {
 
     public void handleOnHiding(Event e) {
         filter = "";
-        if (cmb.getTooltip() != null)
-            cmb.getTooltip().hide();
+        cmb.getTooltip().hide();
         T s = cmb.getSelectionModel().getSelectedItem();
         cmb.getItems().setAll(originalItems);
         cmb.getSelectionModel().select(s);
