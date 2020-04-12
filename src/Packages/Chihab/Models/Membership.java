@@ -71,7 +71,6 @@ public class Membership {
             this.access = AccessType.READ;
         else if (access == 1)
             this.access = AccessType.WRITE;
-
     }
 
     @Override

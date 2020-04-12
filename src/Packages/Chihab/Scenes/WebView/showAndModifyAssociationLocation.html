@@ -22,13 +22,10 @@
     <input id="lat_association" name="lat_association" type="hidden"/>
     <input id="lng_association" name="lng_association" type="hidden"/>
 </div>
-<p hidden id="lat"></p>
-<p id="lon"></p>
+
 <script>
-
-    function initMap() {
-        var myLatLng = {lat: 36.772315, lng: 10.0375315};
-
+    function initMap(lati, long) {
+        var myLatLng = {lat: lati, lng: long};
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 10,
             center: myLatLng
@@ -86,6 +83,7 @@
                 document.getElementById('lng_association').value = evt.latLng.lng();
                 window.association.setLat(evt.latLng.lat());
                 window.association.setLon(evt.latLng.lng());
+                console.log(window.association.getLon());
                 //document.getElementById('current').innerHTML = '<p>Marker dropped: Current Lat: ' + evt.latLng.lat().toFixed(3) + ' Current Lng: ' + evt.latLng.lng().toFixed(3) + '</p>';
             });
             alert('Error: The Geolocation service failed.');
@@ -98,7 +96,6 @@
             'Error: The Geolocation service failed.' :
             'Error: Your browser doesn\'t support geolocation.');
     }
-
 </script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD00UW-yFHi17pDyHLe19_ImRpo0ja5Q3k&callback=initMap">

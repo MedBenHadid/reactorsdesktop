@@ -2,7 +2,10 @@ package SharedResources.Utils.FTPInterface;
 
 import org.apache.commons.net.ftp.FTPClient;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
@@ -59,19 +62,12 @@ public class FTPInterface {
         return temp;
     }
 
-    public boolean fileUpload(File f, String destination) throws IOException {
+    public void fileUpload(File f, String destination) throws IOException {
         connect();
-        FileInputStream inputStream = new FileInputStream(destination + f.getName());
-        OutputStream outputStream = ftpClient.storeFileStream(String.valueOf(f));
-        byte[] bytesIn = new byte[4096];
-        int read = 0;
-        while ((read = inputStream.read(bytesIn)) != -1) {
-            outputStream.write(bytesIn, 0, read);
+        try (InputStream input = new FileInputStream(f)) {
+            ftpClient.storeFile(destination + f.getName(), input);
         }
-        inputStream.close();
-        outputStream.close();
         closeConnection();
-        return ftpClient.completePendingCommand();
     }
 
     private void connect() throws IOException {
