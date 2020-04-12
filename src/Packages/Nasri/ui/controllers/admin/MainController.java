@@ -1,5 +1,7 @@
 package Packages.Nasri.ui.controllers.admin;
 
+import Packages.Nasri.entities.HebergementOffer;
+import Packages.Nasri.entities.HebergementRequest;
 import Packages.Nasri.services.ServiceHebergementOffer;
 import Packages.Nasri.services.ServiceHebergementRequest;
 import Packages.Nasri.ui.models.HebergementOfferTableModel;
@@ -137,6 +139,7 @@ public class MainController implements Initializable {
 
                 @Override
                 protected void updateItem(String filePath, boolean empty) {
+                    super.updateItem(filePath, empty);
                     if (filePath != null) {
                         try {
                             Image image = new Image(new FileInputStream(filePath));
@@ -197,6 +200,7 @@ public class MainController implements Initializable {
     private void loadRequestsTable() {
         ArrayList<HebergementRequestTableModel> hebergementRequests
                 = HebergementRequestTableModel.get(new ServiceHebergementRequest().get());
+        hebergementRequestsTable.getItems().clear();
         this.hebergementRequestsTable.getItems().addAll(hebergementRequests);
         this.addButtonToRequestTable();
     }
@@ -204,8 +208,21 @@ public class MainController implements Initializable {
     private void loadOffersTable() {
         ArrayList<HebergementOfferTableModel> hebergementOffers
                 = HebergementOfferTableModel.get(new ServiceHebergementOffer().get());
-        this.hebergementOffersTable.getItems().addAll(hebergementOffers);
-        this.addButtonToOffersTable();
+        hebergementOffersTable.getItems().clear();
+        hebergementOffersTable.getItems().addAll(hebergementOffers);
+        addButtonToOffersTable();
+    }
+
+    private void loadOffersTable(ArrayList<HebergementOfferTableModel> models) {
+        hebergementOffersTable.getItems().clear();
+        hebergementOffersTable.getItems().addAll(models);
+        addButtonToOffersTable();
+    }
+
+    private void loadRequestsTable(ArrayList<HebergementRequestTableModel> models) {
+        hebergementRequestsTable.getItems().clear();
+        hebergementRequestsTable.getItems().addAll(models);
+        addButtonToRequestTable();
     }
 
     @FXML
@@ -355,5 +372,36 @@ public class MainController implements Initializable {
 
             hebergementRequestsTable.getColumns().add(colBtn);
         }
+    }
+
+    @FXML
+    protected void handleSearchInputKeyReleasedOffersAction() {
+
+        if (searchInputHebergementOffer.getText().equals("")) {
+            loadOffersTable();
+            return;
+        }
+
+        //2. query + get
+        ArrayList<HebergementOffer> entities =
+                new ServiceHebergementOffer().get(searchInputHebergementOffer.getText());
+        ArrayList<HebergementOfferTableModel> models =
+                HebergementOfferTableModel.get(entities);
+        //3. display
+        loadOffersTable(models);
+    }
+
+    @FXML
+    protected void handleSearchInputKeyReleasedRequestsAction() {
+        if (searchInputHebergementRequest.getText().equals("")) {
+            loadRequestsTable();
+            return;
+        }
+
+        ArrayList<HebergementRequest> entities =
+                new ServiceHebergementRequest().get(searchInputHebergementRequest.getText());
+        ArrayList<HebergementRequestTableModel> models =
+                HebergementRequestTableModel.get(entities);
+        loadRequestsTable(models);
     }
 }

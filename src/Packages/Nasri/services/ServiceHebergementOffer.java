@@ -103,6 +103,42 @@ public class ServiceHebergementOffer implements IService<HebergementOffer> {
         return list;
     }
 
+    public ArrayList<HebergementOffer> get(String search) {
+        ArrayList<HebergementOffer> list = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM hebergement WHERE " +
+                    " description LIKE ? OR " +
+                    " governorat LIKE ? OR " +
+                    " telephone LIKE ?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            // can't find a cleaner way
+            preparedStatement.setString(1, search);
+            preparedStatement.setString(2, search);
+            preparedStatement.setString(3, search);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                list.add(new HebergementOffer(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getInt(5),
+                        resultSet.getInt(6),
+                        Helpers.convertDateToLocalDateTime(resultSet.getDate(7)),
+                        HebergementStatus.values()[resultSet.getInt(8)],
+                        resultSet.getString(9),
+                        resultSet.getString(10)
+                ));
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        }
+
+        return list;
+    }
+
     public String getUserName(int userId) {
         String userName = null;
 

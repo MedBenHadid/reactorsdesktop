@@ -87,6 +87,8 @@ public class ServiceHebergementRequest implements IService<HebergementRequest> {
         }
     }
 
+
+
     @Override
     public ArrayList<HebergementRequest> get() {
         ArrayList<HebergementRequest> list = new ArrayList<>();
@@ -94,6 +96,51 @@ public class ServiceHebergementRequest implements IService<HebergementRequest> {
         try {
             String query = "SELECT * FROM hebergement_request";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                list.add(new HebergementRequest(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        HebergementStatus.values()[resultSet.getInt(5)],
+                        resultSet.getString(6),
+                        Helpers.convertDateToLocalDateTime(resultSet.getDate(7)),
+                        resultSet.getString(8),
+                        CivilStatus.values()[resultSet.getInt(9)],
+                        resultSet.getInt(10),
+                        resultSet.getString(11),
+                        resultSet.getString(12),
+                        Helpers.convertDateToLocalDateTime(resultSet.getDate(13)),
+                        resultSet.getBoolean(14)
+                ));
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        }
+
+        return list;
+    }
+
+    public ArrayList<HebergementRequest> get(String search) {
+        ArrayList<HebergementRequest> list = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM hebergement_request WHERE " +
+                    " description LIKE ? OR " +
+                    " region LIKE ? OR " +
+                    " native_country LIKE ? OR " +
+                    " passport_number LIKE ? OR " +
+                    " name LIKE ? OR " +
+                    " telephone LIKE ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, search);
+            preparedStatement.setString(2, search);
+            preparedStatement.setString(3, search);
+            preparedStatement.setString(4, search);
+            preparedStatement.setString(5, search);
+            preparedStatement.setString(6, search);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 list.add(new HebergementRequest(

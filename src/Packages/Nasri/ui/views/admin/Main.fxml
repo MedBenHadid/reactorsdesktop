@@ -23,7 +23,7 @@
                            </children>
                         </HBox>
                         <Button layoutX="466.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleSearchHebergementOffersButtonAction" text="Rechercher" />
-                        <TextField fx:id="searchInputHebergementOffer" layoutX="37.0" layoutY="91.0" prefHeight="25.0" prefWidth="420.0" AnchorPane.leftAnchor="37.0" AnchorPane.topAnchor="91.0" />
+                        <TextField fx:id="searchInputHebergementOffer" layoutX="37.0" layoutY="91.0" onKeyReleased="#handleSearchInputKeyReleasedOffersAction" prefHeight="25.0" prefWidth="420.0" AnchorPane.leftAnchor="37.0" AnchorPane.topAnchor="91.0" />
                         <Button layoutX="1535.0" layoutY="81.0" mnemonicParsing="false" onAction="#handleAddHebergementOfferButtonAction" text="Ajouter" AnchorPane.rightAnchor="137.0" AnchorPane.topAnchor="91.0" />
                         <Button layoutX="1620.0" layoutY="81.0" mnemonicParsing="false" onAction="#handleRefreshHebergementOffersButtonAction" text="Rafraichir" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="91.0" />
                         <TableView fx:id="hebergementOffersTable" layoutX="37.0" layoutY="153.0" prefHeight="606.0" prefWidth="1495.0" styleClass="offersTable" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="153.0" />
@@ -40,7 +40,7 @@
                            </children>
                         </HBox>
                         <Button layoutX="466.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleSearchHebergementRequestsButtonAction" text="Rechercher" />
-                        <TextField fx:id="searchInputHebergementRequest" layoutX="14.0" layoutY="38.0" prefHeight="25.0" prefWidth="420.0" AnchorPane.leftAnchor="37.0" AnchorPane.topAnchor="91.0" />
+                        <TextField fx:id="searchInputHebergementRequest" layoutX="14.0" layoutY="38.0" onKeyReleased="#handleSearchInputKeyReleasedRequestsAction" prefHeight="25.0" prefWidth="420.0" AnchorPane.leftAnchor="37.0" AnchorPane.topAnchor="91.0" />
                         <Button layoutX="1534.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleAddHebergementRequestButtonAction" text="Ajouter" AnchorPane.rightAnchor="138.0" AnchorPane.topAnchor="91.0" />
                         <Button layoutX="1585.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleRefreshHebergementRequestsButtonAction" text="Rafraichir" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="91.0" />
                         <TableView fx:id="hebergementRequestsTable" layoutX="53.0" layoutY="178.0" prefHeight="628.0" prefWidth="1518.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="153.0" />

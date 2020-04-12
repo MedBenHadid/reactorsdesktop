@@ -10,13 +10,13 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1461.0" styleClass="root" stylesheets="@../../../resources/css/user/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Packages.Nasri.ui.controllers.user.UpdateHebergementOfferController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1461.0" styleClass="root" stylesheets="@../../../resources/css/user/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Packages.Nasri.ui.controllers.user.MainController">
    <children>
       <AnchorPane prefHeight="69.0" prefWidth="1298.0" styleClass="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label layoutX="20.0" layoutY="12.0" styleClass="logo" text="Reactors" />
-            <Button layoutX="1059.0" layoutY="13.0" mnemonicParsing="false" styleClass="callToActionButton" text="Demander un hébérgement" AnchorPane.rightAnchor="20.0" />
-            <Button layoutX="870.0" layoutY="13.0" mnemonicParsing="false" styleClass="callToActionButton" text="Offrir un hébérgement" AnchorPane.rightAnchor="245.0" />
+            <Button fx:id="addNewHebergementRequestButton" layoutX="1059.0" layoutY="13.0" mnemonicParsing="false" onAction="#handleAddHebergementRequestButtonAction" styleClass="callToActionButton" text="Demander un hébérgement" AnchorPane.rightAnchor="20.0" />
+            <Button fx:id="addNewHebergmentOfferBtn" layoutX="870.0" layoutY="13.0" mnemonicParsing="false" onAction="#handleAddHebergementOfferButtonAction" styleClass="callToActionButton" text="Offrir un hébérgement" AnchorPane.rightAnchor="245.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="68.0" prefHeight="289.0" prefWidth="1298.0" styleClass="hero" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
