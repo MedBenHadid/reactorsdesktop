@@ -1,4 +1,4 @@
-package Packages.Nasri.ui.controllers.admin;
+package Packages.Nasri.ui.controllers;
 
 import Packages.Nasri.entities.HebergementOffer;
 import Packages.Nasri.enums.HebergementStatus;
@@ -15,7 +15,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-public class AddHebergementOfferControlller implements Initializable {
+public class AddHebergementOfferController implements Initializable {
     @FXML
     TextArea descriptionInput;
     @FXML

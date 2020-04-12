@@ -1,4 +1,4 @@
-package Packages.Nasri.ui.controllers.admin;
+package Packages.Nasri.ui.controllers;
 
 import Packages.Nasri.entities.HebergementRequest;
 import Packages.Nasri.enums.CivilStatus;

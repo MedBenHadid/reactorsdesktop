@@ -215,7 +215,7 @@ public class MainController implements Initializable {
 
     @FXML
     protected void handleAddHebergementOfferButtonAction() throws IOException {
-        URL url = getClass().getResource(URLScenes.refugeesAdminAddHebergementOfferScene);
+        URL url = getClass().getResource(URLScenes.refugeesAddHebergementOfferScene);
         Parent root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
         Stage addHebergementOfferStage = new Stage();
@@ -237,7 +237,7 @@ public class MainController implements Initializable {
 
     @FXML
     protected void handleAddHebergementRequestButtonAction() throws IOException {
-        URL url = getClass().getResource(URLScenes.refugeesAdminAddHebergementRequestScene);
+        URL url = getClass().getResource(URLScenes.refugeesAddHebergementRequestScene);
         Parent root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
         Stage addHebergementRequestStage = new Stage();
