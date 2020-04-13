@@ -2,10 +2,13 @@ package Packages.Nasri.ui.controllers.admin;
 
 import Packages.Nasri.entities.HebergementOffer;
 import Packages.Nasri.entities.HebergementRequest;
+import Packages.Nasri.enums.CivilStatus;
+import Packages.Nasri.enums.HebergementStatus;
 import Packages.Nasri.services.ServiceHebergementOffer;
 import Packages.Nasri.services.ServiceHebergementRequest;
 import Packages.Nasri.ui.models.HebergementOfferTableModel;
 import Packages.Nasri.ui.models.HebergementRequestTableModel;
+import Packages.Nasri.utils.Helpers;
 import SharedResources.URLScenes;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,18 +22,18 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.awt.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -56,10 +59,10 @@ public class MainController implements Initializable {
     private TableColumn<HebergementOfferTableModel, String> governoratOffersTableCol
             = new TableColumn<>("Governorat");
     @FXML
-    private TableColumn<HebergementOfferTableModel, String> numberRoomsOffersTableCol
+    private TableColumn<HebergementOfferTableModel, Integer> numberRoomsOffersTableCol
             = new TableColumn<>("Nombre de chambres");
     @FXML
-    private TableColumn<HebergementOfferTableModel, String> durationOffersTableCol
+    private TableColumn<HebergementOfferTableModel, Integer> durationOffersTableCol
             = new TableColumn<>("Durée (mois)");
     @FXML
     private TableColumn<HebergementOfferTableModel, String> stateOffersTableCol
@@ -169,6 +172,118 @@ public class MainController implements Initializable {
                         numberRoomsOffersTableCol, durationOffersTableCol, stateOffersTableCol,
                         telephoneOffersTableCol, imageOffersTableCol);
 
+        // making the offersTable editable
+        hebergementOffersTable.setEditable(true);
+        descriptionOffersTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        governoratOffersTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        numberRoomsOffersTableCol.setCellFactory(column -> {
+            TableCell<HebergementOfferTableModel, Integer> cell = new TableCell<HebergementOfferTableModel, Integer>() {
+                private TextField numberRoomsTextField = new TextField();
+                @Override
+                protected void updateItem(Integer numberRooms, boolean empty) {
+                    super.updateItem(numberRooms, empty);
+
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        numberRoomsTextField.setText(numberRooms.toString());
+                        setGraphic(numberRoomsTextField);
+                    }
+                }
+            };
+
+            return cell;
+        });
+        durationOffersTableCol.setCellFactory(column -> {
+            TableCell<HebergementOfferTableModel, Integer> cell = new TableCell<HebergementOfferTableModel, Integer>() {
+                private TextField durationInputText = new TextField();
+                @Override
+                protected void updateItem(Integer duration, boolean empty) {
+                    super.updateItem(duration, empty);
+
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        durationInputText.setText(duration.toString());
+                        setGraphic(durationInputText);
+                    }
+                }
+            };
+
+            return cell;
+        });
+        stateOffersTableCol.setCellFactory(column -> {
+            TableCell<HebergementOfferTableModel, String> cell = new TableCell<HebergementOfferTableModel, String>() {
+                private ComboBox stateComboBox = new ComboBox();
+                @Override
+                protected void updateItem(String state, boolean empty) {
+                    super.updateItem(state, empty);
+
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        stateComboBox.getItems().add("En cours");
+                        stateComboBox.getItems().add("Terminé");
+                        int index = state.equals("En cours") ? 0 : 1;
+                        stateComboBox.getSelectionModel().select(index);
+                        setGraphic(stateComboBox);
+                    }
+                }
+            };
+
+            return cell;
+        });
+        telephoneOffersTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        descriptionOffersTableCol.setOnEditCommit(
+                descriptionCellEditEvent -> {
+                    HebergementOfferTableModel model =
+                            (HebergementOfferTableModel)hebergementOffersTable.getSelectionModel().getSelectedItem();
+                    model.setDescription(descriptionCellEditEvent.getNewValue());
+                    handleUpdateOffer(model);
+                }
+        );
+        governoratOffersTableCol.setOnEditCommit(
+                governoratCellEditEvent -> {
+                    HebergementOfferTableModel model =
+                            (HebergementOfferTableModel)hebergementOffersTable.getSelectionModel().getSelectedItem();
+                    model.setGovernorat(governoratCellEditEvent.getNewValue());
+                    handleUpdateOffer(model);
+                }
+        );
+        numberRoomsOffersTableCol.setOnEditCommit(
+                numberRoomsCellEditEvent -> {
+                    HebergementOfferTableModel model =
+                            (HebergementOfferTableModel)hebergementOffersTable.getSelectionModel().getSelectedItem();
+                    model.setNumberRooms(numberRoomsCellEditEvent.getNewValue());
+                    handleUpdateOffer(model);
+                }
+        );
+        durationOffersTableCol.setOnEditCommit(
+                durationCellEditEvent -> {
+                    HebergementOfferTableModel model =
+                            (HebergementOfferTableModel)hebergementOffersTable.getSelectionModel().getSelectedItem();
+                    model.setDuration(durationCellEditEvent.getNewValue());
+                    handleUpdateOffer(model);
+                }
+        );
+        stateOffersTableCol.setOnEditCommit(
+                stateCellEditEvent -> {
+                    HebergementOfferTableModel model =
+                            (HebergementOfferTableModel)hebergementOffersTable.getSelectionModel().getSelectedItem();
+                    model.setState(stateCellEditEvent.getNewValue());
+                    handleUpdateOffer(model);
+                }
+        );
+        telephoneOffersTableCol.setOnEditCommit(
+                telephoneCellEditEvent -> {
+                    HebergementOfferTableModel model =
+                            (HebergementOfferTableModel)hebergementOffersTable.getSelectionModel().getSelectedItem();
+                    model.setTelephone(telephoneCellEditEvent.getNewValue());
+                    handleUpdateOffer(model);
+                }
+        );
+
 
         // setting up the RequestsTable Columns
         userNameRequestTableCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
@@ -190,11 +305,190 @@ public class MainController implements Initializable {
                         passportNumberRequestTableCol, civilStateRequestTableCol, telephoneRequestTableCol
                         );
 
+        //making the requetsTable editable
+        hebergementRequestsTable.setEditable(true);
+        demanderNameRequestTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        descriptionRequestTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        regionRequestTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        nativeCountryRequestTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        arrivalDateRequestTableCol.setCellFactory(column -> {
+            TableCell<HebergementRequestTableModel, String> cell = new TableCell<HebergementRequestTableModel, String>() {
+                private DatePicker datePicker;
+                @Override
+                protected void updateItem(String date, boolean empty) {
+                    super.updateItem(date, empty);
+
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        LocalDate localDate = Helpers.convertStringToLocalDate(date, "yyyy-MM-dd");
+                        datePicker = new DatePicker(localDate);
+                        setGraphic(datePicker);
+                    }
+                }
+            };
+
+            return cell;
+        });
+        stateRequestTableCol.setCellFactory(column -> {
+            TableCell<HebergementRequestTableModel, String> cell = new TableCell<HebergementRequestTableModel, String>() {
+                private ComboBox stateComboBox = new ComboBox();
+                @Override
+                protected void updateItem(String state, boolean empty) {
+                    super.updateItem(state, empty);
+
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        stateComboBox.getItems().add("En cours");
+                        stateComboBox.getItems().add("Terminé");
+                        int index = state.equals("En cours") ? 0 : 1;
+                        stateComboBox.getSelectionModel().select(index);
+                        setGraphic(stateComboBox);
+                    }
+                }
+            };
+
+            return cell;
+        });
+        passportNumberRequestTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        telephoneRequestTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        civilStateRequestTableCol.setCellFactory(column -> {
+            TableCell<HebergementRequestTableModel, String> cell = new TableCell<HebergementRequestTableModel, String>() {
+                private ComboBox civilStatusComboBox = new ComboBox();
+                @Override
+                protected void updateItem(String state, boolean empty) {
+                    super.updateItem(state, empty);
+
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        civilStatusComboBox.getItems().add("Marié(e)");
+                        civilStatusComboBox.getItems().add("Celibataire");
+                        int index = state.equals("Marié(e)") ? 0 : 1;
+                        civilStatusComboBox.getSelectionModel().select(index);
+                        setGraphic(civilStatusComboBox);
+                    }
+                }
+            };
+
+            return cell;
+        });
+
+
+        descriptionRequestTableCol.setOnEditCommit(
+                descriptionCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setDescription(descriptionCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+        demanderNameRequestTableCol.setOnEditCommit(
+                demanderNameCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setName(demanderNameCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+        regionRequestTableCol.setOnEditCommit(
+                regionCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setRegion(regionCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+        nativeCountryRequestTableCol.setOnEditCommit(
+                nativeCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setNativeCountry(nativeCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+        arrivalDateRequestTableCol.setOnEditCommit(
+                arrivalDateCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setArrivalDate(arrivalDateCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+        stateRequestTableCol.setOnEditCommit(
+                stateCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setState(stateCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+        passportNumberRequestTableCol.setOnEditCommit(
+                passportNumberCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setPassportNumber(passportNumberCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+        telephoneRequestTableCol.setOnEditCommit(
+                telephoneCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setTelephone(telephoneCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+        civilStateRequestTableCol.setOnEditCommit(
+                civilStateCellEditEvent -> {
+                    HebergementRequestTableModel model =
+                            (HebergementRequestTableModel)hebergementRequestsTable.getSelectionModel().getSelectedItem();
+                    model.setCivilState(civilStateCellEditEvent.getNewValue());
+                    handleUpdateRequest(model);
+                }
+        );
+
+
 
         //2. add it to the tables
         loadOffersTable();
         loadRequestsTable();
         System.out.println("Opened");
+    }
+
+    private void handleUpdateOffer(HebergementOfferTableModel model) {
+        HebergementOffer hebergementOffer = new HebergementOffer(
+                model.getId(),
+                Helpers.TMP_USER_ID,
+                model.getDescription(),
+                model.getGovernorat(),
+                model.getNumberRooms(),
+                model.getDuration(),
+                model.getState().equals("En cours") ? HebergementStatus.inProcess : HebergementStatus.done,
+                model.getTelephone(), model.getImage()
+        );
+        new ServiceHebergementOffer().update(hebergementOffer);
+    }
+
+    private void handleUpdateRequest(HebergementRequestTableModel model) {
+        HebergementRequest hebergementRequest = new HebergementRequest(
+                model.getId(),
+                Helpers.TMP_USER_ID,
+                model.getDescription(),
+                model.getRegion(),
+                model.getState().equals("En cours") ? HebergementStatus.inProcess : HebergementStatus.done,
+                model.getNativeCountry(),
+                Helpers.convertStringToLocalDate(model.getArrivalDate(), "yyyy-MM-dd").atStartOfDay(),
+                model.getPassportNumber(),
+                model.getCivilState().equals("Marié(e)") ? CivilStatus.Married : CivilStatus.Single,
+                model.getChildrenNumber(),
+                model.getName(),
+                model.getTelephone(),
+                model.isAnonymous()
+                );
+
+        new ServiceHebergementRequest().update(hebergementRequest);
     }
 
     private void loadRequestsTable() {

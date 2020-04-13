@@ -4,7 +4,9 @@ import Packages.Nasri.enums.CivilStatus;
 import Packages.Nasri.enums.HebergementStatus;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public class Helpers {
@@ -24,6 +26,11 @@ public class Helpers {
         return civilStage.equals(CivilStatus.Married.name()) ? "Marié(e)" : "Célibataire";
     }
 
+    public static LocalDate convertStringToLocalDate(String date, String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return LocalDate.parse(date, formatter);
+    }
+
     public static boolean phoneNumberIsValid(String phoneNumber) {
         //source: https://stackoverflow.com/questions/42104546/java-regular-expressions-to-validate-phone-numbers
 
@@ -34,5 +41,12 @@ public class Helpers {
         Pattern pattern = Pattern.compile(regex);
 
         return pattern.matcher(phoneNumber).matches();
+    }
+
+    public static final int TMP_USER_ID = 72;
+
+    public static LocalDateTime convertStringToLocalDateTime(String arrivalDate, String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return LocalDateTime.parse(arrivalDate, formatter);
     }
 }

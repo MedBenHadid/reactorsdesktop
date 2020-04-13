@@ -22,6 +22,8 @@ public class HebergementRequestTableModel {
     private String passportNumber;
     private String civilState;
     private String telephone;
+    private boolean anonymous;
+    private int childrenNumber;
 
     public HebergementRequestTableModel() {}
 
@@ -38,6 +40,24 @@ public class HebergementRequestTableModel {
         this.passportNumber = entity.getPassportNumber();
         this.civilState = Helpers.convertCivilStateToFrench(entity.getCivilStatus().name());
         this.telephone = entity.getTelephone();
+        this.childrenNumber = entity.getChildrenNumber();
+        this.anonymous = entity.isAnonymous();
+    }
+
+    public boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
+    }
+
+    public int getChildrenNumber() {
+        return childrenNumber;
+    }
+
+    public void setChildrenNumber(int childrenNumber) {
+        this.childrenNumber = childrenNumber;
     }
 
     public HebergementRequestTableModel(HebergementRequest entity, String userName) {
