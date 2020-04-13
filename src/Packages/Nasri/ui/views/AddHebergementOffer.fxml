@@ -23,7 +23,7 @@
         <TextField fx:id="numberRoomsInput" layoutX="218.0" layoutY="145.0" prefHeight="25.0" prefWidth="310.0" promptText="5" />
         <TextField fx:id="governoratInput" layoutX="218.0" layoutY="186.0" prefHeight="25.0" prefWidth="310.0" promptText="Monastir" />
         <TextField fx:id="durationInput" layoutX="218.0" layoutY="228.0" prefHeight="25.0" prefWidth="310.0" promptText="6" />
-        <TextField fx:id="telephoneInput" layoutX="218.0" layoutY="270.0" prefHeight="25.0" prefWidth="310.0" promptText="+21658808609" />
+        <TextField fx:id="telephoneInput" layoutX="218.0" layoutY="270.0" prefHeight="25.0" prefWidth="310.0" promptText="25687987" />
         <Button layoutX="14.0" layoutY="367.0" mnemonicParsing="false" onAction="#addButton" text="Ajouter" />
         <Button layoutX="92.0" layoutY="368.0" mnemonicParsing="false" onAction="#resetButton" text="Réinitialiser" />
         <Button layoutX="218.0" layoutY="312.0" mnemonicParsing="false" onAction="#brownForPictureButton" text="Parcourir" />
