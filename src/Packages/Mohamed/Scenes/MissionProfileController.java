@@ -3,6 +3,7 @@ package Packages.Mohamed.Scenes;
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Models.Membership;
 import Packages.Chihab.Services.MembershipService;
+import Packages.Mohamed.Entities.Mission;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.JFXSpinner;
@@ -67,11 +68,12 @@ public class MissionProfileController implements Initializable {
      * Accepts an Association type and stores it to specific instance variables
      * in order to show its profile ( Preferably in a new TabPane )
      *
-     * @param association
+     * @param mission
      */
-    public MissionProfileController(Association association) {
-        this.a = association;
+    public MissionProfileController(Mission mission) {
+        //this.a = mission;
         try {
+
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
             Alert ftpAlert = new Alert(Alert.AlertType.WARNING);

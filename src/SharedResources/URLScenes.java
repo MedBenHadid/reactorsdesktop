@@ -25,10 +25,15 @@ public class URLScenes {
     final public static String memberShipUpdateItem = chihab + "Items/MemberUpdateItem.fxml";
     // Category
     final public static String domaines = chihab + "Domaines.fxml";
+    // User
+    //
+    //
     // Mohamed
-    final private static String med= "/Packages/Mohamed/Controller/";
-    // Association
-    final public static String missionDashbord = med + "Missions.fxml";
+    final private static String med= "/Packages/Mohamed/Scenes/";
+    // Mission
+    final public static String missionDashbord = med + "Mission.fxml";
+    final public static String missionProfile = med + "MissionProfile.fxml";
+    final public static String missionCreate = med + "MissionCreate.fxml";
     //
     //
     //

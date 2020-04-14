@@ -1,173 +1,187 @@
 package Packages.Mohamed.Services;
 
+import Main.Entities.User;
 import Main.Services.UserService;
-import Packages.Chihab.Models.Association;
 import Packages.Chihab.Services.CategoryService;
+import Packages.Mohamed.Entities.Mission;
+import Packages.Mohamed.util.ComboBoxItemWrap;
 import SharedResources.Utils.Connector.ConnectionUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.List;
 
 public class MissionService {
     private static MissionService instance;
     private Connection connection;
 
-    public int create(Association a, int categoryId, int managerId) throws SQLException {
-        PreparedStatement st = connection.prepareStatement("INSERT INTO association " +
-                "(`id`, " +
-                "`domaine_id`, " +
-                "`id_manager`, " +
-                "`nom`, " +
-                "`telephone`, " +
-                "`horaire_travail`, " +
-                "`photo_agence`, " +
-                "`piece_justificatif`, " +
-                "`rue`, " +
-                "`code_postal`, " +
-                "`ville`, " +
-                "`latitude`, " +
-                "`longitude`, " +
-                "`approuved`, " +
-                "`description`) " +
-                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    public void create(Mission m, List<ComboBoxItemWrap<User>> checkedList) throws SQLException {
+        PreparedStatement st = connection.prepareStatement("INSERT INTO mission " +
+                "(`domaine_id`, " +
+                "`TitleMission`, " +
+                "`picture`, " +
+                "`description`, " +
+                "`location`, " +
+                "`sumCollected`, " +
+                "`objectif`, " +
+                "`DateCreation`, " +
+                "`DateFin`, " +
+                "`ups`, " +
+                "`CreatedBy`) " +
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
                 , Statement.RETURN_GENERATED_KEYS
         );
-        st.setInt(1, a.getId());
-        st.setInt(2, categoryId);
-        st.setInt(3, managerId);
-        st.setString(4, a.getNom());
-        st.setInt(5, a.getTelephone());
-        st.setString(6, a.getHoraireTravail());
-        st.setString(7, a.getPhotoAgence());
-        st.setString(8, a.getPieceJustificatif());
-        st.setString(9, a.getRue());
-        st.setInt(10, a.getCodePostal());
-        st.setString(11, a.getVille());
-        st.setDouble(12, a.getLat());
-        st.setDouble(13, a.getLon());
-        st.setBoolean(14, a.isApprouved());
-        st.setString(15, a.getDescription());
+       // System.out.println(m.getDateCreation());
+        st.setInt(1, 76);
+        st.setString(2, m.getTitleMission());
+        st.setString(3, m.getPicture());
+        st.setString(4, m.getDescription());
+        st.setString(5, m.getLocation());
+        st.setDouble(6, 0);
+        st.setDouble(7, m.getObjectif());
+        st.setDate(8, m.getDateCreation());
+        st.setDate(9,m.getDateFin());
+        st.setInt(10, 0);
+        System.out.println(checkedList);
+
+     //   st.setDouble(12, m.getLat());
+     //   st.setDouble(13, m.getLon());
+        st.setInt(11, 75);
+
         st.executeUpdate();
         ResultSet rs = st.getGeneratedKeys();
-        if (rs.next())
-            return rs.getInt(1);
-        return 0;
+        if (rs.next()) {
+            rs.getInt(1);
+        }
     }
 
-    public ObservableList<Association> readAll() throws SQLException {
-        ObservableList<Association> ms = FXCollections.observableArrayList();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM association");
+    public ObservableList<Mission> readAll() throws SQLException {
+        ObservableList<Mission> ms = FXCollections.observableArrayList();
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM mission");
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            Association a = resultSetToAssociation(resultSet);
-            a.setDomaine(CategoryService.getInstace().readById(resultSet.getInt("domaine_id")));
-            a.setManager(UserService.getInstace().readUserBy(resultSet.getInt("id_manager")));
-            ms.add(a);
+            Mission m = resultSetToMission(resultSet);
+            m.setDomaine(CategoryService.getInstace().readById(resultSet.getInt("domaine_id")));
+            m.setCretedBy(UserService.getInstace().readUserBy(resultSet.getInt("CreatedBy")));
+            ms.add(m);
         }
         return ms;
     }
 
-    public void update(Association m) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE association SET " +
-                "nom=?" +
-                ",telephone=?" +
-                ",horaire_travail=?" +
-                ",photo_agence=?" +
-                ",piece_justificatif=?" +
-                ",rue=?" +
-                ",code_postal=?" +
-                ",ville=?" +
+    public void update(Mission m) throws SQLException {
+        PreparedStatement st = connection.prepareStatement("UPDATE mission SET " +
+                "TitleMission=?" +
+                ",picture=?" +
+                ",description=?" +
+                ",location=?" +
+                ",sumCollected=?" +
+                ",objectif=?" +
+                ",DateCreation=?" +
+                ",DateFin=?" +
+                ",ups=?" +
                 ",latitude=?" +
                 ",longitude=?" +
-                ",approuved=?" +
-                ",description=?" +
+                ",CreatedBy=?" +
+                ",domaine_id=? " +
                 "WHERE id=?"
         );
-        preparedStatement.setString(1, m.getNom());
-        preparedStatement.setInt(2, m.getTelephone());
-        preparedStatement.setString(3, m.getHoraireTravail());
-        preparedStatement.setString(4, m.getPhotoAgence());
-        preparedStatement.setString(5, m.getPieceJustificatif());
-        preparedStatement.setString(6, m.getRue());
-        preparedStatement.setInt(7, m.getCodePostal());
-        preparedStatement.setString(8, m.getVille());
-        preparedStatement.setDouble(9, m.getLat());
-        preparedStatement.setDouble(10, m.getLon());
-        preparedStatement.setBoolean(11, m.isApprouved());
-        preparedStatement.setString(12, m.getDescription());
-        preparedStatement.setInt(13, m.getId());
-        preparedStatement.executeUpdate();
+        System.out.println(m.getId()+"--"+m.getTitleMission()+"--"+m.getPicture()+"--"+m.getDescription()+"--"+m.getLocation()+"--"+m.getSumCollected()+"--"+m.getObjectif()+"--"+m.getDateCreation()+"--"+m.getDateFin()+"--");
+        st.setString(1, m.getTitleMission());
+        st.setString(2, m.getPicture());
+        st.setString(3, m.getDescription());
+        st.setString(4, m.getLocation());
+        st.setDouble(5, m.getSumCollected());
+        st.setDouble(6, m.getObjectif());
+        st.setDate(7, (Date) m.getDateCreation());
+        st.setDate(8, (Date) m.getDateFin());
+        st.setInt(9, m.getUps());
+        st.setDouble(10, m.getLat());
+        st.setDouble(11, m.getLon());
+        //st.setInt(12, m.getCretedBy().getId());
+        st.setInt(13, m.getDomaine().getId());
+        st.setInt(14, m.getId());
+        System.out.println(st);
+        st.executeUpdate();
     }
 
-    public void delete(Association m) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM association WHERE id=?");
+    public void delete(Mission m) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Mission WHERE id=?");
         preparedStatement.setInt(1, m.getId());
         preparedStatement.executeUpdate();
     }
 
-    public Association searchByAssociationId(int id) throws SQLException {
-        Association a = new Association();
-        String req = "SELECT * FROM association WHERE id=?";
+    public Mission searchByMissionId(int id) throws SQLException {
+        Mission m = new Mission();
+        String req = "SELECT * FROM mission WHERE id=?";
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement(req);
         preparedStatement.setInt(1, id);
-        a = resultSetToAssociation(preparedStatement.executeQuery());
-        return a;
+        m = resultSetToMission(preparedStatement.executeQuery());
+        return m;
     }
 
-    public Association searchByManagerId(int managerId) throws SQLException {
-        Association a = new Association();
-        String req = "SELECT * FROM association WHERE id_manager=?";
+    public Mission searchByManagerId(int managerId) throws SQLException {
+        Mission m = new Mission();
+        String req = "SELECT * FROM mission WHERE CreatedBy=?";
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement(req);
         preparedStatement.setInt(1, managerId);
-        a = resultSetToAssociation(preparedStatement.executeQuery());
-        return a;
+        m = resultSetToMission(preparedStatement.executeQuery());
+        return m;
+    }
+    public int searchByManagerName(String manager) throws SQLException {
+        User u = new User();
+        String req = "SELECT id FROM user WHERE username=?";
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareStatement(req);
+        preparedStatement.setString(1, manager);
+        u = (User) preparedStatement.executeQuery();
+        return u.getId();
     }
 
-    public Association searchByDomaine(int idDomaine) throws SQLException {
-        Association a = new Association();
-        String req = "SELECT * FROM association WHERE domaine_id=?";
+    public Mission searchByDomaine(int idDomaine) throws SQLException {
+        Mission m = new Mission();
+        String req = "SELECT * FROM mission WHERE domaine_id=?";
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement(req);
         preparedStatement.setInt(1, idDomaine);
-        a = resultSetToAssociation(preparedStatement.executeQuery());
-        return a;
+        m = resultSetToMission(preparedStatement.executeQuery());
+        return m;
     }
 
-    private Association resultSetToAssociation(ResultSet r) throws SQLException {
-        Association a = new Association();
-        a.setId(r.getInt("id"));
-        a.setNom(r.getString("nom"));
-        a.setTelephone(r.getInt("telephone"));
-        a.setHoraireTravail(r.getString("horaire_travail"));
-        a.setPhotoAgence(r.getString("photo_agence"));
-        a.setPieceJustificatif(r.getString("piece_justificatif"));
-        a.setRue(r.getString("rue"));
-        a.setCodePostal(r.getInt("code_postal"));
-        a.setVille(r.getString("ville"));
-        a.setLat(r.getDouble("latitude"));
-        a.setLon(r.getDouble("longitude"));
-        a.setApprouved(r.getBoolean("approuved"));
-        a.setDescription(r.getString("description"));
-        return a;
+    private Mission resultSetToMission(ResultSet r) throws SQLException {
+        Mission m = new Mission();
+        m.setId(r.getInt("id"));
+        m.setTitleMission(r.getString("TitleMission"));
+        m.setPicture(r.getString("picture"));
+        m.setDescription(r.getString("description"));
+        m.setLocation(r.getString("location"));
+       m.setSumCollected(r.getDouble("sumCollected"));
+       m.setObjectif(r.getDouble("objectif"));
+        m.setDateCreation(r.getDate("DateCreation"));
+        m.setDateFin(r.getDate("DateFin"));
+        m.setUps(r.getInt("ups"));
+        m.setLat(r.getDouble("latitude"));
+        m.setLon(r.getDouble("longitude"));
+        return m;
     }
     private MissionService() {
         connection = ConnectionUtil.conDB().conn;
     }
+
     public static MissionService getInstace() {
         if(instance == null) { instance = new MissionService(); }
         return instance;
     }
 
-    public Association readAssociationBy(int id) {
+    public Mission readMissionBy(int id) {
         try {
-            PreparedStatement pt = connection.prepareStatement("SELECT * FROM association WHERE id = ?");
+            PreparedStatement pt = connection.prepareStatement("SELECT * FROM mission WHERE id = ?");
             pt.setInt(1, id);
             ResultSet rs = pt.executeQuery();
             if (rs.next()) {
-                return resultSetToAssociation(rs);
+                return resultSetToMission(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
