@@ -2,9 +2,9 @@ package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
 import Main.Services.UserService;
-import Packages.Chihab.Custom.AutoCompleteBox;
-import Packages.Chihab.Custom.ComboBoxAutoComplete;
 import Packages.Chihab.Models.Association;
+import SharedResources.Utils.AutoCompleteBox;
+import SharedResources.Utils.ComboBoxAutoComplete;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTimePicker;
 import javafx.beans.binding.Bindings;
@@ -45,7 +45,7 @@ public class MissionCreateController implements Initializable {
     @FXML
     private ComboBox<String> managerComboBox;
 
-    private Association association;
+    private final Association association;
 
     public MissionCreateController() {
         this.association = new Association();

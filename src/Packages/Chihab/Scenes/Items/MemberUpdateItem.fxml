@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<HBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
+<HBox xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
     <children>
         <VBox alignment="CENTER">
             <children>
@@ -40,16 +42,8 @@
         </VBox>
         <VBox prefWidth="300.0">
             <children>
-                <ComboBox fx:id="roleComboBox" prefWidth="300.0">
-                    <VBox.margin>
-                        <Insets bottom="10.0"/>
-                    </VBox.margin>
-                </ComboBox>
-                <TextField fx:id="fonctionTextField">
-                    <VBox.margin>
-                        <Insets bottom="10.0" top="10.0"/>
-                    </VBox.margin>
-                </TextField>
+                <JFXComboBox fx:id="roleComboBox"/>
+                <JFXTextField fx:id="fonctionTextField"/>
                 <Label fx:id="dateLabel" text="Label">
                     <VBox.margin>
                         <Insets bottom="10.0" top="10.0"/>

@@ -1,6 +1,6 @@
 
 
-package Packages.Chihab.Controllers.Custom;
+package SharedResources.Utils.BinaryValidator;
 
 import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.DefaultProperty;

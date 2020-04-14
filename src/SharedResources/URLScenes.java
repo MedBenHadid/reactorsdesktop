@@ -7,6 +7,7 @@ public class URLScenes {
     final public static String login = mainSubScenesDir + "Login/Login.fxml";
     final public static String register = mainSubScenesDir + "Register/Register.fxml";
     final public static String forgotPW = mainSubScenesDir + "Forgot/Forgot.fxm";
+    final public static String sidePanel = mainDir + "SidePane.fxml";
 
     final public static String mainScene = "/Main/Home.fxml";
 

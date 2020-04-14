@@ -38,11 +38,11 @@ public class LoginController implements Initializable {
     private TextField txtPassword;
 
     @FXML
-    private Button btnSignin,btnSignup;
+    private Button btnSignin, btnSignup;
 
-    private UserService userService = UserService.getInstace();
-    private Connection con ;
-    private Alert a = new Alert(AlertType.ERROR);
+    private final UserService userService = UserService.getInstace();
+    private final Connection con;
+    private final Alert a = new Alert(AlertType.ERROR);
 
     @FXML
     public void handleButtonAction(MouseEvent event) {
@@ -64,9 +64,7 @@ public class LoginController implements Initializable {
                         stage.setResizable(true);
                         stage.show();
                     } catch (IOException ex) {
-                        a = new Alert(AlertType.ERROR);
-                        a.setContentText(ex.getMessage());
-                        a.show();
+                        ex.printStackTrace();
                     }
                     break;
                 case "Error":

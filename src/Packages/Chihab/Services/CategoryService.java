@@ -9,7 +9,7 @@ import java.sql.*;
 
 public class CategoryService {
     private static CategoryService instance;
-    private Connection connection;
+    private final Connection connection;
 
     private CategoryService() {
         connection = ConnectionUtil.conDB().conn;
@@ -48,6 +48,7 @@ public class CategoryService {
         PreparedStatement pt = connection.prepareStatement("SELECT * FROM category WHERE id = ?");
         pt.setInt(1, id);
         ResultSet rs = pt.executeQuery();
+
         if (rs.next()) {
             return resultSetToCategory(rs);
         } else {

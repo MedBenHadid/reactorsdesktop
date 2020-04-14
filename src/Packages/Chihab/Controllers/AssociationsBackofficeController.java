@@ -5,12 +5,12 @@ import Packages.Chihab.Models.Association;
 import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
+import SharedResources.Utils.BinaryValidator.RegexValidator;
 import SharedResources.Utils.FTPInterface.FTPInterface;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXProgressBar;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -18,16 +18,17 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
+import org.apache.commons.net.ftp.FTP;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.awt.*;
@@ -41,12 +42,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AssociationsBackofficeController implements Initializable {
+    private final Tab domaineTab;
     @FXML
     private TableView<Association> associationTableView;
     @FXML
     private TableColumn<Association, Association> deleteOption, pieceCol;
     @FXML
-    private TableColumn<Association, String> nomCol, descCol, villeCol, domaineCol;
+    public StackPane rootStackPane;
+    @FXML
+    private TableColumn<Association, String> descCol;
+    @FXML
+    private TableColumn<Association, JFXComboBox<String>> villeCol;
     @FXML
     private TableColumn<User, String> managerCol;
     @FXML
@@ -54,31 +60,29 @@ public class AssociationsBackofficeController implements Initializable {
     @FXML
     private Label size;
     @FXML
-    private TabPane tabPane;
-    @FXML
-    private Tab associationListTab;
-    @FXML
     private JFXButton addButton;
     @FXML
-    private TableColumn<Association, Boolean> statusCol;
-    FTPInterface ftpInterface;
+    private TableColumn<Association, String> domaineCol;
     @FXML
-    private JFXProgressBar progressBar;
+    private TableColumn<Association, Association> statusCol, nomCol;
+    private FTPInterface ftpInterface;
 
     public AssociationsBackofficeController() {
+        domaineTab = new Tab();
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
-            Alert ftpAlert = new Alert(Alert.AlertType.WARNING);
-            ftpAlert.setContentText("Error connecting to FTP server");
-            ftpAlert.show();
+            Logger.getLogger(
+                    AssociationsBackofficeController.class.getName()).log(
+                    Level.INFO, null, e
+            );
         }
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO 1: Based on role, disable { addButton, deleteOption, managerCol, statusCol}
-        associationListTab.setClosable(false);
-        //addButton.setVisible(false);
+        //associationListTab.setClosable(false);
+        //addButton.setVisible(UserSession.getInstance().isAdmin);
         ObservableList<Association> associationList = FXCollections.observableArrayList();
         try {
             associationList.addAll(AssociationService.getInstace().readAll());
@@ -86,42 +90,145 @@ public class AssociationsBackofficeController implements Initializable {
             showDialog(Alert.AlertType.ERROR, "", "Connexion au serveur échoué", "Veuillez assurer la bonne connexion");
             e.printStackTrace();
         }
-        nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        nomCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        nomCol.setCellFactory(param -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            protected void updateItem(Association a, boolean empty) {
+                super.updateItem(a, empty);
+                if (a == null) {
+                    setGraphic(null);
+                    return;
+                } else {
+                    File imageAss = null;
+                    try {
+                        imageAss = ftpInterface.downloadFile(URLServer.associationImageDir + a.getPhotoAgence(), FTP.BINARY_FILE_TYPE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    assert imageAss != null;
+                    imageView.setImage(new Image(imageAss.toURI().toString()));
+                    imageView.setFitHeight(20.0);
+                    imageView.setFitWidth(20.0);
+                    setText(a.getNom());
+                    setGraphic(imageView);
+                }
+            }
+        });
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         villeCol.setCellValueFactory(new PropertyValueFactory<>("ville"));
         managerCol.setCellValueFactory(new PropertyValueFactory<>("managerUserName"));
         domaineCol.setCellValueFactory(new PropertyValueFactory<>("domaineNom"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("approuved"));
         associationTableView.setItems(associationList);
+        statusCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        statusCol.setCellFactory(param -> new TableCell<>() {
+            private final JFXToggleButton sliderButton = new JFXToggleButton();
 
-        deleteOption.setVisible(true);
-        nomCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        descCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        villeCol.setCellFactory(ComboBoxTableCell.forTableColumn(
-                "Ariana", "Béja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"
-        ));
-        // TODO - Pre-Finishing steps: JFXToggleButton this bitch ChoiceBoxTableCell.forTableColumn(ScheduleEntry.ALLOWED_TYPES.toArray(new String[0])));
-
-        // Update section
-        // Update name section
-        nomCol.setOnEditCommit(
-                categoryStringCellEditEvent -> {
-                    Association current = associationTableView.getItems().get(categoryStringCellEditEvent.getTablePosition().getRow());
-                    if (checkValidUpdate(categoryStringCellEditEvent.getOldValue(), categoryStringCellEditEvent.getNewValue(), false, 5, 30, "nom"))
-                        try {
-                            current.setNom(categoryStringCellEditEvent.getNewValue());
-                            AssociationService.getInstace().update(current);
-                        } catch (SQLException e) {
-                            Logger.getLogger(
-                                    AssociationsBackofficeController.class.getName()).log(
-                                    Level.INFO, null, e
-                            );
-                            showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
-                        }
-                    else
-                        associationTableView.getItems().set(categoryStringCellEditEvent.getTablePosition().getRow(), current);
+            @Override
+            protected void updateItem(Association a, boolean empty) {
+                super.updateItem(a, empty);
+                if (a == null) {
+                    setGraphic(null);
+                    return;
                 }
-        );
+                sliderButton.getStyleClass().add("fx-toggle-button");
+                sliderButton.selectedProperty().setValue(a.isApprouved());
+                sliderButton.textProperty().bind(Bindings.createStringBinding(() -> sliderButton.selectedProperty().getValue() ? "Approuvé" : "Non approuvé", sliderButton.selectedProperty()));
+                setGraphic(sliderButton);
+                sliderButton.setOnAction(event -> {
+                    if (!sliderButton.selectedProperty().getValue()) {
+                        JFXDialogLayout layout = new JFXDialogLayout();
+                        layout.setHeading(new Text("Dissaproving association " + a.getNom()));
+                        JFXTextArea tr = new JFXTextArea();
+                        tr.setPromptText("Veuillez saisir la raison");
+                        tr.getValidators().add(new RegexValidator("La raison doit etre comprise entre 5 et 255", "^[\\d\\w]{5,255}"));
+                        tr.setOnKeyTyped(e -> tr.validate());
+                        layout.setBody(tr);
+                        JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+                        JFXButton verify = new JFXButton("Désapprouver");
+                        JFXButton close = new JFXButton("Fermer");
+                        close.getStyleClass().addAll("jfx-button-error");
+                        close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                        verify.disableProperty().bind(Bindings.createBooleanBinding(() -> !tr.textProperty().get().matches("^[\\d\\w]{5,255}"), tr.textProperty()));
+                        verify.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                            a.setApprouved(false);
+                            try {
+                                AssociationService.getInstace().update(a);
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            } finally {
+                                dialog.close();
+                                JFXDialogLayout l = new JFXDialogLayout();
+                                l.setHeading(new Text(a.getNom() + " : Approval"));
+                                l.setBody(new Label("Modification enregistré avec success"));
+                                JFXDialog d = new JFXDialog(rootStackPane, l, JFXDialog.DialogTransition.CENTER);
+                                JFXButton fermer = new JFXButton("Fermer");
+                                fermer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> d.close());
+                                l.setActions(fermer);
+                                d.show();
+                                // TODO : Email
+                            }
+                        });
+                        layout.setActions(close, verify);
+                        dialog.show();
+                    } else {
+                        // TODO : Approve
+                        a.setApprouved(true);
+                        try {
+                            AssociationService.getInstace().update(a);
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        } finally {
+                            JFXDialogLayout l = new JFXDialogLayout();
+                            l.setHeading(new Text("Modification de ville de " + a.getNom()));
+                            l.setBody(new Label("Modification avec success"));
+                            JFXDialog d = new JFXDialog(rootStackPane, l, JFXDialog.DialogTransition.CENTER);
+                            JFXButton fermer = new JFXButton("Fermer");
+                            fermer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> d.close());
+                            l.setActions(fermer);
+                            d.show();
+                        }
+                    }
+                });
+            }
+        });
+        deleteOption.setVisible(true);
+        descCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        villeCol.setCellValueFactory(associationJFXComboBoxCellDataFeatures -> {
+            Association a = associationJFXComboBoxCellDataFeatures.getValue();
+            JFXComboBox<String> comboBox = new JFXComboBox<>();
+            comboBox.setItems(FXCollections.observableArrayList("Ariana", "Béja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"));
+            comboBox.getSelectionModel().select(a.getVille());
+            comboBox.valueProperty().addListener((observableValue, s, t1) -> {
+                if (!s.equals(t1)) {
+                    a.setVille(t1);
+                    try {
+                        AssociationService.getInstace().update(a);
+                    } catch (SQLException e) {
+                        Logger.getLogger(
+                                AssociationsBackofficeController.class.getName()).log(
+                                Level.INFO, "Error editing ville", e
+                        );
+                    } finally {
+                        JFXDialogLayout layout = new JFXDialogLayout();
+                        layout.setBody(new Label("Modifié avec success"));
+                        layout.setHeading(new Text("Modification de ville de " + a.getNom()));
+                        JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+                        JFXButton close = new JFXButton("Fermer");
+                        close.getStyleClass().addAll("jfx-button-secondary-variant");
+                        close.setButtonType(JFXButton.ButtonType.RAISED);
+                        close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                        layout.setActions(close);
+                        dialog.show();
+                    }
+                }
+            });
+            comboBox.selectionModelProperty().addListener((observableValue, stringSingleSelectionModel, t1) -> System.out.println(t1));
+            return new SimpleObjectProperty<>(comboBox);
+        });
+        // Update section
         // Update description event handler
         descCol.setOnEditCommit(
                 categoryStringCellEditEvent -> {
@@ -129,11 +236,12 @@ public class AssociationsBackofficeController implements Initializable {
                     if (checkValidUpdate(categoryStringCellEditEvent.getOldValue(), categoryStringCellEditEvent.getNewValue(), false, 5, 255, "Description"))
                         try {
                             current.setDescription(categoryStringCellEditEvent.getNewValue());
+                            System.out.println(categoryStringCellEditEvent.getNewValue());
                             AssociationService.getInstace().update(current);
                         } catch (SQLException e) {
                             Logger.getLogger(
                                     AssociationsBackofficeController.class.getName()).log(
-                                    Level.INFO, null, e
+                                    Level.INFO, "Error updating description", e
                             );
                             showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
                         }
@@ -141,33 +249,13 @@ public class AssociationsBackofficeController implements Initializable {
                         associationTableView.getItems().set(categoryStringCellEditEvent.getTablePosition().getRow(), current);
                 }
         );
-        // Update ville section
-        villeCol.setOnEditCommit(
-                categoryStringCellEditEvent -> {
-                    Association current = associationTableView.getItems().get(categoryStringCellEditEvent.getTablePosition().getRow());
-                    if (!categoryStringCellEditEvent.getOldValue().equals(categoryStringCellEditEvent.getNewValue()))
-                        try {
-                            current.setVille(categoryStringCellEditEvent.getNewValue());
-                            AssociationService.getInstace().update(current);
-                        } catch (SQLException e) {
-                            Logger.getLogger(
-                                    AssociationsBackofficeController.class.getName()).log(
-                                    Level.INFO, null, e
-                            );
-                            showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
-                        }
-                    else
-                        System.out.println("No changes detected, saving you memory, oh look, i printed on the console, nyahahaha fuck you and your memory");
-                }
-        );
-        // Update section
         // Delete section
         deleteOption.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         deleteOption.setCellFactory(param -> new TableCell<>() {
-            private final Button deleteButton = new Button("Supprimer");
-
+            private final JFXButton deleteButton = new JFXButton("Supprimer");
             @Override
             protected void updateItem(Association a, boolean empty) {
+                deleteButton.getStyleClass().addAll("jfx-button-secondary");
                 super.updateItem(a, empty);
                 if (a == null) {
                     setGraphic(null);
@@ -200,10 +288,11 @@ public class AssociationsBackofficeController implements Initializable {
         // Piece justificative section
         pieceCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         pieceCol.setCellFactory(param -> new TableCell<>() {
-            private final Button pieceButton = new Button("Afficher");
+            private final JFXButton pieceButton = new JFXButton("Afficher");
 
             @Override
             protected void updateItem(Association a, boolean empty) {
+                pieceButton.getStyleClass().addAll("jfx-button-secondary-variant");
                 super.updateItem(a, empty);
                 if (a == null) {
                     setGraphic(null);
@@ -212,7 +301,7 @@ public class AssociationsBackofficeController implements Initializable {
                 setGraphic(pieceButton);
                 pieceButton.setOnAction(event -> {
                     try {
-                        File file = ftpInterface.downloadFile(URLServer.associationPieceDir + a.getPieceJustificatif(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+                        File file = ftpInterface.downloadFile(URLServer.associationPieceDir + a.getPieceJustificatif(), FTP.BINARY_FILE_TYPE);
 
                         if (!Desktop.isDesktopSupported())
                             return;
@@ -221,7 +310,6 @@ public class AssociationsBackofficeController implements Initializable {
                             desktop.open(file);
                             file.deleteOnExit();
                         }
-                        // TODO : Implement a print functionality using desktop.print()
                     } catch (Exception e) {
                         Logger.getLogger(
                                 AssociationsBackofficeController.class.getName()).log(
@@ -243,27 +331,27 @@ public class AssociationsBackofficeController implements Initializable {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Association rowData = row.getItem();
-                    if (tabPane.getTabs().stream().skip(1).map(Tab::getUserData).mapToInt(o -> ((Integer) o)).noneMatch(i -> i == rowData.getId())) {
-                        Tab tab = new Tab();
-                        tab.setUserData(rowData.getId());
-                        tab.setText("Association : " + rowData.getNom());
-                        tab.setClosable(true);
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationUpdateProfile));
-                        AssociationProfileUpdateController controller = new AssociationProfileUpdateController(rowData);
-                        loader.setController(controller);
-                        try {
-                            ScrollPane scrollPane = loader.load();
-                            tab.setContent(scrollPane);
-                            tab.setClosable(true);
-                            tabPane.getTabs().add(tab);
-                        } catch (IOException e) {
-                            Logger.getLogger(
-                                    AssociationsBackofficeController.class.getName()).log(
-                                    Level.WARNING, null, e
-                            );
-                            e.printStackTrace();
-                        }
+                    FXMLLoader loader;
+                    if (1 == 1)
+                        loader = new FXMLLoader(getClass().getResource(URLScenes.associationUpdateProfile));
+                    else
+                        loader = new FXMLLoader(getClass().getResource(URLScenes.associationProfile));
+                    AssociationProfileUpdateController controller = new AssociationProfileUpdateController(rowData);
+                    loader.setController(controller);
+                    StackPane createAssociation = null;
+                    try {
+                        createAssociation = loader.load();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                    JFXDialogLayout layout = new JFXDialogLayout();
+                    layout.setBody(createAssociation);
+                    layout.setHeading(new Text("Profile :" + rowData.getNom()));
+                    JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+                    JFXButton close = new JFXButton("Annuler");
+                    close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                    layout.setActions(close);
+                    dialog.show();
                 }
             });
             return row;
@@ -272,31 +360,26 @@ public class AssociationsBackofficeController implements Initializable {
         // Add association section
         addButton.setOnAction(e -> {
             try {
-                AnchorPane createAssociation = FXMLLoader.load(getClass().getResource(URLScenes.associationCreate));
-                Stage stage = new Stage();
-                Scene scene = new Scene(createAssociation);
-                stage.setScene(scene);
-                stage.show();
-                addButton.setDisable(true);
-                stage.setOnCloseRequest(ev -> {
-                    // TODO : switch this to child, for readability and to avoid the infamous bug
-                    Alert confAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                    confAlert.setTitle("Confirmation :");
-                    confAlert.setContentText("Etes vous sure de vouloir quitter ?");
-                    Optional<ButtonType> result = confAlert.showAndWait();
-                    if (result.isPresent())
-                        if (result.get() == ButtonType.OK) {
-                            addButton.setDisable(false);
-                            stage.close();
-                        } else if (result.get() == ButtonType.CANCEL)
-                            ev.consume();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationCreate));
+                AnchorPane createAssociation = loader.load();
+                JFXButton foo = (JFXButton) loader.getNamespace().get("validateButton");
+                JFXDialogLayout layout = new JFXDialogLayout();
+                layout.setBody(createAssociation);
+                layout.setHeading(new Text("Ajout d'une nouvelle association"));
+                JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+                foo.setOnMouseClicked(mouseEvent -> {
+                    associationList.add(((AssociationCreateController) loader.getController()).getAssociation());
+                    dialog.close();
                 });
+                JFXButton close = new JFXButton("Annuler");
+                close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                layout.setActions(close);
+                dialog.show();
             } catch (IOException ex) {
                 Logger.getLogger(
                         AssociationsBackofficeController.class.getName()).log(
-                        Level.WARNING, null, e
+                        Level.WARNING, "Exception loading create FXML", e
                 );
-                ex.printStackTrace();
             }
         });
         // Add association section
@@ -327,10 +410,8 @@ public class AssociationsBackofficeController implements Initializable {
             sortedCityList.comparatorProperty().bind(associationTableView.comparatorProperty());
             associationTableView.setItems(sortedCityList);
         });
-        // TODO : Search by manager
-        // TODO : Client view of association list, render items inside HBox whilst passing association instance to that item, i hope you fucker know what i'm talking about when you wake up
-        // Label for displaying number of current associations bindings
         size.textProperty().bind(Bindings.size((associationList)).asString("%d associations inscrits"));
+
     }
 
 
@@ -368,5 +449,6 @@ public class AssociationsBackofficeController implements Initializable {
         a.setContentText(context);
         a.showAndWait();
     }
+
 
 }

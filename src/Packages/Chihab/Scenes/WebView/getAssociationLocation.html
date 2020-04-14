@@ -33,6 +33,8 @@
             zoom: 10,
             center: myLatLng
         });
+        window.association.setLat(myLatLng.lat);
+        window.association.setLon(myLatLng.lng);
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {

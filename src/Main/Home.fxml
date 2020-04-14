@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXToolbar?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<AnchorPane id="AnchorPane" prefHeight="760.0" prefWidth="1360.0" stylesheets="@../SharedResources/Styles/Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Main.HomeController">
-   <children>
-      <JFXToolbar prefHeight="40.0" prefWidth="1360.0" style="-fx-background-color: #ff2e44; -fx-min-height: 42; -fx-padding: 10;" stylesheets="@../SharedResources/Styles/Style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <left>
-            <Label prefHeight="30.0" prefWidth="228.0" text="Esprit4All Dashboard" textAlignment="CENTER" textFill="WHITE" BorderPane.alignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-
-            </Label>
-         </left>
-         <right>
-            <JFXButton fx:id="exit" text="*" BorderPane.alignment="CENTER" />
-         </right>
-      </JFXToolbar>
-      <VBox fx:id="menu_bar" layoutY="42.0" prefHeight="720.0" prefWidth="250.0" style="-fx-background-color: #4242428B;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="42.0">
-         <children>
-            <AnchorPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="User" alignment="CENTER" layoutY="93.0" prefHeight="17.0" prefWidth="248.0" text="Prenom " textAlignment="CENTER" textFill="WHITE" />
-                  <Label fx:id="Role" layoutX="11.0" layoutY="122.0" text="Role" textFill="WHITE" />
-               </children>
-            </AnchorPane>
-            <JFXButton fx:id="test" onMouseClicked="#handleButtonAction" prefHeight="42.0" prefWidth="250.0" styleClass="nav-button" text="Gestion Clubs" textAlignment="CENTER" />
-         </children>
-      </VBox>
-      <AnchorPane fx:id="holderPane" layoutX="250.0" layoutY="42.0" prefHeight="720.0" prefWidth="1110.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="42.0" />
-   </children>
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="Main.HomeController">
+   <StackPane fx:id="mainStack" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+      <children>
+         <VBox style="-fx-background-color: #8f54ab;">
+            <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #8100fa;">
+               <JFXHamburger fx:id="hamburger" onMouseClicked="#onHamburgerClicked">
+                  <padding>
+                     <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                  </padding>
+                  <HBox.margin>
+                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                  </HBox.margin>
+               </JFXHamburger>
+            </HBox>
+            <JFXTabPane fx:id="tabPane" side="RIGHT" stylesheets="@styles.css" tabClosingPolicy="ALL_TABS"
+                        tabDragPolicy="REORDER" VBox.vgrow="ALWAYS">
+               <Tab fx:id="acceuilListTab" closable="false" text="Acceuil"/>
+            </JFXTabPane>
+         </VBox>
+      </children>
+   </StackPane>
+   <JFXDrawer fx:id="drawer" alignment="TOP_CENTER" defaultDrawerSize="400.0" layoutX="10.0" layoutY="10.0"
+              opacity="0.9" prefWidth="400.0" resizableOnDrag="true" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
 </AnchorPane>

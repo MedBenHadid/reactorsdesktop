@@ -1,6 +1,5 @@
 package Packages.Chihab.Controllers;
 
-import Packages.Chihab.Custom.AutoCompleteBox;
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Models.Category;
 import Packages.Chihab.Models.Membership;
@@ -9,9 +8,12 @@ import Packages.Chihab.Services.CategoryService;
 import Packages.Chihab.Services.MembershipService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
+import SharedResources.Utils.AutoCompleteBox;
 import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,14 +23,11 @@ import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -36,39 +35,33 @@ import javafx.util.StringConverter;
 import netscape.javascript.JSObject;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AssociationProfileUpdateController implements Initializable {
     @FXML
-    private TextField nomInput, rueInput, zipInput, phoneNumberInput;
+    private JFXComboBox<Category> domaineComboBox;
     @FXML
-    private TextArea descriptionInput;
+    private JFXComboBox<String> villeComboBox;
     @FXML
-    private JFXButton validateButton;
+    private JFXTextField nomInput, rueInput, zipInput, phoneNumberInput;
     @FXML
-    private Button photoButton, pieceButton, modpieceButton;
-    @FXML
-    private ComboBox<String> villeComboBox;
-    @FXML
-    private ComboBox<Category> domaineComboBox;
-    @FXML
-    private WebView gmapWebView;
+    private JFXTextArea descriptionInput;
     @FXML
     private ImageView imageImageView;
     @FXML
-    private AnchorPane rootPane;
+    private JFXButton validateButton, photoButton, modpieceButton;
+    @FXML
+    private StackPane stack;
+    @FXML
+    private WebView gmapWebView;
     @FXML
     private VBox membersVbox;
-    @FXML
-    private JFXToggleButton statusToggleButton;
     private File photo = null, piece = null;
     private Association a;
     private FTPInterface ftpInterface;
@@ -106,14 +99,6 @@ public class AssociationProfileUpdateController implements Initializable {
             imageImageView.setImage(new Image(imageAss.toURI().toString()));
         } catch (IOException e) {
             Logger.getLogger(AssociationProfileShowController.class.getName()).log(Level.SEVERE, "Error whilst fetching image", e);
-            Alert photoMissing = new Alert(Alert.AlertType.WARNING);
-            photoMissing.setContentText("Error whilst fetching photo");
-            photoMissing.show();
-        }
-        try {
-            photo = ftpInterface.downloadFile(URLServer.associationImageDir + a.getPhotoAgence(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         // Piece justificative
         FileChooser fileChooser = new FileChooser();
@@ -126,7 +111,7 @@ public class AssociationProfileUpdateController implements Initializable {
         }
         modpieceButton.setOnAction(e -> {
             pieceValid.set(false);
-            piece = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+            piece = fileChooser.showOpenDialog(stack.getScene().getWindow());
             if (piece != null) {
                 String[] names = ImageIO.getReaderFormatNames();
                 for (String exst : names) {
@@ -143,32 +128,12 @@ public class AssociationProfileUpdateController implements Initializable {
                 }
             }
         });
-        pieceButton.setOnAction(event -> {
-            try {
-                File file = ftpInterface.downloadFile(URLServer.associationPieceDir + a.getPieceJustificatif(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-                if (!Desktop.isDesktopSupported())
-                    return;
-                Desktop desktop = Desktop.getDesktop();
-                if (file.exists()) {
-                    desktop.open(file);
-                    file.deleteOnExit();
-                }
-            } catch (Exception e) {
-                Logger.getLogger(
-                        AssociationsBackofficeController.class.getName()).log(
-                        Level.SEVERE, null, e
-                );
-                Alert connAlert = new Alert(Alert.AlertType.WARNING);
-                connAlert.setContentText("Error whilst fetching " + a.getPieceJustificatif() + " from FTP server");
-                connAlert.show();
-            }
-        });
         fileChooser.setTitle("Veuillez choisir la photo de l'association");
         photoButton.setTooltip(new Tooltip("Veuillez choisir la photo de l'association"));
         SimpleBooleanProperty photoValid = new SimpleBooleanProperty(false);
         photoButton.setOnAction(e -> {
             photoValid.set(false);
-            photo = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+            photo = fileChooser.showOpenDialog(stack.getScene().getWindow());
             if (photo != null) {
                 String[] names = ImageIO.getReaderFormatNames();
                 //ImageIO.read(file);
@@ -238,6 +203,8 @@ public class AssociationProfileUpdateController implements Initializable {
                 AssociationService.getInstace().update(a);
             } catch (IOException | SQLException ex) {
                 ex.printStackTrace();
+            } finally {
+
             }
         });
         FXMLLoader loader = null;
@@ -251,22 +218,6 @@ public class AssociationProfileUpdateController implements Initializable {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-        statusToggleButton.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
-            if (aBoolean) {
-                Dialog<String> confDialog = new TextInputDialog("");
-                confDialog.setContentText("Veuillez indiquer la raison :");
-                Optional<String> result = confDialog.showAndWait();
-                if (result.isPresent()) {
-                    String entered = result.get();
-                    System.out.println(a.isApprouved());
-                    // TODO : Disable
-                    // TODO : Send email with reason {entered}
-                } else {
-                    statusToggleButton.selectedProperty().setValue(true);
-                    // TODO : Send confirmation email
-                }
-            }
-        });
     }
 
     boolean rueValidCheck(String rue) {

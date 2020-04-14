@@ -1,4 +1,4 @@
-package Packages.Chihab.Custom;
+package SharedResources.Utils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +11,7 @@ import javafx.scene.input.MouseButton;
 
 public class AutoCompleteBox<S> implements EventHandler {
     final private ObservableList data;
-    private ComboBox comboBox;
+    private final ComboBox comboBox;
     private Integer sid;
 
     public AutoCompleteBox(final ComboBox comboBox) {

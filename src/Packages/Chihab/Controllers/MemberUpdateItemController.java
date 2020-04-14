@@ -4,14 +4,14 @@ import Packages.Chihab.Models.Membership;
 import Packages.Chihab.Services.MembershipService;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -33,9 +33,9 @@ public class MemberUpdateItemController implements Initializable {
     @FXML
     private JFXTextArea descriptionLabel;
     @FXML
-    private ComboBox roleComboBox;
+    private JFXComboBox roleComboBox;
     @FXML
-    private TextField fonctionTextField;
+    private JFXTextField fonctionTextField;
     @FXML
     private Label nameLabel;
     private Membership m;
