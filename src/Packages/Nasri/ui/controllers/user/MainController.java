@@ -12,6 +12,10 @@ import Packages.Nasri.ui.models.UserHebergementOfferTableModel;
 import Packages.Nasri.ui.models.UserHebergementRequestTableModel;
 import Packages.Nasri.utils.Helpers;
 import SharedResources.URLScenes;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,9 +32,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.apache.commons.net.ntp.TimeStamp;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -255,7 +261,88 @@ public class MainController implements Initializable {
         loadOffersTable(models);
     }
 
-
+    @FXML
+    protected void exportOffersToPDF() {
+        System.out.println("exportOffersToPDF");
+        try {
+            Document document = new Document();
+            String FILE = "c:/temp/users/" + "Export-Offers-" + TimeStamp.getCurrentTime().toString() + ".pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(FILE));
+            document.open();
+            document.addTitle("Export-Offers-" + TimeStamp.getCurrentTime().toString());
+            //document content
+            PdfPTable table = new PdfPTable(7);
+            ArrayList<HebergementOffer> offers = new ServiceHebergementOffer().get();
+            ArrayList<HebergementOfferTableModel> data = HebergementOfferTableModel.get(offers);
+            //adding headers
+            table.addCell("Nom d'utilisateur");
+            table.addCell("Description");
+            table.addCell("Governorat");
+            table.addCell("Nombre de chambres");
+            table.addCell("Durée(mois)");
+            table.addCell("Etat");
+            table.addCell("Telephone");
+            table.completeRow();
+            for (HebergementOfferTableModel offer : data) {
+                table.addCell(offer.getUserName());
+                table.addCell(offer.getDescription());
+                table.addCell(offer.getGovernorat());
+                table.addCell(Integer.toString(offer.getNumberRooms()));
+                table.addCell(Integer.toString(offer.getDuration()));
+                table.addCell(offer.getState());
+                table.addCell(offer.getTelephone());
+                table.completeRow();
+            }
+            document.add(table);
+            document.close();
+        } catch(IOException | DocumentException e) {
+            System.out.println("xyz");
+        }
+    }
+    @FXML
+    protected void exportRequestsToPDF() {
+        System.out.println("exportOffersToPDF");
+        try {
+            Document document = new Document();
+            String FILE = "c:/temp/users/" + "Export-Requests-" + TimeStamp.getCurrentTime().toString() + ".pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(FILE));
+            document.open();
+            document.addTitle("Export-Offers-" + TimeStamp.getCurrentTime().toString());
+            //document content
+            PdfPTable table = new PdfPTable(10);
+            ArrayList<HebergementRequest> offers = new ServiceHebergementRequest().get();
+            ArrayList<HebergementRequestTableModel> data = HebergementRequestTableModel.get(offers);
+            //adding headers
+            table.addCell("Nom d'utilisateur");
+            table.addCell("Description");
+            table.addCell("Region");
+            table.addCell("Pays d'origine");
+            table.addCell("Date d'arrivée");
+            table.addCell("Etat");
+            table.addCell("Passport");
+            table.addCell("Telephone");
+            table.addCell("Etat Civil");
+            table.addCell("Nombre d'enfants");
+            table.completeRow();
+            for (HebergementRequestTableModel request : data) {
+                table.addCell(request.getUserName());
+                table.addCell(request.getDescription());
+                table.addCell(request.getRegion());
+                table.addCell(request.getNativeCountry());
+                table.addCell(request.getArrivalDate());
+                table.addCell(request.getState());
+                table.addCell(request.getPassportNumber());
+                table.addCell(request.getTelephone());
+                table.addCell(request.getCivilState());
+                table.addCell(Integer.toString(request.getChildrenNumber()));
+                table.completeRow();
+            }
+            document.add(table);
+            document.close();
+        } catch(IOException | DocumentException e) {
+            System.out.println("xyz");
+        }
+    }
 
     @FXML
     protected void handleRefreshHebergementOffersButtonAction() {
@@ -443,4 +530,7 @@ public class MainController implements Initializable {
             hebergementRequestsTable.getColumns().add(colBtn);
         }
     }
+
+
+
 }
