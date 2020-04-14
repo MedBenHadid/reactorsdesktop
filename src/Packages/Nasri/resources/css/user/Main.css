@@ -3,6 +3,10 @@
     -fx-font-size: 16px;
 }
 
+.button {
+    -fx-cursor: hand;
+}
+
 .header {
     -fx-background-color: #eee;
     -fx-padding: 0;
@@ -50,6 +54,18 @@
     -fx-text-fill: #044E54;
     -fx-font-size: 24px;
     -fx-font-weight: bold;
+}
+
+.actionsButtonsContainer {
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+}
+
+.deleteButton {
+    -fx-spacing: 6px;
+    -fx-padding: 6px;
+    -fx-border-radius: 10px;
+    -fx-text-fill: red;
 }
 
 

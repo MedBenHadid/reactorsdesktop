@@ -49,9 +49,9 @@ public class AddHebergementRequestController implements Initializable {
 
         HebergementRequest hebergementRequest = new HebergementRequest();
 
-        // 72 is a temporary value of user_id
+        // TMP_USER_ID is a temporary value of user_id
         // users module is not integrated yet
-        hebergementRequest.setUserId(72);
+        hebergementRequest.setUserId(Helpers.TMP_USER_ID);
 
 
         hebergementRequest.setName(nameInput.getText());

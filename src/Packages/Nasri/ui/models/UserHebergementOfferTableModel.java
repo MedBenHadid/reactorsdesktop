@@ -1,51 +1,65 @@
 package Packages.Nasri.ui.models;
 
 import Packages.Nasri.entities.HebergementOffer;
-import Packages.Nasri.entities.HebergementRequest;
 import Packages.Nasri.services.ServiceHebergementOffer;
-import Packages.Nasri.services.ServiceHebergementRequest;
 import Packages.Nasri.utils.Helpers;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
-public class HebergementOfferTableModel {
+public class UserHebergementOfferTableModel {
     private int id;
     private int userId;
     private String userName;
     private String description;
     private String governorat;
-    private int numberRooms;
-    private int duration;
-    private String state;
+    private String numberRooms;
+    private String duration;
     private String telephone;
+    private String state;
     private String image;
 
-    public HebergementOfferTableModel() {}
-
-    private HebergementOfferTableModel(HebergementOffer entity) {
+    private UserHebergementOfferTableModel(HebergementOffer entity) {
         this.id = entity.getId();
         this.userId = entity.getUserId();
         this.description = entity.getDescription();
         this.governorat = entity.getGovernorat();
-        this.numberRooms = entity.getNumberRooms();
-        this.duration = entity.getDuration();
-        this.state = Helpers.convertHebergementStateToFrench(entity.getState().name());
         this.telephone = entity.getTelephone();
+        this.numberRooms = Integer.toString(entity.getNumberRooms());
+        this.duration = Integer.toString(entity.getDuration());
+        this.state = Helpers.convertHebergementStateToFrench(entity.getState().name());
         this.image = entity.getImage();
     }
 
-    private HebergementOfferTableModel(HebergementOffer entity, String userName) {
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public UserHebergementOfferTableModel() {}
+
+
+
+    private UserHebergementOfferTableModel(HebergementOffer entity, String userName) {
         this(entity);
         this.userName = userName;
     }
 
-    public static ArrayList<HebergementOfferTableModel> get(ArrayList<HebergementOffer> entities) {
-        ArrayList<HebergementOfferTableModel> models = new ArrayList<HebergementOfferTableModel>();
+    public static ArrayList<UserHebergementOfferTableModel> get(ArrayList<HebergementOffer> entities) {
+        ArrayList<UserHebergementOfferTableModel> models = new ArrayList<UserHebergementOfferTableModel>();
         for (HebergementOffer entity : entities) {
             String userName = new ServiceHebergementOffer().getUserName(entity.getUserId());
-            models.add(new HebergementOfferTableModel(entity, userName));
+            models.add(new UserHebergementOfferTableModel(entity, userName));
         }
 
         return models;
@@ -91,28 +105,20 @@ public class HebergementOfferTableModel {
         this.governorat = governorat;
     }
 
-    public int getNumberRooms() {
+    public String getNumberRooms() {
         return numberRooms;
     }
 
-    public void setNumberRooms(int numberRooms) {
+    public void setNumberRooms(String numberRooms) {
         this.numberRooms = numberRooms;
     }
 
-    public int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public String getTelephone() {
@@ -121,13 +127,5 @@ public class HebergementOfferTableModel {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 }

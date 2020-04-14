@@ -56,9 +56,9 @@ public class AddHebergementOfferController implements Initializable {
 
         HebergementOffer hebergementOffer = new HebergementOffer();
 
-        // 72 is a temporary value of user_id
+        // TMP_USER_ID is a temporary value of user_id
         // users module is not integrated yet
-        hebergementOffer.setUserId(72);
+        hebergementOffer.setUserId(Helpers.TMP_USER_ID);
 
 
         hebergementOffer.setDescription(descriptionInput.getText());

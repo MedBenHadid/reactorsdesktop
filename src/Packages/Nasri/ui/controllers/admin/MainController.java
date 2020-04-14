@@ -54,7 +54,7 @@ public class MainController implements Initializable {
             = new TableColumn<>("Nom d'utilisateur");
     @FXML
     private TableColumn<HebergementOfferTableModel, String> descriptionOffersTableCol
-            = new TableColumn<>("Descirption");
+            = new TableColumn<>("Description");
     @FXML
     private TableColumn<HebergementOfferTableModel, String> governoratOffersTableCol
             = new TableColumn<>("Governorat");
@@ -454,7 +454,6 @@ public class MainController implements Initializable {
         //2. add it to the tables
         loadOffersTable();
         loadRequestsTable();
-        System.out.println("Opened");
     }
 
     private void handleUpdateOffer(HebergementOfferTableModel model) {
@@ -495,8 +494,8 @@ public class MainController implements Initializable {
         ArrayList<HebergementRequestTableModel> hebergementRequests
                 = HebergementRequestTableModel.get(new ServiceHebergementRequest().get());
         hebergementRequestsTable.getItems().clear();
-        this.hebergementRequestsTable.getItems().addAll(hebergementRequests);
-        this.addButtonToRequestTable();
+        hebergementRequestsTable.getItems().addAll(hebergementRequests);
+        addButtonToRequestTable();
     }
 
     private void loadOffersTable() {
