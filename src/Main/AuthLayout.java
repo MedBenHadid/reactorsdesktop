@@ -65,7 +65,7 @@ public class AuthLayout  extends Application implements Initializable {
     private double yOffset = 0;
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = load(getClass().getResource(URLScenes.associationSuperAdminDashboard));
+        Parent root = load(getClass().getResource(URLScenes.authLayout));
         stage.initStyle(StageStyle.DECORATED);
         stage.setTitle("ReactorsFX : La bénévolat en desktop");
         // Louled ken fadetkom set them both to false
