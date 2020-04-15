@@ -42,6 +42,5 @@ public class URLScenes {
     //
     //
     // Mohamed
-    final private static String med = "/Packages/Mohamed/Scenes/";
 
 }
