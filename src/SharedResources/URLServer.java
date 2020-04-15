@@ -14,6 +14,8 @@ public class URLServer {
     // FTP Upload directories {used for uploading}
     public final static String userImageDir = "user/images/";
     public final static String associationImageDir = "association/images/";
+    public final static String missionImageDir = "mission/images/";
+
     public final static String associationPieceDir = "association/pieces/";
     //
 }

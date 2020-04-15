@@ -139,4 +139,8 @@ public class User extends RecursiveTreeObject<User> {
         // TODO
     }
 
+    @Override
+    public String toString() {
+        return username;
+    }
 }

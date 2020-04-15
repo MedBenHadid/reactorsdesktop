@@ -27,6 +27,46 @@ public class UserService {
         return instance;
     }
 
+    public void createUpdateUser(User user){
+        String request ="INSERT INTO user VALUES ()";
+        Statement st;
+        try {
+            st = connection.createStatement();
+            st.executeQuery(request);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public User readUserByCredentials(String credential) {
+        User user;
+        try {
+            PreparedStatement pt = connection.prepareStatement("SELECT * FROM user WHERE username = ? OR email = ?");
+            pt.setString(1,credential);
+            pt.setString(2,credential);
+            user = resultSetToUser(pt.executeQuery());
+            return user;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteUser(User user){
+        PreparedStatement ps ;
+        try {
+            ps = connection.prepareStatement("DELETE FROM user WHERE id=?");
+            ps.setInt(1,user.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     public boolean validateLogin(String credential, String password) throws SQLException {
         String sql = "SELECT * FROM user Where username =? OR  email =? ";
@@ -94,6 +134,9 @@ public class UserService {
         }
         return users;
     }
+
+
+
 
     public void delete(User user) throws SQLException {
         PreparedStatement ps;

@@ -1,56 +1,61 @@
 package Packages.Mohamed.Scenes;
 
-import Packages.Chihab.Models.Association;
-import Packages.Chihab.Models.Membership;
-import Packages.Chihab.Services.MembershipService;
+import Main.Entities.User;
+import Main.Entities.UserSession;
+import Main.Services.UserService;
+import Packages.Chihab.Services.AssociationService;
+import Packages.Mohamed.Entities.Invitation;
+import Packages.Mohamed.Entities.Mission;
+import Packages.Mohamed.Services.MissionService;
+import Packages.Mohamed.util.sendMail;
+import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
-import com.jfoenix.controls.JFXSpinner;
-import com.jfoenix.controls.JFXToggleButton;
-import javafx.beans.property.SimpleBooleanProperty;
+import com.jfoenix.controls.*;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import org.w3c.dom.Document;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Optional;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MissionProfileController implements Initializable {
     @FXML
-    Label nameLabel, descriptionLabel, numeroLabel;
+    Label t, descriptionLabel, DateDebLabel,DateFinLabel,ObjectifLabel,SumColLabel,pourcantageLabel;
     @FXML
     ImageView imageImageView;
     @FXML
-    JFXToggleButton statusToggleButton;
-    @FXML
-    TreeView<Membership> membresTreeView;
-    @FXML
-    Button afficherPieceButton;
-    @FXML
     WebView mapWebView;
     @FXML
-    JFXSpinner spinner;
-    //private Desktop desktop = Desktop.getDesktop();
+    VBox membersVbox;
+    @FXML
+    JFXProgressBar  progressBar;
+    @FXML
+    StackPane profileStack;
+
     FTPInterface ftpInterface;
-    private final MembershipService membershipService = MembershipService.getInstace();
-    private Association a;
+    private Mission m;
 
     public MissionProfileController() {
         try {
@@ -60,104 +65,113 @@ public class MissionProfileController implements Initializable {
         }
     }
 
-
-
-
     /**
      * Accepts an Association type and stores it to specific instance variables
      * in order to show its profile ( Preferably in a new TabPane )
      *
-     * @param association
+     * @param mission
      */
-    public MissionProfileController(Association association) {
-        this.a = association;
+    public MissionProfileController(Mission mission) {
+        this.m = mission;
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
-            Alert ftpAlert = new Alert(Alert.AlertType.WARNING);
-            ftpAlert.setContentText("Error connecting to FTP server");
-            ftpAlert.show();
+            // TODO : Log
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        nameLabel.setText(a.getNom());
-        descriptionLabel.setText(a.getDescription());
-        numeroLabel.setText(String.valueOf(a.getTelephone()));
-        statusToggleButton.selectedProperty().bindBidirectional(new SimpleBooleanProperty(a.isApprouved()));
-
-        statusToggleButton.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
-            if (aBoolean) {
-                Dialog confDialog = new TextInputDialog("");
-                confDialog.setContentText("Veuillez indiquer la raison :");
-                Optional<String> result = confDialog.showAndWait();
-                if (result.isPresent()) {
-                    String entered = result.get();
-                    System.out.println(entered);
-                    // TODO : Disable
-                    // TODO : Send email with reason {entered}
-                } else {
-                    statusToggleButton.selectedProperty().setValue(true);
-
-                }
-            }
-        });
+        System.out.println(m.getTitleMission());
+        t.textProperty().setValue(m.getTitleMission());
+        descriptionLabel.setText(m.getDescription());
+        DateDebLabel.setText(m.getDateCreation().toString());
+        DateFinLabel.setText(m.getDateFin().toString());
+        ObjectifLabel.setText(String.valueOf(m.getObjectif()));
+        SumColLabel.setText(m.getSumCollected().toString());
+        pourcantageLabel.setText(String.valueOf((100*m.getSumCollected())/m.getObjectif())+"%");
         mapWebView.setVisible(false);
-        mapWebView.getEngine().load(this.getClass().getResource("/Packages/Chihab/Scenes/WebView/showAssociationLocation.html").toString());
+        mapWebView.getEngine().load(this.getClass().getResource("/Packages/Mohamed/Scenes/WebView/showMissionLocation.html").toString());
         mapWebView.getEngine().getLoadWorker().stateProperty().addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                        if (newValue == Worker.State.SUCCEEDED) {
-                            spinner.setVisible(false);
-                            mapWebView.setVisible(true);
-                            mapWebView.getEngine().executeScript("initMap(" + a.getLat() + "," + a.getLon() + ")");
-                            Document document = mapWebView.getEngine().getDocument();
-                            System.out.println(document.getElementById("lat").getTextContent());
-                        }
+                (ChangeListener<? super Worker.State>) (observable, oldValue, newValue) -> {
+                    if (newValue == Worker.State.SUCCEEDED) {
+                        mapWebView.setVisible(true);
+                        mapWebView.getEngine().executeScript("initMap(" + m.getLat() + "," + m.getLon() + ")");
+                        Document document = mapWebView.getEngine().getDocument();
+                        System.out.println(document.getElementById("lat_mission").getTextContent());
                     }
                 }
         );
+        progressBar.progressProperty().setValue(((100*m.getSumCollected())/m.getObjectif())/100);
+        /**    try {
+         File imageAss = ftpInterface.downloadFile(URLServer.missionImageDir + m.getPicture(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+         imageImageView.setImage(new Image(imageAss.toURI().toString()));
+         } catch (IOException e) {
+         Logger.getLogger(
+         MissionProfileController.class.getName()).log(
+         Level.SEVERE, "Error whilst fetching image", e
+         );
+         }*/
 
+
+        FXMLLoader loader = null;
         try {
-            TreeItem<Membership> root = new TreeItem<>(membershipService.readAll().get(0));
-            membresTreeView.setRoot(root);
-        } catch (SQLException e) {
+            ArrayList<Invitation> invits = MissionService.getInstace().getInvitationsByMission(m);
+            for (Invitation i : invits) {
+                loader = new FXMLLoader(getClass().getResource(URLScenes.UserItem));
+                UserItemController controller = new UserItemController(i.getId_user());
+                loader.setController(controller);
+                HBox h = loader.load();
+                h.setOnMouseClicked(event -> {
+                    if(event.getClickCount()==2){
+                        JFXDialogLayout layout = new JFXDialogLayout();
+                        layout.setHeading(new Text("Emailing " + i.getId_user().getProfile().getNom()));
+                        JFXTextArea tr = new JFXTextArea();
+                        tr.setPromptText("Veuillez saisir la raison");
+                        //tr.getValidators().add(new RegexValidator("La raison doit etre comprise entre 5 et 255", "^[\\d\\w]{5,255}"));
+                        //tr.setOnKeyTyped(e -> tr.validate());
+                        layout.setBody(tr);
+                        JFXDialog dialog = new JFXDialog(profileStack, layout, JFXDialog.DialogTransition.CENTER);
+                        JFXButton verify = new JFXButton("Désapprouver");
+                        JFXButton close = new JFXButton("Fermer");
+                        close.getStyleClass().addAll("jfx-button-error");
+                        close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                        verify.disableProperty().bind(Bindings.createBooleanBinding(() -> !tr.textProperty().get().matches("^[\\d\\w]{5,255}"), tr.textProperty()));
+                        verify.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                            dialog.close();
+                            JFXDialogLayout l = new JFXDialogLayout();
+                            l.setHeading(new Text("Contact "));
+                            l.setBody(new Label("Modification enregistré avec success"));
+                            JFXDialog d = new JFXDialog(profileStack, l, JFXDialog.DialogTransition.CENTER);
+                            JFXButton fermer = new JFXButton("Fermer");
+                            fermer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> d.close());
+                            l.setActions(fermer);
+                            d.show();
+                            System.out.println(tr.getText());
+
+                            try {
+                                assert UserSession.getInstace() != null;
+                                sendMail.sendMailToAdmin(UserSession.getInstace().getUser().getEmail(),i.getId_user().getEmail(),tr.getText());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                            // TODO : Email
+
+                        });
+                        layout.setActions(close, verify);
+                        dialog.show();
+                        System.out.println("___________");
+                    }
+                });
+                membersVbox.getChildren().add(h);
+            }
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-        try {
-            File imageAss = ftpInterface.downloadFile(URLServer.associationImageDir + a.getPhotoAgence(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-            imageImageView.setImage(new Image(imageAss.toURI().toString()));
-        } catch (IOException e) {
-            Logger.getLogger(
-                    MissionProfileController.class.getName()).log(
-                    Level.SEVERE, "Error whilst fetching image", e
-            );
-            Alert photoMissing = new Alert(Alert.AlertType.WARNING);
-            photoMissing.setContentText("Error whilst fetching photo");
-            photoMissing.show();
-        }
-        afficherPieceButton.setOnAction(event -> {
-            try {
-                File file = ftpInterface.downloadFile(URLServer.associationPieceDir + a.getPieceJustificatif(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-                if (!Desktop.isDesktopSupported())
-                    return;
-                Desktop desktop = Desktop.getDesktop();
-                if (file.exists()) {
-                    desktop.open(file);
-                    file.deleteOnExit();
-                }
-            } catch (Exception e) {
-                Logger.getLogger(
-                        MissionProfileController.class.getName()).log(
-                        Level.SEVERE, null, e
-                );
-                Alert connAlert = new Alert(Alert.AlertType.WARNING);
-                connAlert.setContentText("Error whilst fetching " + a.getPieceJustificatif() + " from FTP server");
-                connAlert.show();
-            }
-        });
+
+
     }
 
 }
