@@ -25,61 +25,45 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HomeController implements Initializable {
-    private final UserSession userSession;
-    private final Tab associationsTab;
-    private final Tab domainesTab;
-    private final Tab missionsTab;
+    private final Tab associationsTab, domainesTab, missionsTab;
     @FXML
     private JFXTabPane tabPane;
     @FXML
     private JFXHamburger hamburger;
+    private final UserSession userSession;
     @FXML
     private JFXDrawer drawer;
     private FTPInterface ftp;
     private HamburgerBackArrowBasicTransition transition;
-    private Tab acceuilTab;
+
 
     public HomeController() {
         this.userSession = UserSession.getInstace();
         try {
             this.ftp = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
-            Logger.getLogger(
-                    HomeController.class.getName()).log(
-                    Level.WARNING, "Exception loading FTP Interface", e
-            );
+            Logger.getLogger(HomeController.class.getName()).log(Level.WARNING, "Exception loading FTP Interface", e);
         }
-
-
         this.associationsTab = new Tab();
         this.associationsTab.setText("Associations");
         try {
             this.associationsTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.associationSuperAdminDashboard)));
         } catch (IOException e) {
-            Logger.getLogger(
-                    HomeController.class.getName()).log(
-                    Level.SEVERE, "Exception loading AssociationDashboard FXML", e
-            );
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading AssociationDashboard FXML", e);
         }
         this.domainesTab = new Tab();
         this.domainesTab.setText("Domaine's d'activité");
         try {
             this.domainesTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.domaines)));
         } catch (IOException e) {
-            Logger.getLogger(
-                    HomeController.class.getName()).log(
-                    Level.SEVERE, "Exception loading create FXML", e
-            );
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
         }
         this.missionsTab = new Tab();
         this.missionsTab.setText("Missions de bénévolat");
         try {
             this.missionsTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.missionDashbord)));
         } catch (IOException e) {
-            Logger.getLogger(
-                    HomeController.class.getName()).log(
-                    Level.SEVERE, "Exception loading create FXML", e
-            );
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
         }
     }
 
@@ -112,6 +96,7 @@ public class HomeController implements Initializable {
                 // TODO : this
             });
             // !!!!!!!!!!!!!! ------------------------ Add your buttons here ------------------------ !!!!!!!!!!!!!! \\
+            /** Chihab */
             JFXButton associations = (JFXButton) loader.getNamespace().get("chihabAssociation");
             associations.setOnMouseClicked(mouseEvent -> {
                 changeTab(associationsTab);
@@ -120,6 +105,7 @@ public class HomeController implements Initializable {
             domaines.setOnMouseClicked(mouseEvent -> {
                 changeTab(domainesTab);
             });
+            /** Mohamed */
             JFXButton missions = (JFXButton) loader.getNamespace().get("mohamedMissions");
             missions.setOnMouseClicked(mouseEvent -> {
                 changeTab(missionsTab);

@@ -376,14 +376,10 @@ public class AssociationsBackofficeController implements Initializable {
                 layout.setActions(close);
                 dialog.show();
             } catch (IOException ex) {
-                Logger.getLogger(
-                        AssociationsBackofficeController.class.getName()).log(
-                        Level.WARNING, "Exception loading create FXML", e
-                );
+                Logger.getLogger(AssociationsBackofficeController.class.getName()).log(Level.WARNING, "Exception loading create FXML", e);
             }
         });
         // Add association section
-
         // Search by name bindings
         TextFields.bindAutoCompletion(inputName, associationTableView.getItems().stream().map(Association::getNom).toArray());
         FilteredList<Association> filteredName = new FilteredList<>(associationTableView.getItems(), e -> true);

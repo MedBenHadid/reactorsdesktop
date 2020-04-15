@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="608.0" prefWidth="545.0" styleClass="root"
+            stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1">
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+    </padding>
+    <children>
+        <Label id="titleLabel" layoutX="15.0" layoutY="24.0" prefHeight="27.0" prefWidth="512.0"
+               text="Modifier une demande d'hébérgement" textAlignment="CENTER"/>
+        <Label layoutX="16.0" layoutY="141.0" prefHeight="17.0" prefWidth="126.0" styleClass="inputLabel"
+               text="Description: "/>
+        <Label layoutX="15.0" layoutY="197.0" styleClass="inputLabel" text="Region:"/>
+        <Label layoutX="16.0" layoutY="408.0" styleClass="inputLabel" text="Date d'arrivée"/>
+        <Label layoutX="15.0" layoutY="238.0" styleClass="inputLabel" text="Pays d'origine: "/>
+        <TextArea layoutX="218.0" layoutY="121.0" prefHeight="65.0" prefWidth="310.0"/>
+        <TextField layoutX="218.0" layoutY="191.0" prefHeight="25.0" prefWidth="310.0"/>
+        <TextField layoutX="218.0" layoutY="232.0" prefHeight="25.0" prefWidth="310.0"/>
+        <TextField layoutX="218.0" layoutY="274.0" prefHeight="25.0" prefWidth="310.0"/>
+        <Button layoutX="20.0" layoutY="550.0" mnemonicParsing="false" text="Modifier"/>
+        <Button layoutX="109.0" layoutY="550.0" mnemonicParsing="false" text="Réinitialiser"/>
+        <Label layoutX="14.0" layoutY="280.0" styleClass="inputLabel" text="Numero de passport : "/>
+        <Label layoutX="16.0" layoutY="322.0" styleClass="inputLabel" text="Etat civil: "/>
+        <Label layoutX="16.0" layoutY="365.0" styleClass="inputLabel" text="Nombre d'enfants"/>
+        <Label layoutX="15.0" layoutY="85.0" styleClass="inputLabel" text="Nom de demandeur: "/>
+        <Label layoutX="17.0" layoutY="451.0" styleClass="inputLabel" text="Téléphone: "/>
+        <Label layoutX="18.0" layoutY="493.0" styleClass="inputLabel" text="Anonymat: "/>
+        <TextField layoutX="218.0" layoutY="79.0" prefHeight="25.0" prefWidth="310.0"/>
+        <TextField layoutX="218.0" layoutY="359.0" prefHeight="25.0" prefWidth="310.0"/>
+        <TextField layoutX="218.0" layoutY="445.0" prefHeight="25.0" prefWidth="310.0"/>
+        <ComboBox layoutX="218.0" layoutY="316.0" prefHeight="37.0" prefWidth="310.0"/>
+        <ComboBox layoutX="218.0" layoutY="487.0" prefHeight="37.0" prefWidth="310.0"/>
+        <DatePicker layoutX="218.0" layoutY="402.0" prefWidth="310.0"/>
+    </children>
+</AnchorPane>

@@ -3,178 +3,81 @@
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="600.0" maxWidth="1.7976931348623157E308" minHeight="600.0" style="-fx-background-color: ffffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Main.AuthLayout">
-   <VBox alignment="CENTER" style="-fx-background-color: #473E98;" AnchorPane.bottomAnchor="0.0"
-         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="760.0" AnchorPane.topAnchor="0.0">
-      <padding>
-         <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
-      </padding>
-      <Label alignment="CENTER" text="Reactors FX" textFill="WHITE">
-         <font>
-            <Font name="Segoe UI" size="18.0"/>
-         </font>
-      </Label>
-      <Label alignment="CENTER" text="La premiére plateforme de bénévolat" textFill="WHITE">
-         <font>
-            <Font name="Segoe UI" size="12.0"/>
-         </font>
-      </Label>
-   </VBox>
-   <VBox alignment="CENTER_LEFT" layoutX="314.0" layoutY="14.0" AnchorPane.leftAnchor="297.0"
-         AnchorPane.rightAnchor="0.0">
-
-      <StackPane VBox.vgrow="ALWAYS">
-
-         <Group fx:id="group" StackPane.alignment="CENTER_LEFT">
-
-            <SplitPane dividerPositions="0.05">
-               <AnchorPane SplitPane.resizableWithParent="false">
-
-                  <VBox alignment="CENTER" layoutY="-271.0" style="-fx-background-color: #473E98;"
-                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-
-                     <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true"
-                                preserveRatio="true">
-                        <VBox.margin>
-                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                        </VBox.margin>
-                        <Image url="@SubScenes/Register/images/up_1.png"/>
-                     </ImageView>
-                     <ImageView fitHeight="34.0" fitWidth="29.0" pickOnBounds="true"
-                                preserveRatio="true">
-                        <VBox.margin>
-                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                        </VBox.margin>
-                        <Image url="@SubScenes/Register/images/exercise_24px.png"/>
-                     </ImageView>
-                     <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true"
-                                preserveRatio="true">
-                        <VBox.margin>
-                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                        </VBox.margin>
-                        <Image url="@SubScenes/Register/images/down_1.png"/>
-                     </ImageView>
-                  </VBox>
-               </AnchorPane>
-               <AnchorPane>
-
-                  <VBox AnchorPane.bottomAnchor="259.20000000000005" AnchorPane.leftAnchor="0.0"
-                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-
-                     <Label alignment="CENTER" text="Informations personelles :" textFill="#8b55ff"
-                            VBox.vgrow="ALWAYS">
-                        <font>
-                           <Font name="Broadway" size="16.0"/>
-                        </font>
-                        <padding>
-                           <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
-                        </padding>
-                     </Label>
-                  </VBox>
-                  <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-
-                     <GridPane alignment="CENTER" hgap="20.0" vgap="20.0" HBox.hgrow="ALWAYS">
-                        <columnConstraints>
-                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        </columnConstraints>
-                        <rowConstraints>
-                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        </rowConstraints>
-
-                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-
-                           <JFXComboBox focusColor="#48a5ea" prefWidth="100.0"
-                                        promptText="Country">
-                              <VBox.margin>
-                                 <Insets/>
-                              </VBox.margin>
-                           </JFXComboBox>
-                           <JFXComboBox focusColor="#48a5ea" prefWidth="100.0"
-                                        promptText="State">
-                              <VBox.margin>
-                                 <Insets/>
-                              </VBox.margin>
-                           </JFXComboBox>
-                           <JFXComboBox focusColor="#48a5ea" prefWidth="100.0"
-                                        promptText="City">
-                              <VBox.margin>
-                                 <Insets/>
-                              </VBox.margin>
-                           </JFXComboBox>
-                           <GridPane.margin>
-                              <Insets/>
-                           </GridPane.margin>
-                        </VBox>
-                        <JFXTextField focusColor="#48a5ea" prefHeight="20.0" prefWidth="50.0"
-                                      promptText="Last Name" GridPane.columnIndex="1">
-                           <GridPane.margin>
-                              <Insets/>
-                           </GridPane.margin>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#48a5ea" prefHeight="20.0" prefWidth="50.0"
-                                      promptText="First Name">
-                           <GridPane.margin>
-                              <Insets/>
-                           </GridPane.margin>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#48a5ea" prefHeight="20.0" prefWidth="50.0"
-                                      promptText="Email ID" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets/>
-                           </GridPane.margin>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#48a5ea" prefHeight="20.0" prefWidth="50.0"
-                                      promptText="Phone Number" GridPane.rowIndex="2">
-                           <GridPane.margin>
-                              <Insets/>
-                           </GridPane.margin>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#48a5ea" promptText="Your User ID"
-                                      GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets/>
-                           </GridPane.margin>
-                        </JFXTextField>
-                        <HBox.margin>
-                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-                        </HBox.margin>
-                        <padding>
-                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-                        </padding>
-                     </GridPane>
-                     <padding>
-                        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
-                     </padding>
-                  </HBox>
-               </AnchorPane>
-            </SplitPane>
-            <HBox>
-
-               <JFXButton text="Reset All">
-                  <HBox.margin>
-                     <Insets right="20.0"/>
-                  </HBox.margin>
-               </JFXButton>
-               <JFXButton style="-fx-background-color: #48A5EA;" text="Continue" textFill="WHITE">
-                  <HBox.margin>
-                     <Insets left="20.0" right="20.0"/>
-                  </HBox.margin>
-               </JFXButton>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="600.0" maxWidth="1.7976931348623157E308"
+            style="-fx-background-color: ffffff;" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="Main.AuthLayout">
+   <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+         AnchorPane.topAnchor="0.0">
+      <children>
+         <VBox fx:id="side" alignment="CENTER" style="-fx-background-color: #473E98;">
+            <padding>
+               <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+            </padding>
+            <Label alignment="CENTER" text="Reactors FX" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI" size="18.0"/>
+               </font>
+            </Label>
+            <Label alignment="CENTER" text="La premiére plateforme de bénévolat" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI" size="12.0"/>
+               </font>
+            </Label>
+            <HBox alignment="BOTTOM_CENTER">
+               <children>
+                  <JFXButton text="Register">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton text="Association ?">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton text="Login">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+               <padding>
+                  <Insets top="250.0"/>
+               </padding>
             </HBox>
-         </Group>
-         <VBox.margin>
-            <Insets/>
-         </VBox.margin>
-      </StackPane>
-
-   </VBox>
+         </VBox>
+         <VBox fx:id="authStack" alignment="CENTER">
+            <padding>
+               <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+            </padding>
+            <children>
+               <JFXTextField fx:id="txtUsername" promptText="Username | Email"/>
+               <JFXPasswordField fx:id="txtPassword" promptText="Password"/>
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Label fx:id="btnForgot" alignment="CENTER" prefHeight="23.0" prefWidth="99.0"
+                            text="Forgot Password?" textFill="#5383ff">
+                        <font>
+                           <Font name="Segoe UI" size="12.0"/>
+                        </font>
+                     </Label>
+                     <JFXButton fx:id="btnSignin" onMouseClicked="#handleButtonAction" text="Login">
+                        <HBox.margin>
+                           <Insets left="134.0"/>
+                        </HBox.margin>
+                     </JFXButton>
+                  </children>
+               </HBox>
+               <Separator prefHeight="9.0" prefWidth="281.0"/>
+               <Label fx:id="lblErrors" alignment="CENTER" prefHeight="40.0" prefWidth="275.0" textFill="#ff6354">
+                  <font>
+                     <Font name="Segoe UI" size="10.0"/>
+                  </font>
+               </Label>
+            </children>
+         </VBox>
+      </children>
+   </HBox>
 </AnchorPane>
