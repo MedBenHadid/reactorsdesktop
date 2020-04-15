@@ -16,4 +16,5 @@ public class URLServer {
     public final static String associationImageDir = "association/images/";
     public final static String associationPieceDir = "association/pieces/";
     //
+    public final static String missionImageDir = "mission/images/";
 }

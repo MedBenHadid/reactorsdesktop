@@ -35,6 +35,8 @@ public class URLScenes {
     final public static String missionDashbord = med + "Mission.fxml";
     final public static String missionProfile = med + "MissionProfile.fxml";
     final public static String missionCreate = med + "MissionCreate.fxml";
+    final public static String UserItem = med + "UserItem.fxml";
+    // Refugee's
     final public static String refugeesUserMainScene = "/Packages/Nasri/ui/views/user/Main.fxml";
     final public static String refugeesAddHebergementOfferScene = "/Packages/Nasri/ui/views/AddHebergementOffer.fxml";
     final public static String refugeesAddHebergementRequestScene = "/Packages/Nasri/ui/views/AddHebergementRequest.fxml";
