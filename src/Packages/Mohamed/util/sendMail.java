@@ -9,7 +9,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class sendMail {
+public class
+sendMail {
 
     public static void sendMail(String recepient, Mission mission) throws Exception {
         System.out.println("Preparing to send email");

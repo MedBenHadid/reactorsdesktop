@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -41,34 +42,32 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AssociationsBackofficeController implements Initializable {
-    @FXML
-    private TableView<Association> associationTableView;
-    @FXML
-    private TableColumn<Association, Association> deleteOption, pieceCol;
+    private final User loggedUser;
     @FXML
     public StackPane rootStackPane;
     @FXML
+    private TableView<Association> associationTableView;
+    @FXML
+    private TableColumn<Association, Association> deleteOption, pieceCol, statusCol, nomCol;
+    @FXML
     private TableColumn<Association, JFXComboBox<String>> villeCol;
+    @FXML
+    private TableColumn<Association, String> domaineCol;
     @FXML
     private TableColumn<User, String> managerCol;
     @FXML
     private JFXTextField inputName, inputCity;
     @FXML
-    private Label size;
-    @FXML
     private JFXButton addButton;
-    @FXML
-    private TableColumn<Association, String> domaineCol;
-    @FXML
-    private TableColumn<Association, Association> statusCol, nomCol;
-    private final boolean isAdmin;
     private FTPInterface ftpInterface;
-    private final ObservableList<Association> associationList;
     @FXML
     private TableColumn actions;
+    private final ObservableList<Association> associationList;
+    @FXML
+    private Label size;
 
     public AssociationsBackofficeController() {
-        this.isAdmin = UserSession.getInstace().getUser().isAdmin();
+        this.loggedUser = UserSession.getInstace().getUser();
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
@@ -85,9 +84,8 @@ public class AssociationsBackofficeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO 1: Based on role, disable { addButton, deleteOption, managerCol, statusCol}
-        addButton.setVisible(this.isAdmin);
-        actions.setVisible(this.isAdmin);
-
+        addButton.setVisible(this.loggedUser.isAdmin());
+        actions.setVisible(this.loggedUser.isAdmin());
         nomCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         nomCol.setCellFactory(param -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
@@ -122,7 +120,6 @@ public class AssociationsBackofficeController implements Initializable {
         statusCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         statusCol.setCellFactory(param -> new TableCell<>() {
             private final JFXToggleButton sliderButton = new JFXToggleButton();
-
             @Override
             protected void updateItem(Association a, boolean empty) {
                 super.updateItem(a, empty);
@@ -196,27 +193,28 @@ public class AssociationsBackofficeController implements Initializable {
             JFXComboBox<String> comboBox = new JFXComboBox<>();
             comboBox.setItems(FXCollections.observableArrayList("Ariana", "Béja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"));
             comboBox.getSelectionModel().select(a.getVille());
-            comboBox.valueProperty().addListener((observableValue, s, t1) -> {
-                if (!s.equals(t1)) {
-                    a.setVille(t1);
-                    try {
-                        AssociationService.getInstace().update(a);
-                    } catch (SQLException e) {
-                        Logger.getLogger(AssociationsBackofficeController.class.getName()).log(Level.INFO, "Error editing ville", e);
-                    } finally {
-                        JFXDialogLayout layout = new JFXDialogLayout();
-                        layout.setBody(new Label("Modifié avec success"));
-                        layout.setHeading(new Text("Modification de ville de " + a.getNom()));
-                        JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
-                        JFXButton close = new JFXButton("Fermer");
-                        close.getStyleClass().addAll("jfx-button-secondary-variant");
-                        close.setButtonType(JFXButton.ButtonType.RAISED);
-                        close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
-                        layout.setActions(close);
-                        dialog.show();
+            if (loggedUser.isAdmin())
+                comboBox.valueProperty().addListener((observableValue, s, t1) -> {
+                    if (!s.equals(t1)) {
+                        a.setVille(t1);
+                        try {
+                            AssociationService.getInstace().update(a);
+                        } catch (SQLException e) {
+                            Logger.getLogger(AssociationsBackofficeController.class.getName()).log(Level.INFO, "Error editing ville", e);
+                        } finally {
+                            JFXDialogLayout layout = new JFXDialogLayout();
+                            layout.setBody(new Label("Modifié avec success"));
+                            layout.setHeading(new Text("Modification de ville de " + a.getNom()));
+                            JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+                            JFXButton close = new JFXButton("Fermer");
+                            close.getStyleClass().addAll("jfx-button-secondary-variant");
+                            close.setButtonType(JFXButton.ButtonType.RAISED);
+                            close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                            layout.setActions(close);
+                            dialog.show();
+                        }
                     }
-                }
-            });
+                });
             comboBox.selectionModelProperty().addListener((observableValue, stringSingleSelectionModel, t1) -> {
                 // TODO : Update
             });
@@ -324,13 +322,13 @@ public class AssociationsBackofficeController implements Initializable {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Association rowData = row.getItem();
                     FXMLLoader loader;
-                    if (1 == 1)
+                    if (loggedUser.isAdmin())
                         loader = new FXMLLoader(getClass().getResource(URLScenes.associationUpdateProfile));
                     else
                         loader = new FXMLLoader(getClass().getResource(URLScenes.associationProfile));
                     AssociationProfileUpdateController controller = new AssociationProfileUpdateController(rowData);
                     loader.setController(controller);
-                    StackPane createAssociation = null;
+                    ScrollPane createAssociation = null;
                     try {
                         createAssociation = loader.load();
                     } catch (IOException e) {

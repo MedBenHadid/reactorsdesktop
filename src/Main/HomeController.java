@@ -75,7 +75,7 @@ public class HomeController implements Initializable {
             // Buttons
             JFXButton logoutButton = (JFXButton) loader.getNamespace().get("logout");
             logoutButton.setOnMouseClicked(mouseEvent -> {
-                // TODO : this
+                System.exit(0);
             });
             JFXButton profileButton = (JFXButton) loader.getNamespace().get("profile");
             profileButton.setOnMouseClicked(mouseEvent -> {
@@ -127,9 +127,8 @@ public class HomeController implements Initializable {
             });
             /** Ramy */
             JFXButton helpdesk = (JFXButton) loader.getNamespace().get("ramyHelpesk");
-            assert UserSession.getInstace() != null;
             helpdesk.setVisible(UserSession.getInstace().getUser().isAdmin());
-            refugees.setOnMouseClicked(mouseEvent -> {
+            helpdesk.setOnMouseClicked(mouseEvent -> {
                 this.helpdeskTab.setText("Helpdesk");
                 try {
                     this.helpdeskTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.Requetefxml)));
@@ -138,7 +137,7 @@ public class HomeController implements Initializable {
                 }
                 changeTab(helpdeskTab);
             });
-
+            /** Issam */
             // !!!!!!!!!!!!!! ------------------------ Add your buttons here ------------------------ !!!!!!!!!!!!!! \\
         } catch (IOException e) {
             e.printStackTrace();

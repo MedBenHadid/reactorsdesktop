@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXBadge?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="Packages.Ramy.views.RequeteController">
+    <TabPane fx:id="tabPane" side="RIGHT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0"
+             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Tab text="Mes Requete">
+            <graphic>
+                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                    <viewport>
+                        <Rectangle2D/>
+                    </viewport>
+                    <Image url="@../../../SharedResources/Images/icons8_Share_64px.png"/>
+                </ImageView>
+            </graphic>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+                <StackPane fx:id="rootStack" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <VBox alignment="CENTER">
+                            <HBox>
+                                <VBox>
+                                    <children>
+                                        <Label text="Mes Requete" textFill="#221aba">
+                                            <font>
+                                                <Font size="25.0"/>
+                                            </font>
+                                            <VBox.margin>
+                                                <Insets left="30.0" right="30.0" top="30.0"/>
+                                            </VBox.margin>
+                                        </Label>
+                                        <Label fx:id="size">
+                                            <VBox.margin>
+                                                <Insets bottom="30.0" left="30.0" right="30.0"/>
+                                            </VBox.margin>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                                <VBox>
+                                    <HBox.margin>
+                                        <Insets left="250.0" right="60.0" top="30.0"/>
+                                    </HBox.margin>
+                                </VBox>
+                                <VBox.margin>
+                                    <Insets left="60.0"/>
+                                </VBox.margin>
+                            </HBox>
+                            <TableView fx:id="catTV" editable="true" tableMenuButtonVisible="true">
+                                <columns>
+                                    <TableColumn fx:id="idCol" prefWidth="75.0" text="ID" visible="false"/>
+                                    <TableColumn fx:id="nomCol" prefWidth="75.0" text="Sujet"/>
+                                    <TableColumn fx:id="descCol" prefWidth="500.0" text="Description"/>
+                                    <TableColumn fx:id="dateCol" prefWidth="75.0" text="DateMAJ"/>
+                                    <TableColumn fx:id="statutCol" prefWidth="75.0" text="Statut"/>
+                                    <TableColumn fx:id="typeCol" prefWidth="75.0" text="Type"/>
+                                    <TableColumn fx:id="deleteOption" prefWidth="75.0" text="Supprimer"/>
+                                    <TableColumn fx:id="addrep" prefWidth="75.0" text="Reponse"/>
+                                </columns>
+                                <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                </VBox.margin>
+                            </TableView>
+                            <JFXButton fx:id="refbutton" onAction="#handlebuttonAction" text="Refresh"/>
+                        </VBox>
+                    </children>
+                </StackPane>
+            </AnchorPane>
+        </Tab>
+        <Tab fx:id="newTab" text="Nouveau">
+            <graphic>
+                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                    <viewport>
+                        <Rectangle2D/>
+                    </viewport>
+                    <Image url="@../../../SharedResources/Images/icons8_Handshake_64px.png"/>
+                </ImageView>
+            </graphic>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+                <Label text="Création d'une nouvelle requete :" AnchorPane.bottomAnchor="0.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <padding>
+                        <Insets bottom="500.0" left="200.0"/>
+                    </padding>
+                </Label>
+                <HBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <JFXBadge/>
+                    <JFXBadge/>
+                    <VBox>
+                        <HBox.margin>
+                            <Insets bottom="150.0" left="150.0" right="150.0" top="150.0"/>
+                        </HBox.margin>
+                        <Label text="Type de la requete :"/>
+                        <Label text="Sujet  :">
+                            <VBox.margin>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+                            </VBox.margin>
+                        </Label>
+                        <Label text="Description :">
+                            <VBox.margin>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+                            </VBox.margin>
+                        </Label>
+                    </VBox>
+                    <VBox>
+                        <HBox.margin>
+                            <Insets bottom="150.0" right="10.0" top="150.0"/>
+                        </HBox.margin>
+                        <ComboBox fx:id="combobox" prefHeight="26.0" prefWidth="464.0" promptText="--choisir type--"/>
+                        <TextField fx:id="nom">
+                            <VBox.margin>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                            </VBox.margin>
+                        </TextField>
+                        <TextArea fx:id="description">
+                            <VBox.margin>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                            </VBox.margin>
+                        </TextArea>
+                        <JFXButton onAction="#ajoutButton" text="Envoyer"/>
+                    </VBox>
+                </HBox>
+            </AnchorPane>
+        </Tab>
+    </TabPane>
+</AnchorPane>

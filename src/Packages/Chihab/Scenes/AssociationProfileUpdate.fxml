@@ -1,49 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.WebView?>
-<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity"
-           minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../../../Main/styles.css"
-           xmlns="http://javafx.com/javafx/11.0.1">
-   <children>
-      <ScrollPane maxWidth="600.0" prefHeight="800.0">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0">
-               <children>
-                  <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <ImageView fx:id="imageImageView" fitHeight="250.0" fitWidth="400.0" pickOnBounds="true"
-                                   preserveRatio="true"/>
-                        <JFXButton fx:id="photoButton" text="Modifier photo"/>
-                        <JFXButton fx:id="modpieceButton" text="Modifier piece justificative"/>
-                        <VBox alignment="CENTER">
-                           <children>
-                              <JFXTextField fx:id="nomInput"/>
-                              <JFXTextArea fx:id="descriptionInput"/>
-                              <JFXTextField fx:id="zipInput"/>
-                              <JFXTextField fx:id="rueInput"/>
-                              <JFXTextField fx:id="phoneNumberInput"/>
-                              <JFXComboBox fx:id="villeComboBox" promptText="Ville"/>
-                              <WebView fx:id="gmapWebView" prefHeight="200.0" prefWidth="-1.0"/>
-                              <JFXComboBox fx:id="domaineComboBox" promptText="Domaine d'activité"/>
-                              <JFXButton fx:id="validateButton" text="Modifier"/>
-                           </children>
-                        </VBox>
-                        <VBox fx:id="membersVbox" prefHeight="200.0" prefWidth="100.0"/>
-                     </children>
-                     <padding>
-                        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
-                     </padding>
-                  </VBox>
-               </children>
-            </AnchorPane>
-         </content>
-      </ScrollPane>
-   </children>
-</StackPane>
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS"
+            xmlns="http://javafx.com/javafx/11.0.1">
+   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0">
+      <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+         </padding>
+         <ImageView fx:id="imageImageView" fitHeight="250.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true"/>
+         <JFXButton fx:id="photoButton" text="Modifier image"/>
+         <JFXButton fx:id="modpieceButton" text="Modifier piece justificative"/>
+         <VBox alignment="CENTER">
+            <children>
+               <JFXTextField fx:id="nomInput"/>
+               <JFXTextArea fx:id="descriptionInput"/>
+               <JFXTextField fx:id="zipInput"/>
+               <JFXTextField fx:id="rueInput"/>
+               <JFXTextField fx:id="phoneNumberInput"/>
+               <JFXComboBox fx:id="villeComboBox" promptText="Ville"/>
+               <WebView fx:id="gmapWebView" prefHeight="200.0" prefWidth="-1.0"/>
+               <JFXComboBox fx:id="domaineComboBox" promptText="Domaine d'activité"/>
+               <JFXButton fx:id="validateButton" text="Modifier"/>
+            </children>
+         </VBox>
+         <VBox fx:id="membersVbox" prefHeight="200.0" prefWidth="100.0"/>
+         <JFXButton fx:id="addMembers" text="Ajouter des membres"/>
+      </VBox>
+      <StackPane fx:id="stack" AnchorPane.bottomAnchor="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                 AnchorPane.topAnchor="0.0"/>
+   </AnchorPane>
+</ScrollPane>

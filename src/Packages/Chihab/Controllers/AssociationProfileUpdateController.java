@@ -10,10 +10,7 @@ import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.AutoCompleteBox;
 import SharedResources.Utils.FTPInterface.FTPInterface;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,8 +24,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
@@ -55,7 +55,7 @@ public class AssociationProfileUpdateController implements Initializable {
     @FXML
     private ImageView imageImageView;
     @FXML
-    private JFXButton validateButton, photoButton, modpieceButton;
+    private JFXButton validateButton, photoButton, modpieceButton, addMembers;
     @FXML
     private StackPane stack;
     @FXML
@@ -218,6 +218,35 @@ public class AssociationProfileUpdateController implements Initializable {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
+        addMembers.setOnMouseClicked(mouseEvent -> {
+            FXMLLoader createMembership = new FXMLLoader(getClass().getResource(URLScenes.addMembershipSelectUSer));
+            AnchorPane c = null;
+            try {
+                c = createMembership.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JFXDialogLayout layout = new JFXDialogLayout();
+            layout.setBody(c);
+            layout.setHeading(new Text("Ajout d'une nouvelle association"));
+            JFXDialog dialog = new JFXDialog(stack, layout, JFXDialog.DialogTransition.CENTER);
+            JFXButton membershipAdd = (JFXButton) createMembership.getNamespace().get("validateButton");
+            membershipAdd.setOnMouseClicked(e -> {
+                FXMLLoader load = new FXMLLoader(getClass().getResource(URLScenes.memberShipUpdateItem));
+                MemberUpdateItemController controller = new MemberUpdateItemController(((MembershipCreate) createMembership.getController()).getM());
+                load.setController(controller);
+                try {
+                    membersVbox.getChildren().add(load.load());
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                dialog.close();
+            });
+            JFXButton close = new JFXButton("Cancel");
+            close.addEventHandler(MouseEvent.MOUSE_CLICKED, m -> dialog.close());
+            layout.setActions(close);
+            dialog.show();
+        });
     }
 
     boolean rueValidCheck(String rue) {

@@ -7,28 +7,29 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx"
+            minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1"
             fx:controller="Main.HomeController">
-   <StackPane fx:id="mainStack" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
-      <VBox style="-fx-background-color: #8f54ab;">
-         <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #8100fa;">
-            <JFXHamburger fx:id="hamburger" onMouseClicked="#onHamburgerClicked">
-               <padding>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
-               </padding>
-               <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-               </HBox.margin>
-            </JFXHamburger>
-         </HBox>
-         <JFXTabPane fx:id="tabPane" side="RIGHT" stylesheets="@styles.css" tabClosingPolicy="ALL_TABS"
-                     tabDragPolicy="REORDER" VBox.vgrow="ALWAYS">
-            <Tab fx:id="acceuilListTab" closable="false" text="Acceuil"/>
-         </JFXTabPane>
-      </VBox>
-   </StackPane>
-   <JFXDrawer fx:id="drawer" alignment="TOP_CENTER" defaultDrawerSize="400.0" layoutX="10.0" layoutY="10.0"
-              opacity="0.9" prefWidth="400.0" resizableOnDrag="true" AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+   <VBox style="-fx-background-color: #8f54ab;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #8100fa;">
+         <JFXHamburger fx:id="hamburger" onMouseClicked="#onHamburgerClicked">
+            <padding>
+               <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+            </padding>
+            <HBox.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </HBox.margin>
+         </JFXHamburger>
+      </HBox>
+      <JFXTabPane fx:id="tabPane" side="RIGHT" stylesheets="@styles.css" tabClosingPolicy="ALL_TABS"
+                  tabDragPolicy="REORDER" VBox.vgrow="ALWAYS">
+         <Tab closable="false" text="Acceuil"/>
+      </JFXTabPane>
+   </VBox>
+   <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+         <JFXDrawer fx:id="drawer" alignment="TOP_CENTER" defaultDrawerSize="400.0" opacity="0.9" prefWidth="400.0"
+                    resizableOnDrag="true"/>
+      </children>
+   </HBox>
 </AnchorPane>

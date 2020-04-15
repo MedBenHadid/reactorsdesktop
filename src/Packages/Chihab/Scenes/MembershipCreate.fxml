@@ -1,73 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXSpinner?>
-<?import com.jfoenix.controls.JFXTextArea?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="Packages.Chihab.Controllers.MembershipCreate">
-    <children>
-        <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
-            <children>
-                <Label text="Chercher par email, ou inviter le :">
-                    <VBox.margin>
-                        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
-                    </VBox.margin>
-                </Label>
-                <JFXTextField fx:id="emailInput">
-                    <VBox.margin>
-                        <Insets left="40.0" right="40.0"/>
-                    </VBox.margin>
-                </JFXTextField>
-                <Separator/>
-                <JFXSpinner fx:id="imageSpinner" visible="false">
-                    <VBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-                    </VBox.margin>
-                </JFXSpinner>
-                <AnchorPane fx:id="profileAnchor">
-                    <VBox.margin>
-                        <Insets left="20.0" right="20.0"/>
-                    </VBox.margin>
-                    <children>
-                        <VBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                              AnchorPane.topAnchor="0.0">
-                            <children>
-                                <ImageView fx:id="profilePicture" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true"
-                                           preserveRatio="true">
-                                    <image>
-                                        <Image url="@../../../../../../Pictures/cp.png"/>
-                                    </image>
-                                </ImageView>
-                                <Label fx:id="fullNameLabel" text="Label">
-                                    <padding>
-                                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-                                    </padding>
-                                    <font>
-                                        <Font name="System Bold Italic" size="36.0"/>
-                                    </font>
-                                </Label>
-                                <TextField/>
-                                <JFXTextArea/>
-                                <JFXComboBox/>
-                            </children>
-                        </VBox>
-                    </children>
-                </AnchorPane>
-                <Button fx:id="inviteButton" mnemonicParsing="false" text="Inviter le">
-                    <VBox.margin>
-                        <Insets bottom="20.0" top="20.0"/>
-                    </VBox.margin>
-                </Button>
-            </children>
-        </VBox>
-    </children>
-</AnchorPane>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity"
+           minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1"
+           fx:controller="Packages.Chihab.Controllers.MembershipCreate">
+   <children>
+      <VBox alignment="CENTER">
+         <children>
+            <Label text="Lookup a user with their email adress, and invite them if they are not already a member of our platform.">
+               <VBox.margin>
+                  <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
+               </VBox.margin>
+            </Label>
+            <JFXTextField fx:id="emailInput">
+               <VBox.margin>
+                  <Insets left="40.0" right="40.0"/>
+               </VBox.margin>
+            </JFXTextField>
+            <Separator/>
+            <JFXSpinner fx:id="imageSpinner" visible="false">
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+               </VBox.margin>
+            </JFXSpinner>
+            <AnchorPane fx:id="profileAnchor" visible="false">
+               <VBox.margin>
+                  <Insets left="20.0" right="20.0"/>
+               </VBox.margin>
+               <children>
+                  <VBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                        AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fx:id="profilePicture" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../../Pictures/cp.png"/>
+                           </image>
+                        </ImageView>
+                        <Label fx:id="fullNameLabel" text="Label">
+                           <padding>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                           </padding>
+                           <font>
+                              <Font name="System Bold Italic" size="36.0"/>
+                           </font>
+                        </Label>
+                        <JFXTextField/>
+                        <JFXTextArea fx:id="description"/>
+                        <JFXComboBox fx:id="role"/>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <JFXButton fx:id="inviteButton" text="Invite them on-board"/>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

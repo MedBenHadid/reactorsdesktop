@@ -1,5 +1,6 @@
 package Packages.Chihab.Services;
 
+import Main.Entities.User;
 import Main.Services.UserService;
 import Packages.Chihab.Models.Association;
 import SharedResources.Utils.Connector.ConnectionUtil;
@@ -10,7 +11,7 @@ import java.sql.*;
 
 public class AssociationService {
     private static AssociationService instance;
-    private Connection connection;
+    private final Connection connection;
 
     public int create(Association a) throws SQLException {
         PreparedStatement st = connection.prepareStatement("INSERT INTO association " +
@@ -115,12 +116,12 @@ public class AssociationService {
         return a;
     }
 
-    public Association searchByManagerId(int managerId) throws SQLException {
-        Association a = new Association();
+    public Association searchByManagerId(User u) throws SQLException {
+        Association a;
         String req = "SELECT * FROM association WHERE id_manager=?";
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement(req);
-        preparedStatement.setInt(1, managerId);
+        preparedStatement.setInt(1, u.getId());
         a = resultSetToAssociation(preparedStatement.executeQuery());
         return a;
     }

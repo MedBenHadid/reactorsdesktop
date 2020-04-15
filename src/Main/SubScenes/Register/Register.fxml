@@ -9,83 +9,75 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1"
             fx:controller="Main.SubScenes.Register.RegisterController">
-   <children>
-      <VBox prefHeight="200.0" prefWidth="100.0"/>
-      <HBox layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <VBox alignment="CENTER" style="-fx-background-color: #473E98;">
-               <children>
-                  <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                     </VBox.margin>
-                     <image>
-                        <Image url="@images/up_1.png"/>
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="34.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                     </VBox.margin>
-                     <image>
-                        <Image url="@images/exercise_24px.png"/>
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                     </VBox.margin>
-                     <image>
-                        <Image url="@images/down_1.png"/>
-                     </image>
-                  </ImageView>
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-      <AnchorPane fx:id="anchorPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="60.0"
-                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Label text="Informations personelles :" textFill="#8b55ff" VBox.vgrow="ALWAYS">
-                     <font>
-                        <Font name="Broadway" size="16.0"/>
-                     </font>
-                     <padding>
-                        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
-                     </padding>
-                  </Label>
-                  <JFXTextField focusColor="#48a5ea" prefHeight="20.0" prefWidth="50.0" promptText="Email ID"/>
-                  <JFXTextField focusColor="#48a5ea" promptText="Your User ID"/>
-                  <JFXTextField focusColor="#48a5ea" promptText="Last Name"/>
-                  <JFXTextField focusColor="#48a5ea" promptText="First Name"/>
-                  <JFXDatePicker/>
-                  <JFXTextField fx:id="phoneNumber" focusColor="#48a5ea" prefHeight="20.0" prefWidth="50.0"
-                                promptText="Phone Number"/>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <JFXButton fx:id="signupAssociation" text="I am an association admin">
-                           <HBox.margin>
-                              <Insets right="20.0"/>
-                           </HBox.margin>
-                        </JFXButton>
-                        <JFXButton fx:id="signupUser" style="-fx-background-color: #48A5EA;" text="I am a simple user"
-                                   textFill="WHITE">
-                           <HBox.margin>
-                              <Insets left="20.0" right="20.0"/>
-                           </HBox.margin>
-                        </JFXButton>
-                     </children>
-                  </HBox>
-               </children>
-               <padding>
-                  <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
-               </padding>
-            </VBox>
-         </children>
-      </AnchorPane>
-   </children>
+   <VBox prefHeight="200.0" prefWidth="100.0"/>
+   <HBox layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" style="-fx-background-color: #473E98;">
+         <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+            <VBox.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </VBox.margin>
+            <Image url="@images/up_1.png"/>
+         </ImageView>
+         <ImageView fitHeight="34.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+            <VBox.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </VBox.margin>
+            <image>
+               <Image url="@images/exercise_24px.png"/>
+            </image>
+         </ImageView>
+         <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+            <VBox.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </VBox.margin>
+            <image>
+               <Image url="@images/down_1.png"/>
+            </image>
+         </ImageView>
+      </VBox>
+   </HBox>
+   <AnchorPane fx:id="anchorPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="60.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+         <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+               <Label text="Informations personelles :" textFill="#8b55ff" VBox.vgrow="ALWAYS">
+                  <font>
+                     <Font name="Broadway" size="16.0"/>
+                  </font>
+                  <padding>
+                     <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+                  </padding>
+               </Label>
+               <JFXTextField focusColor="#48a5ea" prefHeight="20.0" prefWidth="50.0" promptText="Email ID"/>
+               <JFXTextField focusColor="#48a5ea" promptText="Your User ID"/>
+               <JFXTextField focusColor="#48a5ea" promptText="Last Name"/>
+               <JFXTextField focusColor="#48a5ea" promptText="First Name"/>
+               <JFXDatePicker/>
+               <JFXTextField fx:id="phoneNumber" focusColor="#48a5ea" prefHeight="20.0" prefWidth="50.0"
+                             promptText="Phone Number"/>
+               <HBox alignment="CENTER">
+                  <children>
+                     <JFXButton fx:id="signupAssociation" text="I am an association admin">
+                        <HBox.margin>
+                           <Insets right="20.0"/>
+                        </HBox.margin>
+                     </JFXButton>
+                     <JFXButton fx:id="signupUser" style="-fx-background-color: #48A5EA;" text="I am a simple user"
+                                textFill="WHITE">
+                        <HBox.margin>
+                           <Insets left="20.0" right="20.0"/>
+                        </HBox.margin>
+                     </JFXButton>
+                  </children>
+               </HBox>
+            </children>
+            <padding>
+               <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+            </padding>
+         </VBox>
+      </children>
+   </AnchorPane>
 </AnchorPane>

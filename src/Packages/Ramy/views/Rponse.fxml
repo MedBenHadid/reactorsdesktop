@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="461.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="Packages.Ramy.views.RponseController">
+   <children>
+      <TextField fx:id="txtrponse" layoutX="188.0" layoutY="181.0" prefHeight="183.0" prefWidth="286.0"/>
+      <Label layoutX="83.0" layoutY="163.0" text="Reponse:"/>
+      <Button fx:id="sendbut" layoutX="248.0" layoutY="386.0" mnemonicParsing="false" onAction="#ajoutButton"
+              text="Send"/>
+      <Label layoutX="83.0" layoutY="91.0" text="Sujet:"/>
+      <TextField fx:id="txtsujet" layoutX="188.0" layoutY="109.0" prefHeight="26.0" prefWidth="286.0"/>
+   </children>
+</AnchorPane>
