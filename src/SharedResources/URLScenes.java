@@ -31,6 +31,7 @@ public class URLScenes {
     // Nasri - Refugees
     final public static String refugeesDashboardMainScene = "/Packages/Nasri/ui/views/admin/Main.fxml";
     // Mission
+    final private static String med = "/Packages/Mohamed/Scenes/";
     final public static String missionDashbord = med + "Mission.fxml";
     final public static String missionProfile = med + "MissionProfile.fxml";
     final public static String missionCreate = med + "MissionCreate.fxml";
