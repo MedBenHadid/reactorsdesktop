@@ -13,8 +13,8 @@ public class Rponse {
 
     public Rponse() { }
 
-    public Rponse(int id, int requete, String sujet, String rep, Date date, int rating) {
-        this.id = id;
+    public Rponse(int user, int requete, String sujet, String rep, Date date, int rating) {
+        this.user = user;
         this.requete = requete;
         this.sujet = sujet;
         this.rep = rep;
@@ -31,6 +31,7 @@ public class Rponse {
         this.date = date;
         this.rating = rating;
     }
+
 
     public int getRequete() {
         return requete;

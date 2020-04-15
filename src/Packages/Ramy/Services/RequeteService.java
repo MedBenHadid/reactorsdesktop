@@ -61,6 +61,19 @@ public class RequeteService implements IService<Requete> {
         }
 
     }
+    public void updaterponse(Requete requete) {
+        try {
+            String query = "UPDATE requete SET rponse_id = '" + requete.getRponse() + "', Statut = '" + 1
+                    +  "' WHERE id=" + requete.getId();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            System.out.println("Requete updated !");
+
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        }
+
+    }
 
     @Override
     public List<Requete> display() {
