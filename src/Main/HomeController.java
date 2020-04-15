@@ -12,6 +12,8 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
@@ -19,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,10 +119,46 @@ public class HomeController implements Initializable {
             });
             /** Nasri */
             JFXButton refugees = (JFXButton) loader.getNamespace().get("nasriRefugees");
+            refugees.setVisible(UserSession.getInstace().getUser().isAdmin());
             refugees.setOnMouseClicked(mouseEvent -> {
                 this.refugeesTab.setText("Refugee");
                 try {
-                    this.refugeesTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.refugeesDashboardMainScene)));
+                    //this.refugeesTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.refugeesDashboardMainScene)));
+                    URL scene = getClass().getResource(URLScenes.refugeesDashboardMainScene);
+                    Stage stage = new Stage();
+                    Parent root = FXMLLoader.load(scene);
+
+                    Scene refugeeScene = new Scene(root);
+
+                    stage.setScene(refugeeScene);
+
+                    stage.centerOnScreen();
+                    stage.setResizable(false);
+
+                    stage.show();
+                } catch (IOException e) {
+                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
+                }
+                changeTab(refugeesTab);
+            });
+            JFXButton refugeesUser = (JFXButton) loader.getNamespace().get("nasriRefugeesUser");
+            refugeesUser.setVisible(!UserSession.getInstace().getUser().isAdmin());
+            refugeesUser.setOnMouseClicked(mouseEvent -> {
+                this.refugeesTab.setText("Refugee");
+                try {
+                    //this.refugeesTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.refugeesDashboardMainScene)));
+                    URL scene = getClass().getResource(URLScenes.refugeesUserMainScene);
+                    Stage stage = new Stage();
+                    Parent root = FXMLLoader.load(scene);
+
+                    Scene refugeeScene = new Scene(root);
+
+                    stage.setScene(refugeeScene);
+
+                    stage.centerOnScreen();
+                    stage.setResizable(false);
+
+                    stage.show();
                 } catch (IOException e) {
                     Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
                 }
