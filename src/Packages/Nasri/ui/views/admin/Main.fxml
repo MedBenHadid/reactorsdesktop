@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" prefHeight="1025.0" prefWidth="1746.0" styleClass="root"
+            minWidth="-Infinity" styleClass="root"
             stylesheets="@../../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/8.0.171"
             fx:controller="Packages.Nasri.ui.controllers.admin.MainController">
     <children>

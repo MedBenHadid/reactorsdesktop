@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,39 +74,47 @@ public class AssociationCreateController implements Initializable {
     private Association association;
     private FTPInterface ftpInterface;
     private boolean isRegisterPage = false;
-    private ObservableList<User> managers = null;
-    private ObservableList<Category> domaines = null;
+    private User manager;
 
     public AssociationCreateController() {
-        this.association = new Association();
-        association.setApprouved(!isRegisterPage);
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
-            if (!isRegisterPage)
-                managers = UserService.getInstace().readAll().stream().filter(u -> !u.isAdmin()).collect(Collectors.toCollection(FXCollections::observableArrayList));
-            domaines = CategoryService.getInstace().readAll();
-        } catch (IOException | SQLException e) {
+        } catch (IOException e) {
             Logger.getLogger(
                     AssociationCreateController.class.getName()).log(
-                    Level.SEVERE, "Error connecting to FTP Server Or DATABASE :", e.getCause()
+                    Level.SEVERE, "Error connecting to FTP Server :", e.getCause()
             );
         }
     }
 
     public AssociationCreateController(User manager) {
+        this.isRegisterPage = true;
+        this.manager = manager;
         new AssociationCreateController();
-        this.association.setManager(manager);
-        managerComboBox.setVisible(false);
-        this.isRegisterPage = false;
     }
 
     public Association getAssociation() {
         return association;
     }
 
-    // TODO : implement the maps mcThingy
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ObservableList<Category> domaines = FXCollections.observableArrayList();
+        ObservableList<User> managers = FXCollections.observableArrayList();
+        this.association = new Association();
+        association.setApprouved(!isRegisterPage);
+        try {
+            if (!isRegisterPage)
+                managers = UserService.getInstace().readAll().stream().filter(u -> !u.isAdmin()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+            else {
+                this.association.setManager(this.manager);
+                managerComboBox.setVisible(false);
+            }
+            domaines = CategoryService.getInstace().readAll();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
         RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator("Champ manquant");
         // Nom input validation
         nomInput.getValidators().addAll(requiredFieldValidator, new RegexValidator("Veuillez saisir un nom dont la taille est comprise entre 3 et 30", "^[\\w\\s]{3,30}$"));
@@ -181,7 +188,8 @@ public class AssociationCreateController implements Initializable {
 
         // TODO : Add regex
         ObservableList<Category> finalDomaines = domaines;
-        domaineComboBox.getItems().addAll(domaines.stream().map(Category::getNom).collect(Collectors.toCollection(ArrayList::new)));
+        System.out.println();
+        domaineComboBox.getItems().addAll(finalDomaines.stream().map(Category::getNom).collect(Collectors.toCollection(FXCollections::observableArrayList)));
         domaineComboBox.getValidators().add(requiredFieldValidator);
         domaineComboBox.setOnHiding(event -> {
             domaineComboBox.validate();
@@ -193,7 +201,7 @@ public class AssociationCreateController implements Initializable {
         new ComboBoxAutoComplete<>(domaineComboBox);
         if (!isRegisterPage) {
             ObservableList<User> finalManagers = managers;
-            managerComboBox.getItems().addAll(managers.stream().map(User::getEmail).collect(Collectors.toCollection(ArrayList::new)));
+            managerComboBox.getItems().addAll(finalManagers.stream().map(User::getEmail).collect(Collectors.toCollection(FXCollections::observableArrayList)));
             managerComboBox.setVisibleRowCount(6);
             domaineComboBox.setTooltip(new Tooltip("Sélectionner le manager de l'association"));
             new ComboBoxAutoComplete<>(managerComboBox);

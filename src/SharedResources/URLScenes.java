@@ -43,6 +43,7 @@ public class URLScenes {
     // User
     //
     //
-    // Mohamed
+    // Ramy
+    final public static String Requetefxml = "/Packages/Ramy/views/Requete.fxml";
 
 }

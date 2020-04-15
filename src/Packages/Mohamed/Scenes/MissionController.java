@@ -9,7 +9,6 @@ import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
-import com.jfoenix.controls.JFXProgressBar;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -60,13 +59,7 @@ public class MissionController implements Initializable {
     @FXML
     private Label size;
     @FXML
-    private TabPane tabPane;
-    @FXML
-    private Tab missionListTab;
-    @FXML
     private Button addButton;
-    @FXML
-    private JFXProgressBar progressBar;
 
     public MissionController() {
         try {
@@ -81,8 +74,7 @@ public class MissionController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO 1: Based on role, disable { addButton, idCol's view, deleteOption, managerCol, statusCol}
-        missionListTab.setClosable(false);
-        //addButton.setVisible(false);
+        //addButton.setVisible(UserSession.getInstace().getUser().isAssociationAdmin());
         ObservableList<Mission> MissionList = FXCollections.observableArrayList();
         try {
             MissionList.addAll(MissionService.getInstace().readAll());

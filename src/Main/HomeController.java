@@ -4,7 +4,10 @@ import Main.Entities.UserSession;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,17 +28,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HomeController implements Initializable {
-    private final Tab associationsTab, domainesTab, missionsTab;
+    private final UserSession userSession;
+    private final Tab associationsTab, domainesTab, missionsTab, refugeesTab, helpdeskTab;
     @FXML
     private JFXTabPane tabPane;
-    @FXML
-    private JFXHamburger hamburger;
-    private final UserSession userSession;
-    @FXML
-    private JFXDrawer drawer;
     private FTPInterface ftp;
     private HamburgerBackArrowBasicTransition transition;
-
+    @FXML
+    private JFXHamburger hamburger;
+    @FXML
+    private JFXDrawer drawer;
 
     public HomeController() {
         this.userSession = UserSession.getInstace();
@@ -45,33 +47,17 @@ public class HomeController implements Initializable {
             Logger.getLogger(HomeController.class.getName()).log(Level.WARNING, "Exception loading FTP Interface", e);
         }
         this.associationsTab = new Tab();
-        this.associationsTab.setText("Associations");
-        try {
-            this.associationsTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.associationSuperAdminDashboard)));
-        } catch (IOException e) {
-            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading AssociationDashboard FXML", e);
-        }
         this.domainesTab = new Tab();
-        this.domainesTab.setText("Domaine's d'activité");
-        try {
-            this.domainesTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.domaines)));
-        } catch (IOException e) {
-            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
-        }
         this.missionsTab = new Tab();
-        this.missionsTab.setText("Missions de bénévolat");
-        try {
-            this.missionsTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.missionDashbord)));
-        } catch (IOException e) {
-            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
-        }
+        this.refugeesTab = new Tab();
+        this.helpdeskTab = new Tab();
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        transition = new HamburgerBackArrowBasicTransition(hamburger);
-        transition.setRate(-1);
-
+        this.transition = new HamburgerBackArrowBasicTransition(hamburger);
+        this.transition.setRate(-1);
         VBox box = null;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.sidePanel));
@@ -84,7 +70,7 @@ public class HomeController implements Initializable {
             Circle circle = (Circle) loader.getNamespace().get("circle");
             File image = this.ftp.downloadFile(URLServer.userImageDir + this.userSession.getUser().getProfile().getImage(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
             circle.setFill(new ImagePattern(new Image(image.toURI().toString())));
-            JFXRippler rippler = (JFXRippler) loader.getNamespace().get("rippler");
+            //JFXRippler rippler = (JFXRippler) loader.getNamespace().get("rippler");
             // Side panel header
             // Buttons
             JFXButton logoutButton = (JFXButton) loader.getNamespace().get("logout");
@@ -99,16 +85,58 @@ public class HomeController implements Initializable {
             /** Chihab */
             JFXButton associations = (JFXButton) loader.getNamespace().get("chihabAssociation");
             associations.setOnMouseClicked(mouseEvent -> {
+                this.associationsTab.setText("Associations");
+                try {
+                    this.associationsTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.associationSuperAdminDashboard)));
+                } catch (IOException e) {
+                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading AssociationDashboard FXML", e);
+                }
                 changeTab(associationsTab);
             });
             JFXButton domaines = (JFXButton) loader.getNamespace().get("chihabDomaines");
             domaines.setOnMouseClicked(mouseEvent -> {
+                this.domainesTab.setText("Domaine's d'activité");
+                try {
+                    this.domainesTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.domaines)));
+                } catch (IOException e) {
+                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
+                }
                 changeTab(domainesTab);
             });
             /** Mohamed */
             JFXButton missions = (JFXButton) loader.getNamespace().get("mohamedMissions");
             missions.setOnMouseClicked(mouseEvent -> {
+                this.missionsTab.setText("Missions de bénévolat");
+                try {
+                    this.missionsTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.missionDashbord)));
+                } catch (IOException e) {
+                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
+                }
                 changeTab(missionsTab);
+            });
+            /** Nasri */
+            JFXButton refugees = (JFXButton) loader.getNamespace().get("nasriRefugees");
+            refugees.setOnMouseClicked(mouseEvent -> {
+                this.refugeesTab.setText("Refugee");
+                try {
+                    this.refugeesTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.refugeesDashboardMainScene)));
+                } catch (IOException e) {
+                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
+                }
+                changeTab(refugeesTab);
+            });
+            /** Ramy */
+            JFXButton helpdesk = (JFXButton) loader.getNamespace().get("ramyHelpesk");
+            assert UserSession.getInstace() != null;
+            helpdesk.setVisible(UserSession.getInstace().getUser().isAdmin());
+            refugees.setOnMouseClicked(mouseEvent -> {
+                this.helpdeskTab.setText("Helpdesk");
+                try {
+                    this.helpdeskTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.Requetefxml)));
+                } catch (IOException e) {
+                    Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, "Exception loading create FXML", e);
+                }
+                changeTab(helpdeskTab);
             });
 
             // !!!!!!!!!!!!!! ------------------------ Add your buttons here ------------------------ !!!!!!!!!!!!!! \\

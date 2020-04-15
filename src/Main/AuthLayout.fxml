@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="600.0" maxWidth="1.7976931348623157E308"
@@ -11,11 +11,11 @@
    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
          AnchorPane.topAnchor="0.0">
       <children>
-         <VBox fx:id="side" alignment="CENTER" style="-fx-background-color: #473E98;">
+         <VBox alignment="CENTER" style="-fx-background-color: #473E98;">
             <padding>
                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
             </padding>
-            <Label alignment="CENTER" text="Reactors FX" textFill="WHITE">
+            <Label fx:id="side" alignment="CENTER" text="Reactors FX" textFill="WHITE">
                <font>
                   <Font name="Segoe UI" size="18.0"/>
                </font>
@@ -29,57 +29,19 @@
                <padding>
                   <Insets top="250.0"/>
                </padding>
-               <JFXButton text="Register">
+               <JFXButton fx:id="registerButton" text="Register" textFill="WHITE">
                   <HBox.margin>
                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                   </HBox.margin>
                </JFXButton>
-               <JFXButton text="Association ?">
-                  <HBox.margin>
-                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                  </HBox.margin>
-               </JFXButton>
-               <JFXButton text="Login">
+               <JFXButton fx:id="loginButton" text="Login" textFill="WHITE">
                   <HBox.margin>
                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                   </HBox.margin>
                </JFXButton>
             </HBox>
          </VBox>
-         <StackPane fx:id="authStack">
-            <children>
-               <VBox alignment="CENTER">
-                  <padding>
-                     <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
-                  </padding>
-                  <children>
-                     <JFXTextField fx:id="txtUsername" promptText="Username | Email"/>
-                     <JFXPasswordField fx:id="txtPassword" promptText="Password"/>
-                     <HBox prefHeight="100.0" prefWidth="200.0">
-                        <children>
-                           <Label fx:id="btnForgot" alignment="CENTER" prefHeight="23.0" prefWidth="99.0"
-                                  text="Forgot Password?" textFill="#5383ff">
-                              <font>
-                                 <Font name="Segoe UI" size="12.0"/>
-                              </font>
-                           </Label>
-                           <JFXButton fx:id="btnSignin" onMouseClicked="#handleButtonAction" text="Login">
-                              <HBox.margin>
-                                 <Insets left="134.0"/>
-                              </HBox.margin>
-                           </JFXButton>
-                        </children>
-                     </HBox>
-                     <Separator prefHeight="9.0" prefWidth="281.0"/>
-                     <Label fx:id="lblErrors" alignment="CENTER" prefHeight="40.0" prefWidth="275.0" textFill="#ff6354">
-                        <font>
-                           <Font name="Segoe UI" size="10.0"/>
-                        </font>
-                     </Label>
-                  </children>
-               </VBox>
-            </children>
-         </StackPane>
+         <VBox fx:id="mainVBox" alignment="CENTER"/>
       </children>
    </HBox>
 </AnchorPane>

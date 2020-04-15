@@ -50,18 +50,16 @@
             <TableView fx:id="associationTableView" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="nomCol" prefWidth="75.0" text="Nom"/>
-                  <TableColumn fx:id="domaineCol" text="Domaine"/>
-                  <TableColumn fx:id="villeCol" prefWidth="225.59994506835938" text="Ville"/>
-                  <TableColumn fx:id="descCol" prefWidth="208.8000030517578" text="Description"/>
-                  <TableColumn prefWidth="75.0" text="Profile"/>
-                  <TableColumn fx:id="actions" maxWidth="150.0" minWidth="150.0" prefWidth="150.0">
+                  <TableColumn fx:id="domaineCol" prefWidth="100.0" text="Domaine"/>
+                  <TableColumn fx:id="villeCol" prefWidth="100.0" text="Ville"/>
+                  <TableColumn fx:id="actions" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false">
                      <columns>
                         <TableColumn fx:id="pieceCol" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false"
                                      text="Piece"/>
                         <TableColumn fx:id="deleteOption" maxWidth="80.0" minWidth="80.0" resizable="false"
                                      text="Supprimer"/>
                         <TableColumn fx:id="statusCol" maxWidth="80.0" minWidth="80.0" text="Status"/>
-                        <TableColumn fx:id="managerCol" maxWidth="120.0" minWidth="120.0" prefWidth="120.0"
+                        <TableColumn fx:id="managerCol" maxWidth="100.0" minWidth="100.0" prefWidth="100.0"
                                      text="Manager"/>
                      </columns>
                   </TableColumn>

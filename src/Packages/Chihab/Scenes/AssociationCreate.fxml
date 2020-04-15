@@ -7,7 +7,7 @@
 <?import javafx.scene.web.WebView?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
             minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../../../Main/styles.css"
-            xmlns="http://javafx.com/javafx" fx:controller="Packages.Chihab.Controllers.AssociationCreateController">
+            xmlns="http://javafx.com/javafx">
     <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
           AnchorPane.topAnchor="0.0">
         <children>

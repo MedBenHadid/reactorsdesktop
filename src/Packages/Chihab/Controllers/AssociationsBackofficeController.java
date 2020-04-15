@@ -1,6 +1,7 @@
 package Packages.Chihab.Controllers;
 
 import Main.Entities.User;
+import Main.Entities.UserSession;
 import Packages.Chihab.Models.Association;
 import Packages.Chihab.Services.AssociationService;
 import SharedResources.URLScenes;
@@ -21,7 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -36,21 +36,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AssociationsBackofficeController implements Initializable {
-    private final Tab domaineTab;
     @FXML
     private TableView<Association> associationTableView;
     @FXML
     private TableColumn<Association, Association> deleteOption, pieceCol;
     @FXML
     public StackPane rootStackPane;
-    @FXML
-    private TableColumn<Association, String> descCol;
     @FXML
     private TableColumn<Association, JFXComboBox<String>> villeCol;
     @FXML
@@ -65,31 +61,33 @@ public class AssociationsBackofficeController implements Initializable {
     private TableColumn<Association, String> domaineCol;
     @FXML
     private TableColumn<Association, Association> statusCol, nomCol;
+    private final boolean isAdmin;
     private FTPInterface ftpInterface;
+    private final ObservableList<Association> associationList;
+    @FXML
+    private TableColumn actions;
 
     public AssociationsBackofficeController() {
-        domaineTab = new Tab();
+        this.isAdmin = UserSession.getInstace().getUser().isAdmin();
         try {
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
-            Logger.getLogger(
-                    AssociationsBackofficeController.class.getName()).log(
-                    Level.INFO, null, e
-            );
+            Logger.getLogger(AssociationsBackofficeController.class.getName()).log(Level.INFO, null, e);
         }
-    }
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO 1: Based on role, disable { addButton, deleteOption, managerCol, statusCol}
-        //associationListTab.setClosable(false);
-        //addButton.setVisible(UserSession.getInstance().isAdmin);
-        ObservableList<Association> associationList = FXCollections.observableArrayList();
+        associationList = FXCollections.observableArrayList();
         try {
             associationList.addAll(AssociationService.getInstace().readAll());
         } catch (SQLException e) {
-            showDialog(Alert.AlertType.ERROR, "", "Connexion au serveur échoué", "Veuillez assurer la bonne connexion");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO 1: Based on role, disable { addButton, deleteOption, managerCol, statusCol}
+        addButton.setVisible(this.isAdmin);
+        actions.setVisible(this.isAdmin);
+
         nomCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         nomCol.setCellFactory(param -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
@@ -109,14 +107,13 @@ public class AssociationsBackofficeController implements Initializable {
                     }
                     assert imageAss != null;
                     imageView.setImage(new Image(imageAss.toURI().toString()));
-                    imageView.setFitHeight(20.0);
-                    imageView.setFitWidth(20.0);
+                    imageView.setFitHeight(100.0);
+                    imageView.setFitWidth(100.0);
                     setText(a.getNom());
                     setGraphic(imageView);
                 }
             }
         });
-        descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         villeCol.setCellValueFactory(new PropertyValueFactory<>("ville"));
         managerCol.setCellValueFactory(new PropertyValueFactory<>("managerUserName"));
         domaineCol.setCellValueFactory(new PropertyValueFactory<>("domaineNom"));
@@ -194,8 +191,6 @@ public class AssociationsBackofficeController implements Initializable {
                 });
             }
         });
-        deleteOption.setVisible(true);
-        descCol.setCellFactory(TextFieldTableCell.forTableColumn());
         villeCol.setCellValueFactory(associationJFXComboBoxCellDataFeatures -> {
             Association a = associationJFXComboBoxCellDataFeatures.getValue();
             JFXComboBox<String> comboBox = new JFXComboBox<>();
@@ -207,10 +202,7 @@ public class AssociationsBackofficeController implements Initializable {
                     try {
                         AssociationService.getInstace().update(a);
                     } catch (SQLException e) {
-                        Logger.getLogger(
-                                AssociationsBackofficeController.class.getName()).log(
-                                Level.INFO, "Error editing ville", e
-                        );
+                        Logger.getLogger(AssociationsBackofficeController.class.getName()).log(Level.INFO, "Error editing ville", e);
                     } finally {
                         JFXDialogLayout layout = new JFXDialogLayout();
                         layout.setBody(new Label("Modifié avec success"));
@@ -225,34 +217,18 @@ public class AssociationsBackofficeController implements Initializable {
                     }
                 }
             });
-            comboBox.selectionModelProperty().addListener((observableValue, stringSingleSelectionModel, t1) -> System.out.println(t1));
+            comboBox.selectionModelProperty().addListener((observableValue, stringSingleSelectionModel, t1) -> {
+                // TODO : Update
+            });
             return new SimpleObjectProperty<>(comboBox);
         });
         // Update section
         // Update description event handler
-        descCol.setOnEditCommit(
-                categoryStringCellEditEvent -> {
-                    Association current = associationTableView.getItems().get(categoryStringCellEditEvent.getTablePosition().getRow());
-                    if (checkValidUpdate(categoryStringCellEditEvent.getOldValue(), categoryStringCellEditEvent.getNewValue(), false, 5, 255, "Description"))
-                        try {
-                            current.setDescription(categoryStringCellEditEvent.getNewValue());
-                            System.out.println(categoryStringCellEditEvent.getNewValue());
-                            AssociationService.getInstace().update(current);
-                        } catch (SQLException e) {
-                            Logger.getLogger(
-                                    AssociationsBackofficeController.class.getName()).log(
-                                    Level.INFO, "Error updating description", e
-                            );
-                            showDialog(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage(), "Modification échoué");
-                        }
-                    else
-                        associationTableView.getItems().set(categoryStringCellEditEvent.getTablePosition().getRow(), current);
-                }
-        );
         // Delete section
         deleteOption.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         deleteOption.setCellFactory(param -> new TableCell<>() {
-            private final JFXButton deleteButton = new JFXButton("Supprimer");
+            private final JFXButton deleteButton = new JFXButton("Delete");
+
             @Override
             protected void updateItem(Association a, boolean empty) {
                 deleteButton.getStyleClass().addAll("jfx-button-secondary");
@@ -263,24 +239,37 @@ public class AssociationsBackofficeController implements Initializable {
                 }
                 setGraphic(deleteButton);
                 deleteButton.setOnAction(event -> {
-                    Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
-                    confirmationDialog.setTitle("Suppression");
-                    confirmationDialog.setHeaderText("Vous aller supprimer le domaine " + a.getNom() + "!");
-                    confirmationDialog.setContentText("Etes vous sure?");
-                    Optional<ButtonType> confirmationResult = confirmationDialog.showAndWait();
-                    if (confirmationResult.isPresent())
-                        if (confirmationResult.get() == ButtonType.OK)
-                            try {
-                                AssociationService.getInstace().delete(a);
-                                associationTableView.getItems().remove(a);
-                                showDialog(Alert.AlertType.CONFIRMATION, "", "", "Association supprimée !!");
-                            } catch (SQLException e) {
-                                Logger.getLogger(
-                                        AssociationsBackofficeController.class.getName()).log(
-                                        Level.INFO, null, e
-                                );
-                                showDialog(Alert.AlertType.ERROR, "Suppression échoué", "Raison : Reference", "Domaine ne peut pas étre supprimé!");
-                            }
+                    // TODO : JFXDialog
+                    JFXDialogLayout layout = new JFXDialogLayout();
+                    layout.setHeading(new Label("Are you sure that you want to delete " + a.getNom() + "?"));
+                    JFXButton confirm = new JFXButton();
+                    confirm.setText("I know what i'm doing, delete!");
+                    confirm.setOnMouseClicked(mouseEvent -> {
+                        try {
+                            AssociationService.getInstace().delete(a);
+                            associationTableView.getItems().remove(a);
+                        } catch (SQLException e) {
+                            Logger.getLogger(
+                                    AssociationsBackofficeController.class.getName()).log(
+                                    Level.INFO, null, e
+                            );
+                        } finally {
+                            JFXDialogLayout l = new JFXDialogLayout();
+                            layout.setBody(new Text("Association " + a.getNom() + " succesfully deleted"));
+                            layout.setHeading(new Label("Delete:"));
+                            JFXDialog dialog = new JFXDialog(rootStackPane, l, JFXDialog.DialogTransition.CENTER);
+                            JFXButton close = new JFXButton("Exit");
+                            close.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> dialog.close());
+                            layout.setActions(close);
+                            dialog.show();
+                        }
+                    });
+                    layout.setBody(confirm);
+                    JFXDialog d = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+                    JFXButton close = new JFXButton("Cancel");
+                    close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> d.close());
+                    layout.setActions(close);
+                    d.show();
                 });
             }
         });
@@ -302,7 +291,6 @@ public class AssociationsBackofficeController implements Initializable {
                 pieceButton.setOnAction(event -> {
                     try {
                         File file = ftpInterface.downloadFile(URLServer.associationPieceDir + a.getPieceJustificatif(), FTP.BINARY_FILE_TYPE);
-
                         if (!Desktop.isDesktopSupported())
                             return;
                         Desktop desktop = Desktop.getDesktop();
@@ -315,16 +303,20 @@ public class AssociationsBackofficeController implements Initializable {
                                 AssociationsBackofficeController.class.getName()).log(
                                 Level.SEVERE, null, e
                         );
-                        Alert connAlert = new Alert(Alert.AlertType.WARNING);
-                        connAlert.setContentText("Error whilst fetching " + a.getPieceJustificatif() + " from FTP server");
-                        connAlert.show();
+                        JFXDialogLayout layout = new JFXDialogLayout();
+                        layout.setBody(new Label("Error fetching file"));
+                        layout.setHeading(new Text("FTP Related error"));
+                        JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+                        JFXButton close = new JFXButton("Annuler");
+                        close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                        layout.setActions(close);
+                        dialog.show();
                     }
 
                 });
             }
         });
         // Piece justificative section
-        //progressBar.progressProperty().bind(loadDataTask.progressProperty());
         // Profile Section
         associationTableView.setRowFactory(tv -> {
             TableRow<Association> row = new TableRow<>();
@@ -371,7 +363,7 @@ public class AssociationsBackofficeController implements Initializable {
                     associationList.add(((AssociationCreateController) loader.getController()).getAssociation());
                     dialog.close();
                 });
-                JFXButton close = new JFXButton("Annuler");
+                JFXButton close = new JFXButton("Cancel");
                 close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
                 layout.setActions(close);
                 dialog.show();
@@ -411,40 +403,7 @@ public class AssociationsBackofficeController implements Initializable {
     }
 
 
-    boolean checkValidUpdate(String oldValue, String newValue, Boolean isAlphaNumerical, int minLength, int maxLength, String string) {
-        if (!checkValidStringInput(newValue, isAlphaNumerical, minLength, maxLength, string)) {
-            return false;
-        }
-        if (oldValue.toLowerCase().equals(newValue.toLowerCase())) {
-            showDialog(Alert.AlertType.INFORMATION, "No changes detected!", "", "No changes detected, reverting.");
-            return false;
-        }
-        return true;
-    }
 
-    boolean checkValidStringInput(String input, Boolean isAlphaNumerical, int minLength, int maxLength, String string) {
-        if (input.isEmpty() || input.isBlank()) {
-            showDialog(Alert.AlertType.ERROR, "Invalid input size!", "", "Veuillez remplire ce champ par un " + string + " adéquat non vide");
-            return false;
-        } else if (input.length() > maxLength || input.length() < minLength) {
-            showDialog(Alert.AlertType.ERROR, "Invalid input size!", "", string + "de domaine doit etre comprise entre " + minLength + " et " + maxLength + "!");
-            return false;
-        } else if (!isAlphaNumerical) {
-            if (input.matches(".*\\d.*")) {
-                showDialog(Alert.AlertType.INFORMATION, "Invalid input constraint!", "", string + " ne peut pas contenir des chiffres");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    void showDialog(Alert.AlertType t, String title, String header, String context) {
-        Alert a = new Alert(t);
-        a.setTitle(title);
-        a.setHeaderText(header);
-        a.setContentText(context);
-        a.showAndWait();
-    }
 
 
 }

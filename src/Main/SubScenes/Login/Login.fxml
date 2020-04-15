@@ -6,43 +6,37 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane id="AnchorPane" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Main.SubScenes.Login.LoginController">
-    <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-          AnchorPane.topAnchor="0.0">
-        <padding>
-            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
-        </padding>
-        <JFXTextField fx:id="txtUsername" promptText="Username | Email"/>
-        <JFXPasswordField fx:id="txtPassword" promptText="Password"/>
-        <HBox prefHeight="100.0" prefWidth="200.0">
-            <children>
-                <Label fx:id="btnForgot" alignment="CENTER" prefHeight="23.0" prefWidth="99.0" text="Forgot Password?"
-                       textFill="#5383ff">
-                    <font>
-                        <Font name="Segoe UI" size="12.0"/>
-                    </font>
-                </Label>
-                <JFXButton fx:id="btnSignin" onMouseClicked="#handleButtonAction" text="Login">
-                    <HBox.margin>
-                        <Insets left="134.0"/>
-                    </HBox.margin>
-                </JFXButton>
-            </children>
-        </HBox>
-        <Separator prefHeight="9.0" prefWidth="281.0"/>
-        <Label fx:id="lblErrors" alignment="CENTER" prefHeight="40.0" prefWidth="275.0" textFill="#ff6354">
-            <font>
-                <Font name="Segoe UI" size="10.0"/>
-            </font>
-        </Label>
-        <Label alignment="CENTER" prefHeight="23.0" prefWidth="31.0" style="-fx-background-color: #fff;" text="Or"
-               textFill="#5b5a5a">
-            <font>
-                <Font name="Segoe UI" size="12.0"/>
-            </font>
-        </Label>
-        <JFXButton fx:id="btnSignup" onMouseClicked="#handleButtonAction" text="Register"/>
-    </VBox>
-</AnchorPane>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:id="loginVbox" alignment="CENTER" xmlns="http://javafx.com/javafx"
+      fx:controller="Main.SubScenes.Login.LoginController">
+   <padding>
+      <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+   </padding>
+   <children>
+      <JFXTextField fx:id="txtUsername" promptText="Username | Email"/>
+      <JFXPasswordField fx:id="txtPassword" promptText="Password"/>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="btnForgot" alignment="CENTER" prefHeight="23.0" prefWidth="99.0" text="Forgot Password?"
+                   textFill="#5383ff">
+               <font>
+                  <Font name="Segoe UI" size="12.0"/>
+               </font>
+            </Label>
+            <JFXButton fx:id="btnSignin" onMouseClicked="#handleButtonAction" text="Login">
+               <HBox.margin>
+                  <Insets left="134.0"/>
+               </HBox.margin>
+            </JFXButton>
+         </children>
+      </HBox>
+      <Separator prefHeight="9.0" prefWidth="281.0"/>
+      <Label fx:id="lblErrors" alignment="CENTER" prefHeight="40.0" prefWidth="275.0" textFill="#ff6354">
+         <font>
+            <Font name="Segoe UI" size="10.0"/>
+         </font>
+      </Label>
+   </children>
+</VBox>

@@ -1,129 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <StackPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity"
            minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1"
            fx:controller="Packages.Mohamed.Scenes.MissionController">
    <children>
-      <AnchorPane>
+      <VBox>
          <children>
-            <TabPane fx:id="tabPane" side="BOTTOM" tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0"
-                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <tabs>
-                  <Tab fx:id="missionListTab" text="Missions">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <viewport>
-                              <Rectangle2D/>
-                           </viewport>
-                           <image>
-                              <Image url="@../../../../../../Desktop/reactorsdesktop-/src/SharedResources/Images/icons8_Share_64px.png"/>
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0">
-                           <children>
-                              <VBox alignment="CENTER" layoutX="-15.0" layoutY="1.0" prefHeight="591.0"
-                                    prefWidth="1581.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-15.0"
-                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
-                                 <children>
-                                    <HBox>
-                                       <VBox.margin>
-                                          <Insets left="60.0"/>
-                                       </VBox.margin>
-                                       <children>
-                                          <VBox>
-                                             <children>
-                                                <Label text="Mission :" textFill="#221aba">
-                                                   <font>
-                                                      <Font size="25.0"/>
-                                                   </font>
-                                                   <VBox.margin>
-                                                      <Insets left="30.0" right="30.0" top="30.0"/>
-                                                   </VBox.margin>
-                                                </Label>
-                                                <Label fx:id="size" text="Label">
-                                                   <VBox.margin>
-                                                      <Insets bottom="30.0" left="30.0" right="30.0"/>
-                                                   </VBox.margin>
-                                                </Label>
-                                             </children>
-                                          </VBox>
-                                          <VBox alignment="CENTER">
-                                             <children>
-                                                <HBox>
-                                                   <children>
-                                                      <VBox>
-                                                         <children>
-                                                            <Label text="Chercher par titre:"/>
-                                                            <TextField fx:id="inputName"/>
-                                                         </children>
-                                                      </VBox>
-                                                      <VBox>
-                                                         <children>
-                                                            <Label text="Chercher par ville"/>
-                                                            <TextField fx:id="inputCity"/>
-                                                         </children>
-                                                         <HBox.margin>
-                                                            <Insets left="20.0"/>
-                                                         </HBox.margin>
-                                                      </VBox>
-                                                   </children>
-                                                   <VBox.margin>
-                                                      <Insets right="20.0"/>
-                                                   </VBox.margin>
-                                                </HBox>
-                                             </children>
-                                             <HBox.margin>
-                                                <Insets left="300.0"/>
-                                             </HBox.margin>
-                                          </VBox>
-                                       </children>
-                                    </HBox>
-                                    <Button fx:id="addButton" mnemonicParsing="false" prefHeight="26.0"
-                                            prefWidth="153.0" text="Ajouter une mission">
-                                       <VBox.margin>
-                                          <Insets bottom="30.0" left="570.0"/>
-                                       </VBox.margin>
-                                    </Button>
-                                    <TableView fx:id="missionTableView" editable="true" tableMenuButtonVisible="true">
-                                       <columns>
-                                          <TableColumn fx:id="idCol" prefWidth="75.0" text="ID"/>
-                                          <TableColumn fx:id="TitleCol" prefWidth="75.0" text="TitleMission"/>
-                                          <TableColumn fx:id="domaineCol" text="Domaine"/>
-                                          <TableColumn fx:id="descCol" prefWidth="108.80000305175781"
-                                                       text="Description"/>
-                                          <TableColumn fx:id="managerCol" prefWidth="138.0" text="Manager"/>
-                                          <TableColumn fx:id="locationCol" prefWidth="83.20001220703125"
-                                                       text="location"/>
-                                          <TableColumn fx:id="objectifCol" prefWidth="130.0" text="Objectif"/>
-                                          <TableColumn fx:id="SumCollectedCol" prefWidth="123.19998168945312"
-                                                       text="SumCollected"/>
-                                          <TableColumn fx:id="DateCreationCol" prefWidth="111.0" text="DateCreation"/>
-                                          <TableColumn fx:id="DateFinCol" prefWidth="273.0" text="DateFin"/>
-                                          <TableColumn fx:id="upsCol" prefWidth="234.0" text="Ups"/>
-                                          <TableColumn fx:id="deleteOption" prefWidth="110.4000244140625"
-                                                       text="Supprimer"/>
-                                       </columns>
-                                       <VBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                       </VBox.margin>
-                                    </TableView>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </Tab>
-               </tabs>
-            </TabPane>
+            <Label text="Missions :" textFill="#8100fa">
+               <font>
+                  <Font size="25.0"/>
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" right="30.0" top="30.0"/>
+               </VBox.margin>
+            </Label>
+            <Label fx:id="size" text="Label">
+               <VBox.margin>
+                  <Insets bottom="30.0" left="30.0" right="30.0"/>
+               </VBox.margin>
+               <font>
+                  <Font name="System Italic" size="12.0"/>
+               </font>
+            </Label>
+            <HBox alignment="CENTER_RIGHT">
+               <VBox.margin>
+                  <Insets right="20.0"/>
+               </VBox.margin>
+               <children>
+                  <JFXTextField fx:id="inputName" focusColor="#8100fa" promptText="Chercher par titre"
+                                unFocusColor="WHITE">
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                     </HBox.margin>
+                  </JFXTextField>
+                  <JFXTextField fx:id="inputCity" focusColor="#8100fa" promptText="Chercher par ville"
+                                unFocusColor="WHITE">
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                     </HBox.margin>
+                  </JFXTextField>
+               </children>
+            </HBox>
+            <TableView fx:id="missionTableView" editable="true" tableMenuButtonVisible="true">
+               <columns>
+                  <TableColumn fx:id="idCol" prefWidth="75.0" text="ID"/>
+                  <TableColumn fx:id="TitleCol" prefWidth="75.0" text="TitleMission"/>
+                  <TableColumn fx:id="domaineCol" text="Domaine"/>
+                  <TableColumn fx:id="descCol" prefWidth="108.80000305175781" text="Description"/>
+                  <TableColumn fx:id="managerCol" prefWidth="138.0" text="Manager"/>
+                  <TableColumn fx:id="locationCol" prefWidth="83.20001220703125" text="location"/>
+                  <TableColumn fx:id="objectifCol" prefWidth="130.0" text="Objectif"/>
+                  <TableColumn fx:id="SumCollectedCol" prefWidth="123.19998168945312" text="SumCollected"/>
+                  <TableColumn fx:id="DateCreationCol" prefWidth="111.0" text="DateCreation"/>
+                  <TableColumn fx:id="DateFinCol" prefWidth="273.0" text="DateFin"/>
+                  <TableColumn fx:id="upsCol" prefWidth="234.0" text="Ups"/>
+                  <TableColumn fx:id="deleteOption" prefWidth="110.4000244140625" text="Supprimer"/>
+               </columns>
+            </TableView>
+            <HBox alignment="BASELINE_RIGHT">
+               <VBox.margin>
+                  <Insets/>
+               </VBox.margin>
+               <children>
+                  <JFXButton fx:id="addButton" contentDisplay="RIGHT" ripplerFill="#8100fa" text="Ajouter une mission">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="5.0" right="10.0" top="5.0"/>
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+            </HBox>
          </children>
-      </AnchorPane>
+      </VBox>
    </children>
 </StackPane>
