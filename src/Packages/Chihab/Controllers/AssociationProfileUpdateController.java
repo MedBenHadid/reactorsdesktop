@@ -25,7 +25,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -220,20 +219,23 @@ public class AssociationProfileUpdateController implements Initializable {
         }
         addMembers.setOnMouseClicked(mouseEvent -> {
             FXMLLoader createMembership = new FXMLLoader(getClass().getResource(URLScenes.addMembershipSelectUSer));
-            AnchorPane c = null;
+            StackPane c = null;
             try {
                 c = createMembership.load();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             JFXDialogLayout layout = new JFXDialogLayout();
+            layout.setPrefWidth(500);
+            layout.setPrefHeight(500);
             layout.setBody(c);
+            System.out.println(c);
             layout.setHeading(new Text("Ajout d'une nouvelle association"));
             JFXDialog dialog = new JFXDialog(stack, layout, JFXDialog.DialogTransition.CENTER);
-            JFXButton membershipAdd = (JFXButton) createMembership.getNamespace().get("validateButton");
+            JFXButton membershipAdd = (JFXButton) createMembership.getNamespace().get("inviteButton");
             membershipAdd.setOnMouseClicked(e -> {
-                FXMLLoader load = new FXMLLoader(getClass().getResource(URLScenes.memberShipUpdateItem));
-                MemberUpdateItemController controller = new MemberUpdateItemController(((MembershipCreate) createMembership.getController()).getM());
+                FXMLLoader load = new FXMLLoader(getClass().getResource(URLScenes.memberShipItem));
+                MemberItemController controller = new MemberItemController(((MembershipCreate) load.getController()).getM());
                 load.setController(controller);
                 try {
                     membersVbox.getChildren().add(load.load());

@@ -45,7 +45,7 @@ public class MemberUpdateItemController implements Initializable {
             this.m = m;
             this.ftpInterface = FTPInterface.getInstance(URLServer.ftpServerLink, URLServer.ftpSocketPort, URLServer.ftpUser, URLServer.ftpPassword);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getCause();
         }
     }
 

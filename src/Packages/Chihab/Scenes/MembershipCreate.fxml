@@ -14,11 +14,12 @@
    <children>
       <VBox alignment="CENTER">
          <children>
-            <Label text="Lookup a user with their email adress, and invite them if they are not already a member of our platform.">
+            <Label text="Lookup a user with their email adress, and invite them ">
                <VBox.margin>
                   <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
                </VBox.margin>
             </Label>
+            <Label text="Loo if they are not already a member of our platform."/>
             <JFXTextField fx:id="emailInput">
                <VBox.margin>
                   <Insets left="40.0" right="40.0"/>
@@ -53,13 +54,13 @@
                            </font>
                         </Label>
                         <JFXTextField/>
-                        <JFXTextArea fx:id="description"/>
+                        <JFXTextArea fx:id="description" prefColumnCount="20"/>
                         <JFXComboBox fx:id="role"/>
+                        <JFXButton fx:id="inviteButton" text="Invite them on-board"/>
                      </children>
                   </VBox>
                </children>
             </AnchorPane>
-            <JFXButton fx:id="inviteButton" text="Invite them on-board"/>
          </children>
       </VBox>
    </children>

@@ -321,11 +321,7 @@ public class AssociationsBackofficeController implements Initializable {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Association rowData = row.getItem();
-                    FXMLLoader loader;
-                    if (loggedUser.isAdmin())
-                        loader = new FXMLLoader(getClass().getResource(URLScenes.associationUpdateProfile));
-                    else
-                        loader = new FXMLLoader(getClass().getResource(URLScenes.associationProfile));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationUpdateProfile));
                     AssociationProfileUpdateController controller = new AssociationProfileUpdateController(rowData);
                     loader.setController(controller);
                     ScrollPane createAssociation = null;
@@ -335,6 +331,7 @@ public class AssociationsBackofficeController implements Initializable {
                         e.getCause();
                     }
                     JFXDialogLayout layout = new JFXDialogLayout();
+                    layout.setPrefWidth(1200);
                     layout.setBody(createAssociation);
                     layout.setHeading(new Text("Profile :" + rowData.getNom()));
                     JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
