@@ -16,13 +16,15 @@ public class ConnectionUtil {
         String dbDriver = "jdbc:mysql:";
         String dbHost = "//localhost";
         String dbName = "/reactorsdb";
+        // to get version 5.1.33 of MySQL JDBC driver to work with UTC time zone
+        String supportForUTC = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
         String dbUser = "root";
         String dbPort = ":3306";
         String dbPassword = "";
         String driver = "com.mysql.cj.jdbc.Driver";
         try {
             Class.forName(driver);
-            this.conn = DriverManager.getConnection(dbDriver + dbHost + dbPort + dbName, dbUser, dbPassword);
+            this.conn = DriverManager.getConnection(dbDriver + dbHost + dbPort + dbName + supportForUTC, dbUser, dbPassword);
         }
         catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Connection Failed! Check output console");
