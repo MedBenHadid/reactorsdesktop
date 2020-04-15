@@ -332,7 +332,7 @@ public class AssociationsBackofficeController implements Initializable {
                     try {
                         createAssociation = loader.load();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        e.getCause();
                     }
                     JFXDialogLayout layout = new JFXDialogLayout();
                     layout.setBody(createAssociation);
