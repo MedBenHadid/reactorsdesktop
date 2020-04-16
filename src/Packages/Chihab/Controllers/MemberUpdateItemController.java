@@ -7,7 +7,6 @@ import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,7 +32,7 @@ public class MemberUpdateItemController implements Initializable {
     @FXML
     private JFXTextArea descriptionLabel;
     @FXML
-    private JFXComboBox roleComboBox;
+    private JFXComboBox<String> roleComboBox;
     @FXML
     private JFXTextField fonctionTextField;
     @FXML
@@ -58,7 +57,7 @@ public class MemberUpdateItemController implements Initializable {
         fonctionTextField.setText(m.getFonction());
         roleComboBox.setItems(FXCollections.observableArrayList("Livreur", "Rédacteur", "Adhérant simple"));
         roleComboBox.getSelectionModel().select(2);
-        roleComboBox.valueProperty().addListener((ChangeListener<String>) (ov, t, t1) -> {
+        roleComboBox.valueProperty().addListener((ov, t, t1) -> {
             if (!t.equals(t1)) {
                 if (t1.equals("Livreur"))
                     m.setAccess(2);

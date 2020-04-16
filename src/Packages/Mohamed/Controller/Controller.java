@@ -10,6 +10,6 @@ public class Controller implements Initializable {
 
     @java.lang.Override
     public void initialize(java.net.URL url, java.util.ResourceBundle resourceBundle) {
-        labelTest.textProperty().setValue("Nik om l viris");
+        labelTest.textProperty().setValue("");
     }
 }

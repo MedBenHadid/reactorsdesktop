@@ -20,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -324,9 +323,10 @@ public class AssociationsBackofficeController implements Initializable {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationUpdateProfile));
                     AssociationProfileUpdateController controller = new AssociationProfileUpdateController(rowData);
                     loader.setController(controller);
-                    ScrollPane createAssociation = null;
+                    StackPane createAssociation = null;
                     try {
                         createAssociation = loader.load();
+                        System.out.println(createAssociation.getId());
                     } catch (IOException e) {
                         e.getCause();
                     }

@@ -226,11 +226,10 @@ public class AssociationProfileUpdateController implements Initializable {
                 e.printStackTrace();
             }
             JFXDialogLayout layout = new JFXDialogLayout();
-            layout.setPrefWidth(500);
-            layout.setPrefHeight(500);
+            //layout.setPrefWidth(200);
+            //layout.setPrefHeight(200);
             layout.setBody(c);
-            System.out.println(c);
-            layout.setHeading(new Text("Ajout d'une nouvelle association"));
+            layout.setHeading(new Text("Ajout d'une nouvelle adhérance"));
             JFXDialog dialog = new JFXDialog(stack, layout, JFXDialog.DialogTransition.CENTER);
             JFXButton membershipAdd = (JFXButton) createMembership.getNamespace().get("inviteButton");
             membershipAdd.setOnMouseClicked(e -> {

@@ -100,7 +100,7 @@ public class MembershipCreate implements Initializable {
         ObservableList<User> finalUsers = users;
         emailInput.setOnKeyTyped(ke -> {
             emailInput.validate();
-            Optional<User> u = null;
+            Optional<User> u = Optional.empty();
             if (emailInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
                 u = finalUsers.stream().filter(user -> user.getEmail().equals(emailInput.textProperty().get())).findFirst();
             if (emailInput.getText().isEmpty()) {
@@ -127,14 +127,11 @@ public class MembershipCreate implements Initializable {
                 inviteButton.setVisible(false);
             }
         });
-        ObservableList<User> finalUsers1 = users;
         emailInput.setOnKeyPressed(keyEvent -> {
             Optional<User> u = finalUsers.stream().filter(user -> user.getEmail().equals(emailInput.textProperty().get())).findFirst();
             if (keyEvent.getCode().equals(KeyCode.ENTER))
                 if (EmailValidator.isEmail(emailInput.textProperty().get()))
-                    if (u.isPresent()) {
-
-                    } else {
+                    if (u.isEmpty()) {
                         // TODO : He's not a memeber
                         JFXDialogLayout layout = new JFXDialogLayout();
                         layout.setHeading(new Text("Inviting on-board " + emailInput.getText()));
@@ -157,9 +154,20 @@ public class MembershipCreate implements Initializable {
                                 newUser.removeRole(RoleEnum.ROLE_CLIENT);
                                 newUser.getProfile().setImage("user.png");
                                 newUser.setId(UserService.getInstace().create(newUser));
-                                toDelete.add(newUser.getId());
-                                MailSender.sendMail(emailInput.getText(), AssociationService.getInstace().searchByManagerId(UserSession.getInstace().getUser()), UserSession.getInstace().getUser(), passwordPlain, tr.getText());
-                                users.add(newUser);
+                                if (newUser.getId() == -1) {
+                                    JFXDialogLayout l = new JFXDialogLayout();
+                                    l.setHeading(new Text("Member :" + emailInput.getText() + " invited"));
+                                    l.setBody(new Text("Member succesfully invited, please provide further info."));
+                                    JFXDialog d = new JFXDialog(stack, l, JFXDialog.DialogTransition.CENTER);
+                                    JFXButton c = new JFXButton("Cancel");
+                                    c.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> d.close());
+                                    l.setActions(c);
+                                    d.show();
+                                } else {
+                                    toDelete.add(newUser.getId());
+                                    MailSender.sendMail(emailInput.getText(), AssociationService.getInstace().searchByManagerId(UserSession.getInstace().getUser()), UserSession.getInstace().getUser(), passwordPlain, tr.getText());
+                                    users.add(newUser);
+                                }
                             } catch (Exception e) {
                                 Logger.getLogger(MembershipCreate.class.getName()).log(Level.INFO, "Error sending email", e);
                             } finally {
