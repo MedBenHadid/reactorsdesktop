@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="429.0" prefWidth="545.0" styleClass="root"
+            stylesheets="@../../resources/css/admin/Main.css" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="Packages.Nasri.ui.controllers.AddHebergementOfferController">
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+    </padding>
+    <children>
+        <Label id="titleLabel" layoutX="15.0" layoutY="27.0" prefHeight="27.0" prefWidth="512.0"
+               text="Ajouter un Offre d'hébérgement" textAlignment="CENTER"/>
+        <Label layoutX="14.0" layoutY="95.0" prefHeight="17.0" prefWidth="126.0" styleClass="inputLabel"
+               text="Description: "/>
+        <Label layoutX="14.0" layoutY="151.0" styleClass="inputLabel" text="Nombre de chambres:"/>
+        <Label layoutX="15.0" layoutY="318.0" styleClass="inputLabel" text="Image: "/>
+        <Label layoutX="15.0" layoutY="234.0" prefHeight="17.0" prefWidth="116.0" styleClass="inputLabel"
+               text="Durée (mois):"/>
+        <Label layoutX="14.0" layoutY="192.0" prefWidth="126.0" styleClass="inputLabel" text="Governorat: "/>
+        <Label layoutX="15.0" layoutY="276.0" styleClass="inputLabel" text="Téléphone: "/>
+        <TextArea fx:id="descriptionInput" layoutX="218.0" layoutY="75.0" prefHeight="65.0" prefWidth="310.0"
+                  promptText="J'ai peut offrir 5 kg de Chocolat"/>
+        <TextField fx:id="numberRoomsInput" layoutX="218.0" layoutY="145.0" prefHeight="25.0" prefWidth="310.0"
+                   promptText="5"/>
+        <TextField fx:id="governoratInput" layoutX="218.0" layoutY="186.0" prefHeight="25.0" prefWidth="310.0"
+                   promptText="Monastir"/>
+        <TextField fx:id="durationInput" layoutX="218.0" layoutY="228.0" prefHeight="25.0" prefWidth="310.0"
+                   promptText="6"/>
+        <TextField fx:id="telephoneInput" layoutX="218.0" layoutY="270.0" prefHeight="25.0" prefWidth="310.0"
+                   promptText="25687987"/>
+        <Button layoutX="14.0" layoutY="367.0" mnemonicParsing="false" onAction="#addButton" text="Ajouter"/>
+        <Button layoutX="92.0" layoutY="368.0" mnemonicParsing="false" onAction="#resetButton" text="Réinitialiser"/>
+        <Button layoutX="218.0" layoutY="312.0" mnemonicParsing="false" onAction="#brownForPictureButton"
+                text="Parcourir"/>
+    </children>
+</AnchorPane>

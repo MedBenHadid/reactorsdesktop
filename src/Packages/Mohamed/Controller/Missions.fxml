@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="Packages.Mohamed.Controller.Controller">
+    <children>
+        <HBox layoutX="171.0" layoutY="38.0" prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <Pane prefHeight="260.0" prefWidth="201.0"/>
+            </children>
+        </HBox>
+        <Button fx:id="button" layoutX="186.0" layoutY="231.0" mnemonicParsing="false" text="Button"/>
+        <Label text="Label"/>
+        <Label fx:id="labelTest" layoutX="335.0" layoutY="148.0" text="Label"/>
+    </children>
+</AnchorPane>

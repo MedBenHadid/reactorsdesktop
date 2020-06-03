@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="837.0" prefWidth="1312.0" styleClass="root"
+            stylesheets="@../../../resources/css/user/Main.css" xmlns="http://javafx.com/javafx/11.0.1">
+    <AnchorPane prefHeight="69.0" prefWidth="1298.0" styleClass="header" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0">
+        <Label layoutX="20.0" layoutY="12.0" styleClass="logo" text="Reactors"/>
+        <Button layoutX="1059.0" layoutY="13.0" mnemonicParsing="false" styleClass="callToActionButton"
+                text="Demander un hébérgement" AnchorPane.rightAnchor="20.0"/>
+        <Button layoutX="870.0" layoutY="13.0" mnemonicParsing="false" styleClass="callToActionButton"
+                text="Offrir un hébérgement" AnchorPane.rightAnchor="245.0"/>
+    </AnchorPane>
+    <AnchorPane layoutY="68.0" prefHeight="289.0" prefWidth="1298.0" styleClass="hero" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0">
+        <Label layoutX="81.0" layoutY="190.0" styleClass="heroLabel"
+               text="Meilleure plateforme du bénévolat en Tunisie"/>
+    </AnchorPane>
+    <AnchorPane layoutX="6.0" layoutY="357.0" prefHeight="200.0" prefWidth="200.0" styleClass="main"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="357.0">
+        <Separator layoutX="653.0" orientation="VERTICAL" prefHeight="480.0" prefWidth="9.0"
+                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="653.0" AnchorPane.rightAnchor="650.0"
+                   AnchorPane.topAnchor="0.0"/>
+        <TitledPane animated="false" layoutX="25.0" layoutY="135.0" prefHeight="148.0" prefWidth="159.0"
+                    text="Offre d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="233.0" layoutY="294.0" prefHeight="148.0" prefWidth="159.0"
+                    text="Offre d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="441.0" layoutY="294.0" prefHeight="148.0" prefWidth="159.0"
+                    text="Offre d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="25.0" layoutY="295.0" prefHeight="148.0" prefWidth="159.0"
+                    text="Offre d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="233.0" layoutY="136.0" prefHeight="148.0" prefWidth="159.0"
+                    text="Offre d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="440.0" layoutY="136.0" prefHeight="148.0" prefWidth="159.0"
+                    text="Offre d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="745.0" layoutY="135.0" prefHeight="148.0" prefWidth="183.0"
+                    text="Demande d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="985.0" layoutY="135.0" prefHeight="148.0" prefWidth="183.0"
+                    text="Demande d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="745.0" layoutY="295.0" prefHeight="148.0" prefWidth="183.0"
+                    text="Demande d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="985.0" layoutY="294.0" prefHeight="148.0" prefWidth="183.0"
+                    text="Demande d'hébérgement">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </TitledPane>
+        <Label layoutX="166.0" layoutY="41.0" styleClass="sectionTitle" text="Liste d'offres d'hébérgement"/>
+        <Label layoutX="785.0" layoutY="41.0" styleClass="sectionTitle"
+               text="Liste des demandes d'hébérgement"/>
+    </AnchorPane>
+</AnchorPane>

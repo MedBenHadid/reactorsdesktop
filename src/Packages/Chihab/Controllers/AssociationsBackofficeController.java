@@ -42,20 +42,33 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class AssociationsBackofficeController extends StackPane implements Initializable  {
-    @FXML private StackPane rootStackPane;
-    @FXML private TableView<Association> associationTableView;
-    @FXML private JFXProgressBar fetchProgress;
-    @FXML private TableColumn<Association, String> villeCol;
-    @FXML private TableColumn<Association, String> profilePictureCol;
-    @FXML private TableColumn<Association, String> nameCol;
-    @FXML private TableColumn<Association, Category> domaineCol;
-    @FXML private TableColumn<Association, User> managerCol;
-    @FXML private JFXComboBox<String> vCombo;
-    @FXML private JFXComboBox<Category> dCombo;
-    @FXML private JFXTextField inputName;
-    @FXML private JFXButton addButton,resetButton,espaceMembershipButton;
-    @FXML private Label size,hits;
+public class AssociationsBackofficeController extends StackPane implements Initializable {
+    @FXML
+    private StackPane rootStackPane;
+    @FXML
+    private TableView<Association> associationTableView;
+    @FXML
+    private JFXProgressBar fetchProgress;
+    @FXML
+    private TableColumn<Association, String> villeCol;
+    @FXML
+    private TableColumn<Association, String> profilePictureCol;
+    @FXML
+    private TableColumn<Association, String> nameCol;
+    @FXML
+    private TableColumn<Association, Category> domaineCol;
+    @FXML
+    private TableColumn<Association, User> managerCol;
+    @FXML
+    private JFXComboBox<String> vCombo;
+    @FXML
+    private JFXComboBox<Category> dCombo;
+    @FXML
+    private JFXTextField inputName;
+    @FXML
+    private JFXButton addButton, resetButton, espaceMembershipButton;
+    @FXML
+    private Label size, hits;
     @FXML private JFXSpinner spinner;
 
     private final JFXDialogLayout layout = new JFXDialogLayout();
