@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" fx:controller="Packages.Chihab.Controllers.DomainesController" prefHeight="400.0" prefWidth="600.0">
+    <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Tab text="Domaines">
+            <graphic>
+                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                    <viewport>
+                        <Rectangle2D/>
+                    </viewport>
+                    <Image url="@../../../SharedResources/Images/icons8_Share_64px.png"/>
+                </ImageView>
+            </graphic>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+                <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <HBox>
+                        <Label text="Domaines d'activités" textFill="#221aba">
+                            <HBox.margin>
+                                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+                            </HBox.margin>
+                            <font>
+                                <Font size="25.0"/>
+                            </font>
+                        </Label>
+                        <TextField fx:id="input">
+                            <HBox.margin>
+                                <Insets bottom="30.0" left="350.0" right="30.0" top="50.0"/>
+                            </HBox.margin>
+                        </TextField>
+                    </HBox>
+                    <TableView fx:id="catTV" editable="true" tableMenuButtonVisible="true">
+                        <columns>
+                            <TableColumn fx:id="idCol" prefWidth="75.0" text="ID" visible="false"/>
+                            <TableColumn fx:id="nomCol" prefWidth="75.0" text="Nom"/>
+                            <TableColumn fx:id="descCol" prefWidth="500.0" text="Description"/>
+                            <TableColumn fx:id="deleteOption" prefWidth="75.0" text="Supprimer"
+                                         visible="false"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </AnchorPane>
+        </Tab>
+        <Tab fx:id="newTab" disable="true" text="Nouveau">
+            <graphic>
+                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                    <viewport>
+                        <Rectangle2D/>
+                    </viewport>
+                    <Image url="@../../../SharedResources/Images/icons8_Handshake_64px.png"/>
+                </ImageView>
+            </graphic>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+                <Label text="Création d'un nouveau domaine :" AnchorPane.bottomAnchor="0.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <padding>
+                        <Insets bottom="500.0" left="200.0"/>
+                    </padding>
+                </Label>
+                <HBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <VBox>
+                        <HBox.margin>
+                            <Insets bottom="150.0" left="150.0" right="150.0" top="150.0"/>
+                        </HBox.margin>
+                        <Label text="Nom du domaine :">
+                            <VBox.margin>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+                            </VBox.margin>
+                        </Label>
+                        <Label text="Description :">
+                            <VBox.margin>
+                                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+                            </VBox.margin>
+                        </Label>
+                    </VBox>
+                    <VBox>
+                        <HBox.margin>
+                            <Insets bottom="150.0" right="10.0" top="150.0"/>
+                        </HBox.margin>
+                        <TextField fx:id="nom">
+                            <VBox.margin>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                            </VBox.margin>
+                        </TextField>
+                        <TextArea fx:id="description">
+                            <VBox.margin>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                            </VBox.margin>
+                        </TextArea>
+                        <Button mnemonicParsing="false" onAction="#createCategory" text="Créer">
+                            <VBox.margin>
+                                <Insets left="115.0"/>
+                            </VBox.margin>
+                        </Button>
+                    </VBox>
+                </HBox>
+            </AnchorPane>
+        </Tab>
+    </TabPane>
+</AnchorPane>

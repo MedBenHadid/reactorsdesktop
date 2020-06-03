@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXScrollPane?>
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Packages.Chihab.Controllers.EspaceAdherant">
+   <children>
+      <JFXScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <StackPane>
+               <children>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <JFXButton text="Retour" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="TOP_RIGHT">
+                           <children>
+                              <JFXButton text="Invites" />
+                           </children>
+                        </HBox>
+                        <VBox fx:id="managerVBOX" alignment="TOP_CENTER" />
+                        <VBox fx:id="memberVBOX" alignment="TOP_CENTER" />
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+         </children>
+      </JFXScrollPane>
+   </children>
+</AnchorPane>

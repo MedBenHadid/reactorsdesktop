@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.Font?>
+<fx:root fx:id="rootStackPane" stylesheets="@../../../Main/styles.css" type="StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <AnchorPane>
+      <children>
+         <JFXProgressBar fx:id="fetchProgress" progress="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+         <VBox minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label text="Associations :">
+               <font>
+                  <Font size="25.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../SharedResources/Images/logoreactors.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets left="20.0" top="20.0" />
+               </padding>
+               <textFill>
+                  <RadialGradient centerX="0.5088888804117838" centerY="0.5" cycleMethod="REPEAT" focusDistance="-0.07476646209431592" radius="0.15420560302021347">
+                     <stops>
+                        <Stop color="BLACK" />
+                        <Stop color="#ae00ff" offset="0.007633587786259542" />
+                        <Stop color="#864a94" offset="0.318712747045906" />
+                        <Stop color="#bfbfbf" offset="0.6526874411795461" />
+                        <Stop color="#bf00ff" offset="1.0" />
+                     </stops>
+                  </RadialGradient>
+               </textFill>
+            </Label>
+            <Label fx:id="size" text="Label">
+               <VBox.margin>
+                  <Insets left="20.0" right="30.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <JFXButton fx:id="addButton" contentDisplay="RIGHT" ripplerFill="#8100fa" text="Ajouter une association">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="espaceMembershipButton" text="Espace adhérant">
+                     <HBox.margin>
+                        <Insets right="40.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" />
+               </VBox.margin>
+            </HBox>
+            <TableView fx:id="associationTableView" fixedCellSize="200.0" opacity="0.7" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="nameCol" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" text="Name" />
+                  <TableColumn fx:id="profilePictureCol" editable="false" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" text="Profile picture" />
+                  <TableColumn fx:id="domaineCol" maxWidth="400.0" minWidth="300.0" prefWidth="300.0" text="Domaine" />
+                  <TableColumn fx:id="villeCol" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" text="Ville" />
+                  <TableColumn fx:id="managerCol" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="200.0" text="Manager" />
+               </columns>
+               <effect>
+                  <DropShadow color="#8100fa" />
+               </effect>
+               <VBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </VBox.margin>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <VBox alignment="CENTER_RIGHT">
+               <HBox alignment="CENTER_RIGHT" VBox.vgrow="ALWAYS">
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+                  <JFXSpinner fx:id="spinner" viewOrder="-2.0" visible="false">
+                     <HBox.margin>
+                        <Insets right="60.0" />
+                     </HBox.margin>
+                  </JFXSpinner>
+                  <VBox alignment="CENTER_RIGHT">
+                     <children>
+                        <JFXTextField fx:id="inputName" focusColor="#8100fa" prefHeight="26.0" prefWidth="196.0" promptText="Chercher par nom" unFocusColor="WHITE" />
+                        <JFXButton ripplerFill="#bf00ff" text="Reset">
+                           <VBox.margin>
+                              <Insets top="8.0" />
+                           </VBox.margin>
+                        </JFXButton>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER_RIGHT">
+                     <children>
+                        <JFXComboBox fx:id="dCombo" labelFloat="true" prefHeight="26.0" prefWidth="197.0" promptText="Domaine d'activité" />
+                        <JFXButton ripplerFill="#bf00ff" text="Reset">
+                           <VBox.margin>
+                              <Insets top="8.0" />
+                           </VBox.margin>
+                        </JFXButton>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER_RIGHT">
+                     <children>
+                        <JFXComboBox fx:id="vCombo" focusColor="#bb00ff" labelFloat="true" prefHeight="26.0" prefWidth="162.0" promptText="Ville" />
+                        <JFXButton ripplerFill="#bf00ff" text="Reset">
+                           <VBox.margin>
+                              <Insets top="8.0" />
+                           </VBox.margin>
+                        </JFXButton>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER">
+                     <Label fx:id="hits" text="LONG ASS TEST " />
+                     <JFXButton fx:id="resetButton" ripplerFill="#bf00ff" text="Reset all">
+                        <VBox.margin>
+                           <Insets top="8.0" />
+                        </VBox.margin>
+                     </JFXButton>
+                     <HBox.margin>
+                        <Insets left="60.0" />
+                     </HBox.margin>
+                  </VBox>
+               </HBox>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" />
+               </VBox.margin>
+            </VBox>
+         </VBox>
+      </children>
+   </AnchorPane>
+</fx:root>

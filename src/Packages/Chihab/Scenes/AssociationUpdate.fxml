@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+<fx:root fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" stylesheets="@../../../Main/styles.css" type="javafx.scene.layout.StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
+      <AnchorPane minHeight="0.0" minWidth="0.0">
+         <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <padding>
+               <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+            </padding>
+            <JFXButton fx:id="deleteButton" prefWidth="200.0" styleClass="jfx-button-error" stylesheets="@../../../Main/styles.css" text="Delete">
+               <ripplerFill>
+                  <LinearGradient endX="1.0" endY="1.0" startY="0.42748090875057776">
+                     <stops>
+                        <Stop color="WHITE" />
+                        <Stop color="BLACK" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </ripplerFill>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../SharedResources/Images/Delete-24.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <ImageView fx:id="imageImageView" fitHeight="250.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="associationNameLabel" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Black" size="32.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="photoButton" buttonType="RAISED" prefWidth="200.0" text="Update image" />
+            <JFXButton fx:id="modpieceButton" buttonType="RAISED" prefWidth="200.0" text="Update identity prooving file" />
+            <VBox alignment="CENTER">
+               <JFXTextArea fx:id="descriptionInput" focusColor="#873087" prefColumnCount="20" promptText="Describe your organization's role :" wrapText="true">
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="20.0" />
+                  </VBox.margin></JFXTextArea>
+               <JFXTextField fx:id="phoneNumberInput" promptText="Phone number">
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="20.0" />
+                  </VBox.margin></JFXTextField>
+               <JFXTextField fx:id="rueInput" promptText="Where can we find you ?">
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="20.0" />
+                  </VBox.margin></JFXTextField>
+               <JFXTextField fx:id="zipInput" promptText="Postal code :">
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="20.0" />
+                  </VBox.margin></JFXTextField>
+               <JFXComboBox fx:id="villeComboBox" prefWidth="500.0" promptText="City">
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="20.0" />
+                  </VBox.margin></JFXComboBox>
+               <WebView fx:id="gmapWebView" prefHeight="200.0" prefWidth="-1.0">
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="20.0" />
+                  </VBox.margin></WebView>
+               <JFXComboBox fx:id="domaineComboBox" prefWidth="500.0" promptText="Your sector ?">
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="20.0" />
+                  </VBox.margin></JFXComboBox>
+               <JFXButton fx:id="validateButton" prefWidth="500.0" text="Update">
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="20.0" />
+                  </VBox.margin></JFXButton>
+            </VBox>
+            <VBox fx:id="membersVbox" prefHeight="200.0" prefWidth="100.0" />
+            <JFXButton fx:id="addMembers" text="Invite members aboard">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../SharedResources/Images/icons8_Handshake_64px.png" />
+                     </image>
+                  </ImageView>
+               </graphic></JFXButton>
+         </VBox>
+      </AnchorPane>
+   </ScrollPane>
+</fx:root>
