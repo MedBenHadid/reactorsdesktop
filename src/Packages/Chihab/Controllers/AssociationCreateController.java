@@ -5,7 +5,7 @@ import Main.Entities.UserSession;
 import Main.Services.UserService;
 import Packages.Chihab.Models.Entities.Association;
 import Packages.Chihab.Models.Entities.Category;
-import Packages.Chihab.Models.Entities.ObservableAssociationValue;
+import Packages.Chihab.Services.AssociationService;
 import Packages.Chihab.Services.CategoryService;
 import SharedResources.URLScenes;
 import SharedResources.URLServer;
@@ -35,18 +35,25 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import netscape.javascript.JSObject;
+import tray.animations.AnimationType;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -72,20 +79,20 @@ public class AssociationCreateController extends StackPane implements Initializa
     private final SimpleBooleanProperty pieceValid = new SimpleBooleanProperty(true);
     private final FileChooser fileChooser = new FileChooser();
     private final FileChooser photoChooser = new FileChooser();
-    private final ObservableAssociationValue association = new ObservableAssociationValue(new Association());
+    private final Association association = new Association();
     private final JFXDialogLayout layout = new JFXDialogLayout();
-    private File photo, piece;
-    private final FXMLLoader loader = new FXMLLoader( getClass().getResource(URLScenes.associationCreate) );
+    private final FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.associationCreate));
     private final JFXButton close = new JFXButton("Close");
+    private File photo, piece;
 
     public AssociationCreateController() {
-        this.association.get().setApprouved(UserSession.getInstace().isLoggedIn());
-        loader.setRoot( this );
-        loader.setController( this );
+        this.association.setApprouved(UserSession.getInstace().isLoggedIn());
+        loader.setRoot(this);
+        loader.setController(this);
         try {
             loader.load();
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -114,7 +121,7 @@ public class AssociationCreateController extends StackPane implements Initializa
         nomInput.focusedProperty().addListener((o, a, t) -> {
             if (!t) nomInput.validate();
             if (nomInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
-                this.association.get().setNom(nomInput.getText());
+                this.association.setNom(nomInput.getText());
 
         });
         nomInput.setOnKeyTyped(keyEvent -> {
@@ -127,7 +134,7 @@ public class AssociationCreateController extends StackPane implements Initializa
             if (!t1) {
                 descriptionInput.validate();
                 if (descriptionInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
-                    association.get().setDescription(descriptionInput.getText());
+                    association.setDescription(descriptionInput.getText());
             }
         });
         descriptionInput.setOnKeyTyped(keyEvent -> {
@@ -140,7 +147,7 @@ public class AssociationCreateController extends StackPane implements Initializa
             if (!t1) {
                 phoneNumberInput.validate();
                 if (phoneNumberInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
-                    association.get().setTelephone(Integer.parseInt(phoneNumberInput.getText()));
+                    association.setTelephone(Integer.parseInt(phoneNumberInput.getText()));
             }
         });
         phoneNumberInput.setOnKeyReleased(keyEvent -> phoneNumberInput.validate());
@@ -150,7 +157,7 @@ public class AssociationCreateController extends StackPane implements Initializa
             if (!t1) {
                 rueInput.validate();
                 if (phoneNumberInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
-                    association.get().setRue(rueInput.getText());
+                    association.setRue(rueInput.getText());
             }
         });
         rueInput.setOnKeyPressed(keyEvent -> {
@@ -163,7 +170,7 @@ public class AssociationCreateController extends StackPane implements Initializa
             if (!t1) {
                 zipInput.validate();
                 if (zipInput.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
-                    association.get().setCodePostal(Integer.parseInt(zipInput.getText()));
+                    association.setCodePostal(Integer.parseInt(zipInput.getText()));
             }
         });
         zipInput.setOnKeyTyped(keyEvent -> zipInput.validate());
@@ -174,7 +181,7 @@ public class AssociationCreateController extends StackPane implements Initializa
         villeComboBox.setOnHiding(event -> {
             villeComboBox.validate();
             if (villeComboBox.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
-                association.get().setVille(villeComboBox.getValue());
+                association.setVille(villeComboBox.getValue());
         });
         photoChooser.setTitle("Veuillez choisir la photo de l'association");
         photoChooser.getExtensionFilters().addAll(
@@ -190,7 +197,7 @@ public class AssociationCreateController extends StackPane implements Initializa
             else {
                 photoValid.setValue(false);
                 photoError.setVisible(false);
-                association.get().setPhotoAgence(photo.getName());
+                association.setPhotoAgence(photo.getName());
             }
         });
         // Piece justificative
@@ -210,14 +217,14 @@ public class AssociationCreateController extends StackPane implements Initializa
             if (piece == null) pieceError.setVisible(true);
             else {
                 pieceValid.setValue(false);
-                association.get().setPieceJustificatif(piece.getName());
+                association.setPieceJustificatif(piece.getName());
                 System.out.println(association);
             }
         });
 
         //gmapWebView.getEngine().load(this.getClass().getResource("/Packages/Chihab/Scenes/WebView/getAssociationLocation.html").toString());
         JSObject window = (JSObject) gmapWebView.getEngine().executeScript("window");
-        window.setMember("association", association.getValue());
+        window.setMember("association", association);
 
         gmapWebView.getEngine().getLoadWorker().stateProperty().addListener(
                 (ChangeListener<? super Worker.State>) (observable, oldValue, newValue) -> {
@@ -226,9 +233,9 @@ public class AssociationCreateController extends StackPane implements Initializa
                     }
                 }
         );
-        association.get().latProperty().addListener((observableValue, number, t1) -> {
-            if(!number.equals(t1))
-            System.out.println("changed to :"+ t1);
+        association.latProperty().addListener((observableValue, number, t1) -> {
+            if (!number.equals(t1))
+                System.out.println("changed to :" + t1);
         });
 
 
@@ -244,24 +251,35 @@ public class AssociationCreateController extends StackPane implements Initializa
         });
         vers.onHiddenProperty().setValue(event -> {
             if (de.getValue().compareTo(vers.getValue()) != -1) {
-                dialog(new Label("Date is inferior to start date, reverting to start + 8h, you can change if u want"),"Invalid date");
+                dialog(new Label("Date is inferior to start date"), "Invalid date");
                 vers.setValue(de.getValue().plusHours(8));
             } else {
-                association.get().setHoraireTravail("De " + de.getValue().getHour()+" : " +de.getValue().getMinute() + " vers : " + vers.getValue()+" : " +vers.getValue().getMinute() );
+                association.setHoraireTravail("De " + de.getValue().getHour() + " : " + de.getValue().getMinute() + " vers : " + vers.getValue() + " : " + vers.getValue().getMinute());
             }
         });
+        List<String> noms = AssociationService.getInstance().getRecords().values().stream().map(Association::getNom).collect(Collectors.toList());
         validateButton.setOnAction(actionEvent -> {
-                if(FTPInterface.getInstance().send(photo, URLServer.associationImageDir)&&FTPInterface.getInstance().send(piece, URLServer.associationImageDir)) {
-                    if(1==1){
-                        dialog(new Text(association.toString()),"FTP Error");
-                    } else {
-                        dialog(new Text("Couldnt connect to database!"),"DB Error");
-                    }
-                } else{
-                    dialog(new Text("Couldnt upload files!"),"FTP Error");
+            if (noms.contains(association.getNom()))
+                dialog(new Text(association.getNom() + " already exists!"), "Hint!");
+            else if (FTPInterface.getInstance().send(photo, URLServer.associationImageDir) && FTPInterface.getInstance().send(piece, URLServer.associationPieceDir)) {
+                if (AssociationService.getInstance().add(association)) {
+                    TrayNotification tray = new TrayNotification(association.getNom() + " succesfully added", "", NotificationType.SUCCESS);
+                    tray.setImage(new Image(getClass().getResource("/SharedResources/Images/logoreactors.png").toString()));
+                    tray.setRectangleFill(Paint.valueOf("6200EE"));
+                    tray.setAnimationType(AnimationType.POPUP);
+                    tray.showAndDismiss(new Duration(1200));
+                    if (UserSession.getInstace().isLoggedIn())
+                        AssociationsBackofficeController.getDialog().close();
+                } else {
+                    dialog(new Text("Couldnt add !"), "DB Error");
                 }
+            } else {
+                dialog(new Text("Couldnt upload files!"), "FTP Error");
+            }
 
         });
+
+
         BooleanBinding managerSelected;
         if (UserSession.getInstace().isLoggedIn())
             managerSelected = Bindings.createBooleanBinding(() -> false);
@@ -309,7 +327,7 @@ public class AssociationCreateController extends StackPane implements Initializa
 
     private void initManagers() {
         try {
-            managerComboBox.setItems(FXCollections.observableList(UserService.getInstace().readAll().stream().filter(user -> !user.isAdmin()&&!user.isAssociationAdmin()&&user.getApprouved()).collect(Collectors.toCollection(FXCollections::observableArrayList))));
+            managerComboBox.setItems(UserService.getInstace().readAll().stream().filter(user -> !user.isAdmin() && !user.isAssociationAdmin() && user.getApprouved()).collect(Collectors.toCollection(FXCollections::observableArrayList)));
             if(managerComboBox.getItems().size()<1){
                 dialog(new Text("No users found that are not already association admins or are not yet approuved !! create some ya admin!!"),"No users found");
                 // TODO : Add refresh
@@ -320,7 +338,7 @@ public class AssociationCreateController extends StackPane implements Initializa
                 managerComboBox.setOnHiding(e -> {
                     managerComboBox.validate();
                     if (managerComboBox.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
-                        association.get().setManager(managerComboBox.getValue());
+                        association.setManager(managerComboBox.getValue());
                 });
             }
             managerComboBox.getValidators().add(requiredFieldValidator);
@@ -339,7 +357,7 @@ public class AssociationCreateController extends StackPane implements Initializa
         domaineComboBox.setOnHiding(event -> {
             domaineComboBox.validate();
             if (domaineComboBox.getValidators().stream().noneMatch(ValidatorBase::getHasErrors))
-                association.get().setDomaine(domaineComboBox.getSelectionModel().getSelectedItem());
+                association.setDomaine(domaineComboBox.getSelectionModel().getSelectedItem());
         });
         new ComboBoxAutoComplete<>(domaineComboBox);
 

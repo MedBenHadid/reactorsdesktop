@@ -24,20 +24,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MemberUpdateItemController implements Initializable {
-    @FXML private ImageView userImageView;
-    @FXML private JFXTextArea descriptionLabel;
-    @FXML private JFXComboBox<String> roleComboBox;
-    @FXML private JFXTextField fonctionTextField;
-    @FXML private Label nameLabel,dateLabel;
-    private final Membership m;
+    @FXML
+    private ImageView userImageView;
+    @FXML
+    private JFXTextArea descriptionLabel;
+    @FXML
+    private JFXComboBox<String> roleComboBox;
+    @FXML
+    private JFXTextField fonctionTextField;
+    @FXML
+    private Label nameLabel, dateLabel;
 
-    public MemberUpdateItemController(Membership m) {
+    private final Membership m;
+    private final int associationId;
+
+    public MemberUpdateItemController(Membership m, int associationId) {
         this.m = m;
+        this.associationId = associationId;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //roleComboBox.textProperty().setValue(m.getMember().getProfile().getNom() + " " + m.getMember().getProfile().getPrenom());
         nameLabel.textProperty().setValue(m.getMember().getProfile().getNom() + " " + m.getMember().getProfile().getPrenom());
         descriptionLabel.setText(m.getDescription());
         dateLabel.setText(m.getJoinDate().toString());
@@ -53,7 +60,7 @@ public class MemberUpdateItemController implements Initializable {
                 else
                     m.setAccess(3);
                 try {
-                    MembershipService.getInstace().update(m);
+                    MembershipService.getInstace().update(m, associationId);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -64,11 +71,10 @@ public class MemberUpdateItemController implements Initializable {
                 if (fonctionTextField.getText().length() > 6) {
                     m.setFonction(fonctionTextField.getText());
                     try {
-                        MembershipService.getInstace().update(m);
+                        MembershipService.getInstace().update(m, associationId);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                    // TODO : Success alert
                 }
             }
         });
@@ -77,7 +83,7 @@ public class MemberUpdateItemController implements Initializable {
                 if (descriptionLabel.getText().length() > 6) {
                     m.setDescription(descriptionLabel.getText());
                     try {
-                        MembershipService.getInstace().update(m);
+                        MembershipService.getInstace().update(m, associationId);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }

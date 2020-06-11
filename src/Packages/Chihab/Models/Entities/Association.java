@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public final class Association extends SimpleObjectProperty<Association> implements Observable, Comparable<Association> {
-    // ,ReadOnlyProperty<Association>, ObservableObjectValue<Association>
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
     private final ObjectProperty<User> manager = new SimpleObjectProperty<>(new User());
     private final ObjectProperty<Category> domaine = new SimpleObjectProperty<>(new Category());
@@ -70,6 +69,11 @@ public final class Association extends SimpleObjectProperty<Association> impleme
         this.lat.set(lat);
         this.lon.set(lon);
     }
+
+    public <T> Association(T object) {
+
+    }
+
 
     public int getId() {
         return id.get();
@@ -281,7 +285,21 @@ public final class Association extends SimpleObjectProperty<Association> impleme
         if (this == o) return true;
         if (!(o instanceof Association)) return false;
         Association that = (Association) o;
-        return Objects.equals(id.get(), that.id.get());
+        if (id.get() != (that.getId())) return false;
+        if (!manager.get().equals(that.getManager())) return false;
+        if (!domaine.get().equals(that.getDomaine())) return false;
+        if (!nom.get().equals(that.getNom())) return false;
+        if (!photoAgence.get().equals(that.getPhotoAgence())) return false;
+        if (!pieceJustificatif.get().equals(that.getPieceJustificatif())) return false;
+        if (!rue.get().equals(that.getRue())) return false;
+        if (!description.get().equals(that.getDescription())) return false;
+        if (!ville.get().equals(that.getVille())) return false;
+        if (!horaireTravail.get().equals(that.getHoraireTravail())) return false;
+        if (telephone.get() != (that.getTelephone())) return false;
+        if (codePostal.get() != (that.getCodePostal())) return false;
+        if (approuved.get() != (that.isApprouved())) return false;
+        if (lat.get() != (that.getLat())) return false;
+        return lon.get() == (that.getLon());
     }
 
     @Override
@@ -291,6 +309,6 @@ public final class Association extends SimpleObjectProperty<Association> impleme
 
     @Override
     public int compareTo(Association association) {
-        return Integer.compare(association.getId(),id.get());
+        return Integer.compare(association.getId(), id.get());
     }
 }

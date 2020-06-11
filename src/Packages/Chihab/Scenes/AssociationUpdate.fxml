@@ -2,12 +2,10 @@
 
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 <fx:root fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" stylesheets="@../../../Main/styles.css" type="javafx.scene.layout.StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
@@ -29,44 +27,104 @@
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../SharedResources/Images/Delete-24.png" />
+                        <Image url="@../../../SharedResources/Images/Delete-24.png"/>
                      </image>
                   </ImageView>
                </graphic>
             </JFXButton>
-            <ImageView fx:id="imageImageView" fitHeight="250.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
+            <JFXButton fx:id="showFile" buttonType="RAISED" prefWidth="200.0" text="Show file">
+               <ripplerFill>
+                  <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                     <stops>
+                        <Stop color="#0010ff"/>
+                        <Stop color="#bf00ff" offset="1.0"/>
+                     </stops>
+                  </RadialGradient>
+               </ripplerFill>
+               <VBox.margin>
+                  <Insets top="10.0"/>
+               </VBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="printFile" prefWidth="200.0" text="Print file">
+               <graphic>
+                  <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../SharedResources/Images/printer.png"/>
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets top="10.0"/>
+               </VBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="mailManager" prefWidth="200.0" text="Contact manager">
+               <VBox.margin>
+                  <Insets top="10.0"/>
+               </VBox.margin>
+               <graphic>
+                  <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../SharedResources/Images/icons8_Handshake_64px.png"/>
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <JFXToggleButton fx:id="statusToggleButton" toggleLineColor="#00bcff" unToggleColor="RED"
+                             unToggleLineColor="#4c4040">
+               <toggleColor>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop color="#bb00ff"/>
+                        <Stop color="#00eaff" offset="1.0"/>
+                     </stops>
+                  </LinearGradient>
+               </toggleColor>
+            </JFXToggleButton>
+            <ImageView fx:id="imageImageView" fitHeight="250.0" fitWidth="400.0" pickOnBounds="true"
+                       preserveRatio="true"/>
             <Label fx:id="associationNameLabel" textAlignment="CENTER">
                <font>
-                  <Font name="Arial Black" size="32.0" />
+                  <Font name="Arial Black" size="32.0"/>
                </font>
             </Label>
-            <JFXButton fx:id="photoButton" buttonType="RAISED" prefWidth="200.0" text="Update image" />
-            <JFXButton fx:id="modpieceButton" buttonType="RAISED" prefWidth="200.0" text="Update identity prooving file" />
-            <VBox alignment="CENTER">
-               <JFXTextArea fx:id="descriptionInput" focusColor="#873087" prefColumnCount="20" promptText="Describe your organization's role :" wrapText="true">
+            <JFXButton fx:id="photoButton" buttonType="RAISED" prefWidth="200.0" text="Update image"/>
+            <JFXButton fx:id="modpieceButton" buttonType="RAISED" prefWidth="200.0"
+                       text="Update identity prooving file"/>
+            <VBox>
+               <Label alignment="TOP_LEFT" text="Description :"/>
+               <JFXTextArea fx:id="descriptionInput" focusColor="#873087" prefColumnCount="20"
+                            promptText="Describe your organization's role :" wrapText="true">
                   <VBox.margin>
-                     <Insets bottom="20.0" top="20.0" />
-                  </VBox.margin></JFXTextArea>
+                     <Insets bottom="20.0" top="20.0"/>
+                  </VBox.margin>
+               </JFXTextArea>
+               <Label alignment="TOP_LEFT" text="Phone number:"/>
                <JFXTextField fx:id="phoneNumberInput" promptText="Phone number">
                   <VBox.margin>
-                     <Insets bottom="20.0" top="20.0" />
-                  </VBox.margin></JFXTextField>
+                     <Insets bottom="20.0" top="20.0"/>
+                  </VBox.margin>
+               </JFXTextField>
+               <Label alignment="TOP_LEFT" text="Adress :"/>
                <JFXTextField fx:id="rueInput" promptText="Where can we find you ?">
                   <VBox.margin>
                      <Insets bottom="20.0" top="20.0" />
                   </VBox.margin></JFXTextField>
+               <Label alignment="TOP_LEFT" text="Zip code :"/>
                <JFXTextField fx:id="zipInput" promptText="Postal code :">
                   <VBox.margin>
                      <Insets bottom="20.0" top="20.0" />
                   </VBox.margin></JFXTextField>
+               <Label alignment="TOP_LEFT" text="City :"/>
                <JFXComboBox fx:id="villeComboBox" prefWidth="500.0" promptText="City">
                   <VBox.margin>
                      <Insets bottom="20.0" top="20.0" />
                   </VBox.margin></JFXComboBox>
+               <Label alignment="TOP_LEFT" text="Location :"/>
                <WebView fx:id="gmapWebView" prefHeight="200.0" prefWidth="-1.0">
                   <VBox.margin>
                      <Insets bottom="20.0" top="20.0" />
                   </VBox.margin></WebView>
+               <Label alignment="TOP_LEFT" text="Sector :"/>
                <JFXComboBox fx:id="domaineComboBox" prefWidth="500.0" promptText="Your sector ?">
                   <VBox.margin>
                      <Insets bottom="20.0" top="20.0" />

@@ -9,14 +9,13 @@ import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.*;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -34,11 +34,14 @@ import javafx.util.Duration;
 import org.apache.commons.net.ftp.FTP;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
+import tray.animations.AnimationType;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -65,53 +68,86 @@ public class AssociationsBackofficeController extends StackPane implements Initi
     private JFXComboBox<Category> dCombo;
     @FXML
     private JFXTextField inputName;
-    @FXML
-    private JFXButton addButton, resetButton, espaceMembershipButton;
+    private static JFXDialog dialog;
     @FXML
     private Label size, hits;
-    @FXML private JFXSpinner spinner;
-
+    private final Image reactorsLogo = new Image(getClass().getResource("/SharedResources/Images/logoreactors.png").toString());
     private final JFXDialogLayout layout = new JFXDialogLayout();
     private final AssociationCreateController createPanel = new AssociationCreateController();
+    private final FXMLLoader thisLoader = new FXMLLoader(getClass().getResource(URLScenes.associationSuperAdminDashboard));
     private final User loggedIn = UserSession.getInstace().getUser();
     private final JFXButton close = new JFXButton("Fermer");
-    private final FXMLLoader thisLoader = new FXMLLoader( getClass().getResource(URLScenes.associationSuperAdminDashboard) );
-    private final JFXDialog dialog;
-    public AssociationsBackofficeController(){
-        thisLoader.setRoot( this );
-        thisLoader.setController( this );
+    private final FadeTransition ft = new FadeTransition(Duration.millis(1500));
+    @FXML
+    private JFXSpinner spinner;
+    @FXML
+    private JFXButton addButton, resetButton, espaceMembershipButton, resetD, resetV;
+    @FXML
+    private ImageView logoImageViewer;
+
+    public AssociationsBackofficeController() {
+        thisLoader.setRoot(this);
+        thisLoader.setController(this);
         try {
             thisLoader.load();
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        this.dialog = new JFXDialog(rootStackPane,layout, JFXDialog.DialogTransition.CENTER);
+        dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+    }
+
+    public static JFXDialog getDialog() {
+        return dialog;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        RotateTransition trans = new RotateTransition(Duration.seconds(2), logoImageViewer);
+        ft.setNode(logoImageViewer);
+        ft.setFromValue(0.1);
+        ft.setToValue(1.0);
+        ft.setCycleCount(20);
+        ft.setAutoReverse(true);
+        ft.play();
+        trans.setFromAngle(0.0);
+        trans.setToAngle(10.0);
+        trans.setCycleCount(RotateTransition.INDEFINITE);
+        trans.setAutoReverse(true);
+        trans.play();
+
+        Platform.runLater(() -> {
+                    TrayNotification tray = new TrayNotification("Test", "Message", NotificationType.SUCCESS);
+                    tray.setImage(reactorsLogo);
+                    tray.setRectangleFill(Paint.valueOf("6200EE"));
+                    tray.setAnimationType(AnimationType.POPUP);
+                    tray.showAndDismiss(new Duration(1200));
+                }
+        );
+
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), ev -> {
-            Platform.runLater(()-> AssociationService.getInstance().updateCheckRunnable());
+            Task<Void> fetchTask = AssociationService.getInstance().updateWizard();
+            fetchProgress.visibleProperty().bind(fetchTask.runningProperty());
+            fetchProgress.progressProperty().bind(fetchTask.progressProperty());
+            fetchProgress.accessibleTextProperty().bind(fetchTask.messageProperty());
+            fetchTask.run();
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
         associationTableView.itemsProperty().bind(Bindings.createObjectBinding(() -> AssociationService.getInstance().getRecords().values().stream().filter(association -> {
             boolean test = true;
-            if(vCombo.getSelectionModel().getSelectedIndex() != -1){
+            if (vCombo.getSelectionModel().getSelectedIndex() != -1) {
                 test = association.getVille().equals(vCombo.getSelectionModel().getSelectedItem());
             }
-            if(dCombo.getSelectionModel().getSelectedIndex() != -1){
+            if (dCombo.getSelectionModel().getSelectedIndex() != -1) {
                 test = test && association.getDomaine().equals(dCombo.getSelectionModel().getSelectedItem());
             }
-            if( inputName.isFocused() ){
+            if (inputName.isFocused() || inputName.getText().length() > 4) {
                 test = test && association.getNom().contains(inputName.getText());
             }
             return test;
-        }).collect(Collectors.toCollection(FXCollections::observableArrayList)),AssociationService.getInstance().getRecords(),inputName.textProperty(),inputName.focusedProperty(),vCombo.armedProperty(),dCombo.armedProperty()));
-        AssociationService.getInstance().getRecords().addListener((MapChangeListener<? super Integer, ? super Association>) change -> {
-            System.out.println("detected change");
-        });
+        }).collect(Collectors.toCollection(FXCollections::observableArrayList)), AssociationService.getInstance().getRecords(), inputName.textProperty(), inputName.focusedProperty(), vCombo.focusedProperty(), dCombo.focusedProperty()));
+
         domaineCol.setCellValueFactory(data -> data.getValue().domaineProperty());
         managerCol.setCellValueFactory(data -> data.getValue().managerProperty());
         villeCol.setCellValueFactory(data -> data.getValue().villeProperty());
@@ -123,19 +159,22 @@ public class AssociationsBackofficeController extends StackPane implements Initi
         managerCol.setCellFactory(this::managerCall);
         nameCol.setCellFactory(this::nomCol);
         villeCol.setCellFactory(this::villeCall);
-        size.textProperty().bind(Bindings.createStringBinding(() -> AssociationService.getInstance().getRecords().size() +" associations inscrits",AssociationService.getInstance().getRecords()));
-        hits.textProperty().bind(Bindings.createStringBinding(() -> associationTableView.getItems().size() +" search hits",associationTableView.itemsProperty()));
+        size.textProperty().bind(Bindings.createStringBinding(() -> AssociationService.getInstance().getRecords().size() + " associations inscrits", AssociationService.getInstance().getRecords()));
+        hits.textProperty().bind(Bindings.createStringBinding(() -> associationTableView.getItems().size() + " search hits", associationTableView.itemsProperty()));
         vCombo.itemsProperty().bind(Bindings.createObjectBinding(() -> associationTableView.getItems().stream().map(Association::getVille).distinct().collect(Collectors.toCollection(FXCollections::observableArrayList)), associationTableView.itemsProperty()));
         dCombo.itemsProperty().bind(Bindings.createObjectBinding(() -> associationTableView.getItems().stream().map(Association::getDomaine).distinct().collect(Collectors.toCollection(FXCollections::observableArrayList)), associationTableView.itemsProperty()));
-        addButton.setOnMouseClicked(e->{ dialog(createPanel,"Create a new association :").show(); });
-        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(inputName, (Collection<String>) associationTableView.getItems().stream().map(Association::getNom).distinct().collect(Collectors.toCollection(FXCollections::observableArrayList)));
+        addButton.setOnMouseClicked(e -> dialog(createPanel, "Create a new association :").show());
+        ObservableList<String> strings = associationTableView.getItems().stream().map(Association::getNom).distinct().collect(Collectors.toCollection(FXCollections::observableArrayList));
+        AutoCompletionBinding<String> stringAutoCompletionBinding = TextFields.bindAutoCompletion(inputName, strings);
         spinner.visibleProperty().bind(stringAutoCompletionBinding.getCompletionTarget().focusedProperty());
         stringAutoCompletionBinding.setVisibleRowCount(6);
         resetButton.setOnMouseClicked(event -> {
             vCombo.getSelectionModel().select(-1);
             dCombo.getSelectionModel().select(-1);
-            inputName.deleteText(0,inputName.getText().length());
+            inputName.deleteText(0, inputName.getText().length());
         });
+        resetD.setOnMouseClicked(event -> dCombo.getSelectionModel().select(-1));
+        resetV.setOnMouseClicked(event -> vCombo.getSelectionModel().select(-1));
     }
 
 
@@ -158,7 +197,7 @@ public class AssociationsBackofficeController extends StackPane implements Initi
                                     if (!isLoaded) {
                                         observable.addListener((observableValue, state, t1) -> {
                                             if (t1 == Worker.State.SUCCEEDED) {
-                                               // wv.getEngine().executeScript("initCarousel('" + ville + "')");
+                                                wv.getEngine().executeScript("initCarousel('" + ville + "')");
                                                 isLoaded = true;
                                             }
                                         });
@@ -245,7 +284,6 @@ public class AssociationsBackofficeController extends StackPane implements Initi
                             e.printStackTrace();
                         }
                     }
-
                     imageView.setImage(profileImage);
                     imageView.setFitHeight(200.0);
                     imageView.setFitWidth(200.0);
@@ -274,7 +312,7 @@ public class AssociationsBackofficeController extends StackPane implements Initi
                                     if (!isLoaded) {
                                         observable.addListener((observableValue, state, t1) -> {
                                             if (t1 == Worker.State.SUCCEEDED) {
-                                                //wv.getEngine().executeScript("initCarousel('" + a.getNom() + "')");
+                                                wv.getEngine().executeScript("initCarousel('" + a.getNom() + "')");
                                                 isLoaded = true;
                                             }
                                         });
@@ -304,17 +342,22 @@ public class AssociationsBackofficeController extends StackPane implements Initi
                    // a.addListener((observableValue, association, t1) -> );
                     setOnMouseClicked(event -> {
                         if (event.getClickCount() == 2 && (!isEmpty())) {
-                            if (loggedIn.isAdmin()){
-                                dialog(new AssociationProfileUpdateController(a),"Admin update").show();
+                            if (loggedIn.isAdmin()) {
+                                dialog(new AssociationProfileUpdateController(a), "Admin update").show();
 
-                            } else if (loggedIn.isAssociationAdmin()){
-                                if(UserSession.getInstace().getManagedAss().get().getId()==a.getId()){
-                                    dialog(new AssociationProfileUpdateController(a),"Your association :"+ a.getNom()).show();
-                                } else {
-                                    dialog(new AssociationProfileShowController(a),"Profile :"+ a.getNom()).show();
+                            } else if (loggedIn.isAssociationAdmin()) {
+                                Optional<Association> asso = UserSession.getInstace().getManagedAss();
+                                if (asso.isPresent())
+                                    if (asso.get().getId() == a.getId()) {
+                                        dialog(new AssociationProfileUpdateController(a), "Your association :" + a.getNom()).show();
+                                    } else {
+                                        dialog(new AssociationProfileShowController(a), "Profile :" + a.getNom()).show();
+                                    }
+                                else {
+                                    dialog(new AssociationProfileShowController(a), "Profile :" + a.getNom()).show();
                                 }
-                            }else{
-                                dialog(new AssociationProfileShowController(a),"Profile :"+ a.getNom()).show();
+                            } else {
+                                dialog(new AssociationProfileShowController(a), "Profile :" + a.getNom()).show();
                             }
                         }
                     });
@@ -322,13 +365,16 @@ public class AssociationsBackofficeController extends StackPane implements Initi
             }
         };
     }
-    private JFXDialog dialog(Node body, String heading){
+
+    private JFXDialog dialog(Node body, String heading) {
         close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
         layout.setActions(close);
+        body.prefWidth(this.getWidth() / 2);
+        body.prefHeight(this.getHeight() / 2);
         layout.setBody(body);
         layout.setHeading(new Text(heading));
         return dialog;
-// in row factory , add to listener to see if deleted, if so dialog.close();
+        // in row factory , add to listener to see if deleted, if so dialog.close();
         //dialog.setOnDialogClosed();
     }
 

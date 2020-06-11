@@ -10,12 +10,12 @@ import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.AutoCompleteBox;
 import SharedResources.Utils.BinaryValidator.PhoneNumberValidator;
+import SharedResources.Utils.BinaryValidator.RegexValidator;
 import SharedResources.Utils.BinaryValidator.StringLengthValidator;
 import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.NumberValidator;
 import com.jfoenix.validation.RequiredFieldValidator;
-import com.jfoenix.validation.base.ValidatorBase;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,7 +26,7 @@ import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -39,12 +39,16 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import netscape.javascript.JSObject;
+import org.apache.commons.net.ftp.FTP;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,51 +58,64 @@ public class AssociationProfileUpdateController extends StackPane implements Ini
     @FXML JFXComboBox<String> villeComboBox;
     @FXML JFXTextField rueInput, zipInput, phoneNumberInput;
     @FXML JFXTextArea descriptionInput;
-    @FXML ImageView imageImageView;
-    @FXML JFXButton validateButton, photoButton, modpieceButton, addMembers,deleteButton;
-    @FXML StackPane stack;
-    @FXML WebView gmapWebView;
-    @FXML VBox membersVbox;
-    @FXML Label associationNameLabel;
+    @FXML
+    ImageView imageImageView;
+    private final JFXButton confirmDelete = new JFXButton("Yes, i'm sure.");
+    @FXML
+    StackPane stack;
+    @FXML
+    WebView gmapWebView;
+    @FXML
+    VBox membersVbox;
+    @FXML
+    Label associationNameLabel;
+    private final JFXButton statusButton = new JFXButton("Yes, i'm sure, dissaprove.");
     private File photo, piece;
-    private FXMLLoader loader;
     private StackPane c;
     private final JFXButton close = new JFXButton("Cancel");
+    private final JFXTextArea reason = new JFXTextArea("Reason for dissaproving :");
+    private final JFXDialogLayout layout = new JFXDialogLayout();
     private final FXMLLoader createMembership = new FXMLLoader(getClass().getResource(URLScenes.addMembershipSelectUSer));
     private final Association association;
     private final RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator("Missing field");
     private final PhoneNumberValidator phoneValidator = new PhoneNumberValidator("Please provide a valid phone number");
     private final FileChooser fileChooser = new FileChooser();
     private final FileChooser photoChooser = new FileChooser();
+    private final JFXDialog dialog;
+    @FXML
+    JFXButton validateButton, photoButton, modpieceButton, addMembers, deleteButton, showFile, printFile, mailManager;
+    @FXML
+    JFXToggleButton statusToggleButton;
 
     public AssociationProfileUpdateController(Association association) {
         this.association = association;
         FXMLLoader thisLoader = new FXMLLoader(getClass().getResource(URLScenes.associationUpdateProfile));
-        thisLoader.setRoot( this );
-        thisLoader.setController( this );
+        thisLoader.setRoot(this);
+        thisLoader.setController(this);
         try {
             thisLoader.load();
-        } catch ( IOException e ) {
-            throw new RuntimeException( e );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        init(association);
-    }
-    private void init(Association a){
-
+        this.dialog = new JFXDialog(this, layout, JFXDialog.DialogTransition.CENTER);
+        reason.getValidators().add(new RegexValidator("Please provide a valid reason 8..255", "\\b\\w{8,255}\\b"));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //ArrayList<? extends TextInputControl> a = new ArrayList<>();
-        ObservableList<JFXTextField> textFields = FXCollections.observableArrayList();
-        textFields.add(rueInput);
-        textFields.add(zipInput);
-        textFields.add(phoneNumberInput);
-
-        associationNameLabel.textProperty().bind(association.get().nomProperty());
-        association.addListener((observableValue, association1, t1) -> {
-            System.out.println("DETECTED CHANAZEAZEAZE");
+        statusToggleButton.selectedProperty().set(association.isApprouved());
+        statusToggleButton.textProperty().bind(Bindings.createStringBinding(() -> (association.isApprouved() ? "Disapprove" : "Approve"), association.approuvedProperty()));
+        statusToggleButton.selectedProperty().addListener((observableValue, toggleGroup, t1) -> {
+            if (!t1)
+                statusDialog().show();
+            else {
+                association.setApprouved(true);
+                AssociationService.getInstance().update(association);
+            }
         });
+        associationNameLabel.textProperty().bind(association.nomProperty());
+        association.addListener((observableValue, association1, t1) -> System.out.println("DETECTED CHANAZEAZEAZE"));
 
         BooleanBinding descriptionFieldValid = Bindings.createBooleanBinding(() -> descriptionInput.getText().isBlank(), descriptionInput.textProperty());
         BooleanBinding zipFieldValid = Bindings.createBooleanBinding(() -> !zipInput.getText().matches(".*\\d.*") || zipInput.getText().length() != 4, zipInput.textProperty());
@@ -110,12 +127,11 @@ public class AssociationProfileUpdateController extends StackPane implements Ini
         phoneNumberInput.setText(String.valueOf(association.getTelephone()));
         descriptionInput.setText(association.getDescription());
         rueInput.setText(association.getRue());
-
+        zipInput.setText(String.valueOf(association.getCodePostal()));
 
         phoneNumberInput.getValidators().addAll(requiredFieldValidator, phoneValidator);
         rueInput.getValidators().addAll(requiredFieldValidator, new StringLengthValidator(8, -1, "La taille doit etre supérieure a "));
         zipInput.getValidators().addAll(new NumberValidator("Veuillez saisir un code postale numérique"), requiredFieldValidator, new StringLengthValidator(4, 0, "La taille du code postale est "));
-
 
 
 
@@ -129,7 +145,7 @@ public class AssociationProfileUpdateController extends StackPane implements Ini
         new AutoCompleteBox<String>(villeComboBox);
         try {
             File imageAss = FTPInterface.getInstance().downloadFile(URLServer.associationImageDir + association.getPhotoAgence(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-            imageImageView.setImage(new Image(imageAss.toURI().toString()));
+            imageImageView.setImage(new Image(Objects.requireNonNull(imageAss).toURI().toString()));
         } catch (IOException e) {
             Logger.getLogger(AssociationProfileShowController.class.getName()).log(Level.SEVERE, "Error whilst fetching image", e);
         }
@@ -138,10 +154,31 @@ public class AssociationProfileUpdateController extends StackPane implements Ini
         fileChooser.setTitle("Veuillez choisir la photo de l'association");
         SimpleBooleanProperty pieceValid = new SimpleBooleanProperty(false);
         try {
-            piece = FTPInterface.getInstance().downloadFile(URLServer.associationPieceDir + association.getPieceJustificatif(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+            piece = FTPInterface.getInstance().downloadFile(URLServer.associationPieceDir + association.getPieceJustificatif(), FTP.BINARY_FILE_TYPE);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        printFile.setOnMouseClicked(event -> {
+            try {
+                Desktop.getDesktop().print(piece);
+            } catch (IOException e) {
+                dialog(new Text("Error whilst opening file."), "Couldnt open file").show();
+            }
+        });
+        showFile.setOnMouseClicked(event -> {
+            try {
+                Desktop.getDesktop().open(piece);
+            } catch (IOException e) {
+                dialog(new Text("Error whilst opening file."), "Couldnt open file").show();
+            }
+        });
+        mailManager.setOnMouseClicked(event -> {
+            try {
+                Desktop.getDesktop().mail(URI.create("mailto:" + association.getManager().getEmail()));
+            } catch (IOException e) {
+                dialog(new Text("Error whilst opening mailer."), "Couldnt open mailer").show();
+            }
+        });
         modpieceButton.setOnAction(e -> {
             pieceValid.set(false);
             piece = fileChooser.showOpenDialog(stack.getScene().getWindow());
@@ -149,15 +186,16 @@ public class AssociationProfileUpdateController extends StackPane implements Ini
                 String[] names = ImageIO.getReaderFormatNames();
                 for (String exst : names) {
                     if (piece.getName().endsWith(exst) || piece.getName().endsWith(".pdf") || piece.getName().endsWith(".doc") || piece.getName().endsWith(".docx")) {
-                        association.get().setPieceJustificatif(piece.getName());
-                        pieceValid.set(true);
-                        break;
+                        if (FTPInterface.getInstance().send(piece, URLServer.associationPieceDir)) {
+                            association.setPieceJustificatif(piece.getName());
+                            AssociationService.getInstance().update(association);
+                            pieceValid.set(true);
+                            break;
+                        }
                     }
                 }
                 if (!pieceValid.get()) {
-                    Alert pieceAlert = new Alert(Alert.AlertType.WARNING);
-                    pieceAlert.setContentText("Veuillez choisir un document avec un format supporté");
-                    pieceAlert.showAndWait();
+                    dialog(new Text("Veuillez choisir un document avec un format supporté"), "Wrong !").show();
                 }
             }
         });
@@ -178,22 +216,16 @@ public class AssociationProfileUpdateController extends StackPane implements Ini
             photoValid.set(false);
             photo = fileChooser.showOpenDialog(stack.getScene().getWindow());
             if (photo != null) {
-
-                if(FTPInterface.getInstance().send(photo,URLServer.associationImageDir)){
-                    try {
-                        if(AssociationService.getInstance().update(association)){
-                            imageImageView.setImage(new Image(photo.toURI().toString()));
-                        }
-                    } catch (SQLException throwables) {
-                        // TODO : Error
+                if(FTPInterface.getInstance().send(photo,URLServer.associationImageDir)) {
+                    association.setPhotoAgence(photo.getName());
+                    if (AssociationService.getInstance().update(association)) {
+                        imageImageView.setImage(new Image(photo.toURI().toString()));
                     }
                 }else {
                     // TODO : Error
                 }
             } else {
-                Alert pieceAlert = new Alert(Alert.AlertType.WARNING);
-                pieceAlert.setContentText("Veuillez choisir une photo avec un format supporté");
-                pieceAlert.showAndWait();
+                dialog(new Text("Veuillez choisir une photo avec un format supporté"), "Wrong !").show();
             }
         });
         try {
@@ -222,48 +254,42 @@ public class AssociationProfileUpdateController extends StackPane implements Ini
                     }
                 }
         );
-        //validateButton.disableProperty().bind(descriptionFieldValid.or(zipFieldValid.or(rueFieldValid.or(phoneNumberFieldValid.or(villeComboSelected)))));
+        ObservableList<JFXTextField> textFields = FXCollections.observableArrayList();
+        textFields.add(rueInput);
+        textFields.add(zipInput);
+        textFields.add(phoneNumberInput);
+        for (JFXTextField field : textFields) {
+            field.focusedProperty().addListener(observable -> {
+                field.validate();
+            });
+        }
+        validateButton.disableProperty().bind(descriptionFieldValid.or(zipFieldValid.or(rueFieldValid.or(phoneNumberFieldValid.or(villeComboSelected)))));
         validateButton.setOnAction(actionEvent -> {
-            boolean isValid = true;
-            for(JFXTextField field : textFields){
-               field.validate();
-               for(ValidatorBase validator : field.getValidators()){
-                   isValid = isValid&&validator.getHasErrors();
-               }
-            }
-            if(isValid){
-                System.out.println(association.getLat());
-                System.out.println(association.getLon());
-                association.setRue(rueInput.getText());
-                association.setVille(villeComboBox.getValue());
-                association.setCodePostal(Integer.parseInt(zipInput.getText()));
-                association.setDescription(descriptionInput.getText());
-                association.setDomaine(domaineComboBox.getValue());
-                association.setTelephone(Integer.parseInt(phoneNumberInput.getText()));
-                association.setPhotoAgence(photo.getName());
-                association.setPieceJustificatif(piece.getName());
-            }
+            association.setRue(rueInput.getText());
+            association.setVille(villeComboBox.getValue());
+            association.setCodePostal(Integer.parseInt(zipInput.getText()));
+            association.setDescription(descriptionInput.getText());
+            association.setDomaine(domaineComboBox.getValue());
+            association.setTelephone(Integer.parseInt(phoneNumberInput.getText()));
             //JSObject window = (JSObject) gmapWebView.getEngine().executeScript("window");
             //association.setLat(Double.valueOf(((ObservableAssociationValue) window.getMember("association"))..getLat()));
             //association.setLon(Double.valueOf(((ObservableAssociationValue) window.getMember("association")).get().getLon()));
-
-
-                if(1==1) {
-                    // TODO : Fire event and have it subscribe
-                }else{
-                    // TODO : Show error dialog
-                }
+            if (AssociationService.getInstance().update(association)) {
+                dialog(new Text("Succesfully updated " + association.getNom()), "Success!");
+            } else {
+                dialog(new Text("Couldnt update !"), "Error");
+            }
 
         });
-
+        deleteButton.setOnMouseClicked(event -> deleteDialog().show());
         try {
             for (Membership m : MembershipService.getInstace().searchByAssociationId(association.getId())) {
-               // if(m.getStatus().equals(Membership.ACCEPTED)){
-                    loader = new FXMLLoader(getClass().getResource(URLScenes.memberShipUpdateItem));
-                    MemberUpdateItemController controller = new MemberUpdateItemController(m);
+                if (m.getStatus().equals(Membership.ACCEPTED)) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.memberShipUpdateItem));
+                    MemberUpdateItemController controller = new MemberUpdateItemController(m, association.getId());
                     loader.setController(controller);
                     membersVbox.getChildren().add(loader.load());
-                //}
+                }
             }
         } catch (SQLException | IOException e) {
             Logger.getLogger(AssociationCreateController.class.getName()).log(Level.SEVERE, null, e);
@@ -308,4 +334,51 @@ public class AssociationProfileUpdateController extends StackPane implements Ini
         return true;
     }
 
+    private JFXDialog dialog(Node body, String heading) {
+        close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+        layout.setActions(close);
+        body.prefWidth(this.getWidth() / 2);
+        body.prefHeight(this.getHeight() / 2);
+        layout.setBody(body);
+        layout.setHeading(new Text(heading));
+        return dialog;
+        // in row factory , add to listener to see if deleted, if so dialog.close();
+        //dialog.setOnDialogClosed();
+    }
+
+    private JFXDialog deleteDialog() {
+        close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+        confirmDelete.setOnMouseClicked(event -> {
+            if (AssociationService.getInstance().delete(association)) {
+                AssociationsBackofficeController.getDialog().close();
+            } else {
+                System.out.println("Couldnt delete");
+            }
+        });
+        layout.setActions(confirmDelete, close);
+        layout.setBody(new Text("Are you sure you want to delete " + association.getNom() + " !"));
+        layout.setHeading(new Label("Confirm !"));
+        return dialog;
+    }
+
+    private JFXDialog statusDialog() {
+        close.setOnMouseClicked(mouseEvent -> dialog.close());
+        statusButton.setDisable(false);
+        statusButton.setOnMouseClicked(event -> {
+            if (reason.validate()) {
+                association.setApprouved(false);
+                if (AssociationService.getInstance().update(association)) {
+                    layout.setBody(new Text("Success!"));
+                    statusButton.setDisable(true);
+                    dialog.close();
+                } else {
+                    layout.setBody(new Text("Couldnt update!"));
+                }
+            }
+        });
+        layout.setActions(statusButton, close);
+        layout.setBody(reason);
+        layout.setHeading(new Label("But why tho! !"));
+        return dialog;
+    }
 }

@@ -13,7 +13,7 @@ public class ChihabMain extends Application {
 
     @Override
     public void start(Stage stage) throws SQLException {
-        if(UserSession.login("azeaze@po.com","1ac2620f")) {
+        if (UserSession.login("adminuser1", "1ac2620f")) {
             AssociationsBackofficeController root = new AssociationsBackofficeController();
             stage.initStyle(StageStyle.DECORATED);
             stage.setTitle("ReactorsFX : La bénévolat en desktop");

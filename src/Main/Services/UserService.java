@@ -1,6 +1,7 @@
 package Main.Services;
 
 import Main.Entities.User;
+import Packages.Chihab.Models.enums.RoleEnum;
 import SharedResources.Utils.BCrypt.BCrypt;
 import SharedResources.Utils.Connector.ConnectionUtil;
 import de.ailis.pherialize.Pherialize;
@@ -65,9 +66,11 @@ public class UserService {
         u.setId(rs.getInt("id"));
         u.setUsername(rs.getString("username"));
         u.setEmail(rs.getString("email"));
-        u.setEnabled(rs.getBoolean("enabled"));
+        u.setEnabled(rs.getInt("enabled") == 1);
+        u.setApprouved(rs.getInt("approuved") == 1);
         u.setLast_login(rs.getTimestamp("last_login"));
         u.setRoles(Pherialize.unserialize(rs.getString("roles")).toArray());
+        u.getRoles().put(u.getRoles().size(), RoleEnum.ROLE_CLIENT);
         u.getProfile().setImage(rs.getString("image"));
         //u.getProfile().setAdresse();
         u.getProfile().setImage(rs.getString("image"));

@@ -39,11 +39,12 @@ public class MembershipService {
         return ms;
     }
 
-    public void update(Membership m) throws SQLException {
+    public void update(Membership m, int idAss) throws SQLException {
         String req = "UPDATE adherance SET user_id=?,association_id=?,joined=?,fonction=?,description=?,role=?,status=? WHERE id=?";
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement(req);
         preparedStatement.setInt(1, m.getMember().getId());
+        preparedStatement.setInt(2, idAss);
         preparedStatement.setDate(3, m.getJoinDate());
         preparedStatement.setString(4, m.getFonction());
         preparedStatement.setString(5, m.getDescription());
@@ -56,6 +57,12 @@ public class MembershipService {
     public void delete(Membership m) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM adherance WHERE id=?");
         preparedStatement.setInt(1, m.getId());
+        preparedStatement.executeUpdate();
+    }
+
+    public void delete(int mID) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM adherance WHERE id=?");
+        preparedStatement.setInt(1, mID);
         preparedStatement.executeUpdate();
     }
 
@@ -75,12 +82,21 @@ public class MembershipService {
         ps.setInt(1, memberID);
         ResultSet rs = ps.executeQuery();
         int[] intArray = new int[rs.getFetchSize()];
-        int i=0;
+        int i = 0;
         while (rs.next()) {
-            intArray[i]=rs.getInt(1);
+            intArray[i] = rs.getInt(1);
             i++;
         }
         return intArray;
+    }
+
+    public void deleteAllAssociationMemberShips(int assId) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("SELECT id FROM adherance WHERE association_id=?");
+        ps.setInt(1, assId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            delete(rs.getInt("id"));
+        }
     }
 
     public ObservableList<Membership> searchAffiliateIdByMemberIdReturnArray(int memberID) throws SQLException {
