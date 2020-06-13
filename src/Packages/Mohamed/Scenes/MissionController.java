@@ -1,12 +1,14 @@
 package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
+import Main.Entities.UserSession;
 import Packages.Mohamed.Entities.Mission;
+import Packages.Mohamed.Entities.Notification;
+import Packages.Mohamed.Scenes.MissionProfileUpdateController;
 import Packages.Mohamed.Services.MissionService;
+import Packages.Mohamed.Services.NotificationService;
 import SharedResources.URLScenes;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -16,13 +18,17 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -33,6 +39,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class MissionController implements Initializable {
     @FXML
@@ -55,24 +62,43 @@ public class MissionController implements Initializable {
     private TextField inputName, inputCity;
     @FXML
     private Label size;
+
     @FXML
-    private Button addButton;
+    Button addButton,notifbtn;
+    @FXML
+    private JFXNodesList notifNodesList;
+    @FXML
+    private JFXListView<Notification> notifListView;
+    @FXML
+    private StackPane NotifStackPane;
+    private final JFXDialogLayout layout = new JFXDialogLayout();
+    private final JFXButton close = new JFXButton("Fermer");
+    private static JFXDialog dialog;
+
+    int k =-1;
 
     public MissionController() {
-
+        //dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
     }
-
+    public static JFXDialog getDialog() {
+        return dialog;
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
         // TODO 1: Based on role, disable { addButton, idCol's view, deleteOption, managerCol, statusCol}
         //addButton.setVisible(UserSession.getInstace().getUser().isAssociationAdmin());
-        ObservableList<Mission> MissionList = FXCollections.observableArrayList();
-        try {
-            MissionList.addAll(MissionService.getInstace().readAll());
-        } catch (SQLException e) {
-            showDialog(Alert.AlertType.ERROR, "", "Connexion au serveur échoué", "Veuillez assurer la bonne connexion");
-            e.printStackTrace();
-        }
+        missionTableView.itemsProperty().bind(Bindings.createObjectBinding(() -> MissionService.getInstace().getDatabase().values().stream().filter(mission -> {
+            boolean test = true;
+            if( inputName.isFocused() ){
+                test = mission.getTitleMission().contains(inputName.getText());
+            }
+            if( inputCity.isFocused()){
+                test = test && mission.getLocation().contains(inputCity.getText());
+            }
+            return test;
+        }).collect(Collectors.toCollection(FXCollections::observableArrayList)),inputName.textProperty(),inputCity.textProperty()));
+
         TitleCol.setCellValueFactory(new PropertyValueFactory<>("TitleMission"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
@@ -83,7 +109,6 @@ public class MissionController implements Initializable {
         DateCreationCol.setCellValueFactory(new PropertyValueFactory<>("DateCreation"));
         DateFinCol.setCellValueFactory(new PropertyValueFactory<>("DateFin"));
         upsCol.setCellValueFactory(new PropertyValueFactory<>("ups"));
-        missionTableView.setItems(MissionList);
         /**
          * Start of Super Admin section
          */
@@ -101,7 +126,7 @@ public class MissionController implements Initializable {
 
         // Update section
         // Update name section
-        TitleCol.setOnEditCommit(
+      /*  TitleCol.setOnEditCommit(
                 categoryStringCellEditEvent -> {
                     Mission current = missionTableView.getItems().get(categoryStringCellEditEvent.getTablePosition().getRow());
                     if (checkValidUpdate(categoryStringCellEditEvent.getOldValue(), categoryStringCellEditEvent.getNewValue(), false, 5, 30, "nom"))
@@ -138,7 +163,7 @@ public class MissionController implements Initializable {
                         missionTableView.getItems().set(categoryStringCellEditEvent.getTablePosition().getRow(), current);
                 }
         );
-
+*/
 
         // Update section
         // Delete section
@@ -182,13 +207,11 @@ public class MissionController implements Initializable {
         missionTableView.setRowFactory(tv -> {
             TableRow<Mission> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
+                if(UserSession.getInstace().getUser().isAdmin()){
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Mission rowData = row.getItem();
-                    FXMLLoader loader;
-                    if (1 == 1)
-                        loader = new FXMLLoader(getClass().getResource(URLScenes.missionProfile));
-                    else
-                        loader = new FXMLLoader(getClass().getResource(URLScenes.associationProfile));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.missionProfile));
+
                     MissionProfileController controller = new MissionProfileController(rowData);
                     loader.setController(controller);
 
@@ -207,11 +230,44 @@ public class MissionController implements Initializable {
                     layout.setActions(close);
                     dialog.show();
 
+                }
+                }else{
+                 try {
+                        dialog(new MissionProfileUpdateController(row.getItem()),"Profile :"+ row.getItem().getTitleMission()).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /*   Mission rowData = row.getItem();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.missionUpdate));
+
+                    MissionProfileUpdateController controller = null;
+
+                    loader.setController(controller);
+
+                    StackPane update = null;
+                    try {
+                        update = loader.load();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    JFXDialogLayout layout = new JFXDialogLayout();
+                    layout.setBody(update);
+                    layout.setHeading(new Text("Mission :" + rowData.getTitleMission()));
+                    JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
+                    JFXButton close = new JFXButton("Annuler");
+                    close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                    layout.setActions(close);
+                    dialog.show();*/
+
 
                 }
+
             });
             return row;
         });
+
+
+
         // Profile Section
         // Add Mission section
         addButton.setOnAction(e -> {
@@ -225,7 +281,6 @@ public class MissionController implements Initializable {
                 JFXButton foo = (JFXButton) loader.getNamespace().get("createButton");
                 foo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     dialog.close();
-                    MissionList.add(((MissionCreateController) loader.getController()).getMission());
                 });
                 layout.setBody(createMission);
                 layout.setHeading(new Text("Ajout d'une nouvelle mission"));
@@ -244,44 +299,52 @@ public class MissionController implements Initializable {
                 ex.printStackTrace();
             }
         });
+        notifListView.itemsProperty().bind(Bindings.createObjectBinding(() ->NotificationService.getInstance().getRecords().values().stream().collect(Collectors.toCollection(FXCollections::observableArrayList)),NotificationService.getInstance().getRecords()));
+        notifListView.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<Notification> call(ListView<Notification> param) {
+                return new JFXListCell<>() {
+                    @Override
+                    public void updateItem(Notification item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null && !empty) {
+                            setOnMouseClicked(event -> {
+                                rootStackPane.getChildren().get(0).setViewOrder(0);
+                                k=-1;
+                                //TODO : Show popup dialog.
+                            });
+                            setGraphic(new NotificationItemController(item));
+                            setText("");
+                        }
+                    }
+                };
+            }
+        });
+        notifbtn.textProperty().bind(Bindings.createStringBinding(()-> notifListView.getItems().size()+" notifications",notifListView.itemsProperty()));
+        notifbtn.setOnAction(event -> {
+            rootStackPane.getChildren().get(0).setViewOrder(k);
+            k = k==-1 ? 0 : -1 ;
+        });
         // Add Mission section
         /**
          * End of Super Admin section
          */
         // Search by name bindings
         TextFields.bindAutoCompletion(inputName, missionTableView.getItems().stream().map(Mission::getTitleMission).toArray());
-        FilteredList<Mission> filteredName = new FilteredList<>(missionTableView.getItems(), e -> true);
-        inputName.setOnKeyReleased(e -> {
-            inputName.textProperty().addListener((observableValue, s, t1) -> {
-                filteredName.setPredicate(mission -> {
-                    if (t1 == null || t1.isEmpty())
-                        return true;
-                    return mission.getTitleMission().toLowerCase().startsWith(t1.toLowerCase());
-                });
-            });
-            SortedList<Mission> sortedListName = new SortedList<>(filteredName);
-            sortedListName.comparatorProperty().bind(missionTableView.comparatorProperty());
-            missionTableView.setItems(sortedListName);
-        });
+
         // Search by city bindings
         TextFields.bindAutoCompletion(inputCity, missionTableView.getItems().stream().map(Mission::getLocation).toArray());
-        FilteredList<Mission> filteredCity = new FilteredList<>(missionTableView.getItems(), e -> true);
-        inputCity.setOnKeyReleased(e -> {
-            inputCity.textProperty().addListener((observableValue, s, t1) -> {
-                filteredCity.setPredicate(mission -> {
-                    if (t1 == null || t1.isEmpty())
-                        return true;
-                    return mission.getLocation().toLowerCase().startsWith(t1.toLowerCase());
-                });
-            });
-            SortedList<Mission> sortedCityList = new SortedList<>(filteredCity);
-            sortedCityList.comparatorProperty().bind(missionTableView.comparatorProperty());
-            missionTableView.setItems(sortedCityList);
-        });
+
+
+
+
+
+
+
         // TODO : Search by manager
         // TODO : Client view of Mission list, render items inside HBox whilst passing Mission instance to that item, i hope you fucker know what i'm talking about when you wake up
         // Label for displaying number of current Mission bindings
-        size.textProperty().bind(Bindings.size((MissionList)).asString("Missions : %d"));
+        size.textProperty().bind(Bindings.size((missionTableView.getItems())).asString("Missions : %d"));
 
     }
 
@@ -319,6 +382,14 @@ public class MissionController implements Initializable {
         a.setHeaderText(header);
         a.setContentText(context);
         a.showAndWait();
+    }
+    private JFXDialog dialog(Node body, String heading){
+        close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+        layout.setActions(close);
+        layout.setBody(body);
+        layout.setHeading(new Text(heading));
+        return dialog;
+
     }
 
 }

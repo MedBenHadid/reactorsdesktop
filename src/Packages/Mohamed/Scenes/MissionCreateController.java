@@ -1,6 +1,7 @@
 package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
+import Main.Entities.UserSession;
 import Main.Services.UserService;
 import Packages.Mohamed.Entities.Mission;
 import Packages.Mohamed.Services.MissionService;
@@ -154,7 +155,7 @@ public class MissionCreateController implements Initializable {
                     managerComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
 
                     if (managerComboBox.getSelectionModel().getSelectedItem().getCheck()) {
-                        System.out.println("chekeed");
+                        System.out.println("chekeed"+managerComboBox.getSelectionModel().getSelectedItem().getItem().getId());
                         System.out.println("=+" + managerComboBox.getSelectionModel().getSelectedItem());
                         checkedList.add(managerComboBox.getSelectionModel().getSelectedItem().getItem());
                     } else {
@@ -194,12 +195,13 @@ public class MissionCreateController implements Initializable {
                     if (file.getName().endsWith(exst)) {
                         // TODO : upload to server
 
-                        mission.setPicture(mission.getTitleMission() + file.getName());
-                        try {
-                            FTPInterface.getInstance().fileUpload(file, URLServer.missionImageDir + mission.getPicture());
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
+                        mission.setPicture(file.getName());
+
+                        boolean test = FTPInterface.getInstance().send(file, URLServer.missionImageDir);
+                       if (test)
+                           System.out.println("Image uploded");
+                       else
+                           System.out.println("faild to upload");
                         break;
                     }
                 }
@@ -239,6 +241,7 @@ public class MissionCreateController implements Initializable {
                 mission.setTitleMission(TitleInput.getText());
                 mission.setDateCreation(java.sql.Date.valueOf(datedeb.getValue().toString()));
                 mission.setDateFin(java.sql.Date.valueOf(datefin.getValue().toString()));
+                mission.setCretedBy(UserSession.getInstace().getUser());
 
 
                 MissionService.getInstace().create(mission, checkedList);

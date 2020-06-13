@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="h" xmlns="http://javafx.com/javafx/11.0.1">
+<fx:root xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.HBox" fx:id="h" xmlns="http://javafx.com/javafx/11.0.1">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
@@ -53,4 +53,4 @@
             </VBox.margin>
         </Label>
     </VBox>
-</HBox>
+</fx:root>

@@ -1,7 +1,9 @@
 package Packages.Mohamed.Services;
 
 import Main.Entities.User;
+import Main.Entities.UserSession;
 import Main.Services.UserService;
+import Packages.Chihab.Models.Entities.Association;
 import Packages.Chihab.Services.CategoryService;
 import Packages.Mohamed.Entities.Invitation;
 import Packages.Mohamed.Entities.Mission;
@@ -10,6 +12,7 @@ import Packages.Mohamed.util.sendMail;
 import SharedResources.Utils.Connector.ConnectionUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,17 +22,22 @@ public class MissionService {
     private static MissionService instance;
     private final Connection connection = ConnectionUtil.getInstance().getConn();
 
-    private MissionService() throws SQLException {
+    public ObservableMap<Integer, Mission> getDatabase() {
+        return database;
+    }
 
+    private final ObservableMap<Integer,Mission> database = FXCollections.observableHashMap();
+    private MissionService() {
+        try {
+            readAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static MissionService getInstace() {
         if (instance == null) {
-            try {
-                instance = new MissionService();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+            instance = new MissionService();
         }
         return instance;
     }
@@ -64,18 +72,14 @@ public class MissionService {
         st.setDate(9, m.getDateFin());
         st.setDouble(10, m.getLat());
         st.setDouble(11, m.getLon());
-
         st.setInt(12, 0);
-        st.setInt(13, 75);
-
-
+        st.setInt(13, UserSession.getInstace().getUser().getId());
         st.executeUpdate();
         ResultSet rs = st.getGeneratedKeys();
         if (rs.next()) {
-            rs.getInt(1);
+            m.setId(rs.getInt(1));
+            database.put(m.getId(),m);
         }
-
-
         //sendMailToMembers
         for (int i = 0; i < checkedList.size(); i++) {
             sendMail.sendMail(checkedList.get(i).getEmail(), m);
@@ -90,34 +94,30 @@ public class MissionService {
             String inviter = "inviter";
             invitation.setEtat(EtatEnum.inviter);
             invitation.setId_mission(m);
-            //      invitation.setId_notification(1);
+            // invitation.setId_notification(1);
             invitation.setId_user(checkedList.get(i));
-
-
             sti.setInt(1, rs.getInt(1));
             sti.setInt(2, invitation.getId_user().getId());
-            //      sti.setString(4,invitation.getEtat().toString());
+            // sti.setString(4,invitation.getEtat().toString());
             sti.executeUpdate();
             // System.out.println(sti);
 
         }
     }
 
-    public ObservableList<Mission> readAll() throws SQLException {
-        ObservableList<Mission> ms = FXCollections.observableArrayList();
+    public void readAll() throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM mission");
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             Mission m = resultSetToMission(resultSet);
             m.setDomaine(CategoryService.getInstace().readById(resultSet.getInt("domaine_id")));
             m.setCretedBy(UserService.getInstace().readUserBy(resultSet.getInt("CreatedBy")));
-            ms.add(m);
+            database.put(m.getId(),m);
         }
-        return ms;
     }
 
-    public ArrayList<User> readMissionUsers(Mission m) throws SQLException {
-        ArrayList<User> ms = new ArrayList<>();
+    public ObservableList<User> readMissionUsers(Mission m) throws SQLException {
+        ObservableList<User> ms = FXCollections.observableArrayList();
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM invitation WHERE id_mission=?");
         preparedStatement.setInt(1, m.getId());
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -128,14 +128,14 @@ public class MissionService {
 
             System.out.println(resultSet.getInt("id_user"));
 
-            //ms.add(u);
+       //     ms.add(u);
         }
         return ms;
     }
 
     public ArrayList<Invitation> getInvitationsByMission(Mission m) throws SQLException {
         ArrayList<Invitation> is = new ArrayList<>();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM invitation WHERE id_mission=?");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM invitation WHERE id_mission=? ");
         preparedStatement.setInt(1, m.getId());
         ResultSet r = preparedStatement.executeQuery();
         while (r.next()) {
@@ -146,6 +146,19 @@ public class MissionService {
         return is;
     }
 
+
+    public ArrayList<Invitation> memberInMission(Mission m) throws SQLException {
+        ArrayList<Invitation> is = new ArrayList<>();
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM invitation WHERE id_mission=? ");
+        preparedStatement.setInt(1, m.getId());
+        ResultSet r = preparedStatement.executeQuery();
+        while (r.next()) {
+            Invitation i = resultSetToInvitation(r);
+            i.setId_mission(m);
+            is.add(i);
+        }
+        return is;
+    }
     private Invitation resultSetToInvitation(ResultSet r) throws SQLException {
         Invitation i = new Invitation();
         i.setId(r.getInt("id"));
@@ -154,7 +167,7 @@ public class MissionService {
         return i;
     }
 
-    public void update(Mission m) throws SQLException {
+    public boolean update(Mission m) throws SQLException {
         PreparedStatement st = connection.prepareStatement("UPDATE mission SET " +
                 "TitleMission=?" +
                 ",picture=?" +
@@ -183,27 +196,32 @@ public class MissionService {
         st.setInt(9, m.getUps());
         st.setDouble(10, m.getLat());
         st.setDouble(11, m.getLon());
-        //st.setInt(12, m.getCretedBy().getId());
+        st.setInt(12, m.getCretedBy().getId());
         st.setInt(13, m.getDomaine().getId());
         st.setInt(14, m.getId());
-        System.out.println(st);
-        st.executeUpdate();
+
+        if(st.executeUpdate() > 0) {
+            database.remove(m.getId());
+            database.put(m.getId(),m);
+            return true;
+        }else {
+            return false;
+        }
     }
 
-    public void delete(Mission m) throws SQLException {
+    public boolean delete(Mission m) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Mission WHERE id=?");
         preparedStatement.setInt(1, m.getId());
-        preparedStatement.executeUpdate();
+        if(preparedStatement.executeUpdate() > 0){
+            database.remove(m.getId());
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public Mission searchByMissionId(int id) throws SQLException {
-        Mission m = new Mission();
-        String req = "SELECT * FROM mission WHERE id=?";
-        PreparedStatement preparedStatement;
-        preparedStatement = connection.prepareStatement(req);
-        preparedStatement.setInt(1, id);
-        m = resultSetToMission(preparedStatement.executeQuery());
-        return m;
+    public Mission searchByMissionId(int id){
+        return database.get(id);
     }
 
     public Mission searchByManagerId(int managerId) throws SQLException {
@@ -216,14 +234,18 @@ public class MissionService {
         return m;
     }
 
-    public int searchByManagerName(String manager) throws SQLException {
-        User u = new User();
-        String req = "SELECT id FROM user WHERE username=?";
+    public int serchAssociationByid_manager(int m_id) throws SQLException {
+        Association a = new Association();
+        String req = "SELECT * FROM association WHERE id_manager=?";
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement(req);
-        preparedStatement.setString(1, manager);
-        u = (User) preparedStatement.executeQuery();
-        return u.getId();
+        preparedStatement.setInt(1, m_id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        if (rs.next()){
+            return new Association(rs).getId();
+        }
+        return a.getId();
     }
 
     public Mission searchByDomaine(int idDomaine) throws SQLException {

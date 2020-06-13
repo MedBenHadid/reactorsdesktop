@@ -6,6 +6,8 @@ import Packages.Mohamed.Entities.Mission;
 import Packages.Mohamed.Services.MissionService;
 import Packages.Mohamed.util.sendMail;
 import SharedResources.URLScenes;
+import SharedResources.URLServer;
+import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -14,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -23,11 +26,14 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import org.w3c.dom.Document;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MissionProfileController implements Initializable {
     @FXML
@@ -66,7 +72,7 @@ public class MissionProfileController implements Initializable {
         DateDebLabel.setText(m.getDateCreation().toString());
         DateFinLabel.setText(m.getDateFin().toString());
         ObjectifLabel.setText(String.valueOf(m.getObjectif()));
-        SumColLabel.setText(m.getSumCollected().toString());
+        SumColLabel.setText(String.valueOf(m.getSumCollected()));
         pourcantageLabel.setText((100 * m.getSumCollected()) / m.getObjectif() + "%");
         mapWebView.setVisible(false);
         mapWebView.getEngine().load(this.getClass().getResource("/Packages/Mohamed/Scenes/WebView/showMissionLocation.html").toString());
@@ -81,15 +87,15 @@ public class MissionProfileController implements Initializable {
                 }
         );
         progressBar.progressProperty().setValue(((100 * m.getSumCollected()) / m.getObjectif()) / 100);
-        /**    try {
-         File imageAss = ftpInterface.downloadFile(URLServer.missionImageDir + m.getPicture(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+   try {
+         File imageAss = FTPInterface.getInstance().downloadFile(URLServer.missionImageDir + m.getPicture(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
          imageImageView.setImage(new Image(imageAss.toURI().toString()));
          } catch (IOException e) {
          Logger.getLogger(
          MissionProfileController.class.getName()).log(
          Level.SEVERE, "Error whilst fetching image", e
          );
-         }*/
+         }
 
 
         FXMLLoader loader = null;
@@ -128,10 +134,11 @@ public class MissionProfileController implements Initializable {
                             System.out.println(tr.getText());
 
                             try {
-                                assert UserSession.getInstace() != null;
+                               // assert UserSession.getInstace() != null;
                                 sendMail.sendMailToAdmin(UserSession.getInstace().getUser().getEmail(), i.getId_user().getEmail(), tr.getText());
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                System.out.println(UserSession.getInstace().getUser().getEmail());
                             }
 
 

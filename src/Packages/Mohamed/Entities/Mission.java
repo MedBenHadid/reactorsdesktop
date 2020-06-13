@@ -15,7 +15,7 @@ public class Mission {
     private String TitleMission, picture, description, location;
     private int ups;
     private double lat, lon;
-    private Double objectif, sumCollected;
+    private double objectif, sumCollected;
     private User CretedBy;
     private Date DateCreation, DateFin;
     private List<Invitation> invites;
@@ -104,7 +104,7 @@ public class Mission {
         this.lon = lon;
     }
 
-    public Double getObjectif() {
+    public double getObjectif() {
         return objectif;
     }
 
@@ -112,7 +112,7 @@ public class Mission {
         this.objectif = objectif;
     }
 
-    public Double getSumCollected() {
+    public double getSumCollected() {
         return sumCollected;
     }
 
@@ -120,8 +120,8 @@ public class Mission {
         this.sumCollected = sumCollected;
     }
 
-    public String getCretedBy() {
-        return CretedBy.getUsername();
+    public User getCretedBy() {
+        return CretedBy;
     }
 
     public void setCretedBy(User cretedBy) {

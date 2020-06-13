@@ -19,8 +19,8 @@
 <body class="full">
 <div style="height:100%">
     <div id="map" style="height:100%"></div>
-    <input id="lat_association" name="lat_association" type="hidden"/>
-    <input id="lng_association" name="lng_association" type="hidden"/>
+    <input id="lat_mission" name="lat_mission" type="hidden"/>
+    <input id="lng_mission" name="lng_mission" type="hidden"/>
 </div>
 
 <script>
@@ -42,16 +42,16 @@
                 var marker = new google.maps.Marker({
                     position: pos,
                     map: map,
-                    title: 'Emplacement Association',
+                    title: 'Emplacement Mission',
                     draggable: true
                 });
                 google.maps.event.addListener(marker, 'dragend', function (evt) {
                     $('#emplacement_lat').val(evt.latLng.lat());
                     $('#emplacement_lng').val(evt.latLng.lng());
-                    document.getElementById('lat_association').value = evt.latLng.lat();
-                    document.getElementById('lng_association').value = evt.latLng.lng();
-                    window.association.setLat(evt.latLng.lat());
-                    window.association.setLon(evt.latLng.lng());
+                    document.getElementById('lat_mission').value = evt.latLng.lat();
+                    document.getElementById('lng_mission').value = evt.latLng.lng();
+                    window.mission.setLat(evt.latLng.lat());
+                    window.mission.setLon(evt.latLng.lng());
 
                 });
             }, function () {
@@ -59,13 +59,13 @@
                 var marker = new google.maps.Marker({
                     position: myLatLng,
                     map: map,
-                    title: 'Emplacement Association',
+                    title: 'Emplacement Mission',
                     draggable: true
                 });
                 google.maps.event.addListener(marker, 'dragend', function (evt) {
-                    document.getElementById('lat_association').value = evt.latLng.lat();
-                    document.getElementById('lng_association').value = evt.latLng.lng();
-                    console.log(document.getElementById('lng_association').value);
+                    document.getElementById('lat_mission').value = evt.latLng.lat();
+                    document.getElementById('lng_mission').value = evt.latLng.lng();
+                    console.log(document.getElementById('lng_mission').value);
                 });
                 alert('Error: The Geolocation service failed.');
             });
@@ -75,15 +75,15 @@
             var marker = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
-                title: 'Emplacement Association',
+                title: 'Emplacement Mission',
                 draggable: true
             });
             google.maps.event.addListener(marker, 'dragend', function (evt) {
-                document.getElementById('lat_association').value = evt.latLng.lat();
-                document.getElementById('lng_association').value = evt.latLng.lng();
-                window.association.setLat(evt.latLng.lat());
-                window.association.setLon(evt.latLng.lng());
-                console.log(window.association.getLon());
+                document.getElementById('lat_mission').value = evt.latLng.lat();
+                document.getElementById('lng_mission').value = evt.latLng.lng();
+                window.mission.setLat(evt.latLng.lat());
+                window.mission.setLon(evt.latLng.lng());
+                console.log(window.mission.getLon());
                 //document.getElementById('current').innerHTML = '<p>Marker dropped: Current Lat: ' + evt.latLng.lat().toFixed(3) + ' Current Lng: ' + evt.latLng.lng().toFixed(3) + '</p>';
             });
             alert('Error: The Geolocation service failed.');

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<fx:root fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" stylesheets="@../../../Main/styles.css" type="javafx.scene.layout.StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <ScrollPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0">
+            <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <padding>
+                    <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+                </padding>
+                <JFXButton fx:id="deleteButton" prefWidth="200.0" styleClass="jfx-button-error" stylesheets="@../../../Main/styles.css" text="Delete">
+                    <ripplerFill>
+                        <LinearGradient endX="1.0" endY="1.0" startY="0.42748090875057776">
+                            <stops>
+                                <Stop color="WHITE" />
+                                <Stop color="BLACK" offset="1.0" />
+                            </stops>
+                        </LinearGradient>
+                    </ripplerFill>
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../SharedResources/Images/Delete-24.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </JFXButton>
+                <ImageView fx:id="imageImageView" fitHeight="250.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
+                <Label fx:id="MissionNameLabel" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial Black" size="32.0" />
+                    </font>
+                </Label>
+                <JFXButton fx:id="photoButton" buttonType="RAISED" prefWidth="200.0" text="Update image" />
+                <VBox>
+                    <Label alignment="TOP_LEFT" text="Description :" />
+                    <JFXTextArea fx:id="descriptionInput" focusColor="#873087" prefColumnCount="20" promptText="Describe your mission." wrapText="true">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin>
+                    </JFXTextArea>
+                    <Label alignment="TOP_LEFT" text="Adress :" />
+               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <JFXComboBox fx:id="vComboBox" promptText="Comb">
+                        <HBox.margin>
+                           <Insets left="40.0" />
+                        </HBox.margin>
+                     </JFXComboBox>
+                          <JFXTextField fx:id="adresseInput" promptText="Where can we find you ?" text="Adress" />
+                  </children>
+               </HBox>
+                    <Label alignment="TOP_LEFT" text="Location :" />
+                    <WebView fx:id="gmapWebView" prefHeight="200.0" prefWidth="-1.0">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin></WebView>
+                    <Label alignment="TOP_LEFT" text="Sector :" />
+                    <JFXComboBox fx:id="domaineComboBox" prefWidth="500.0" promptText="Your sector ?">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin></JFXComboBox>
+               <Label text="Objectif :" />
+               <JFXSlider fx:id="objectifSlider" />
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Label text="Date début :">
+                        <HBox.margin>
+                           <Insets top="10.0" />
+                        </HBox.margin>
+                     </Label>
+                     <JFXDatePicker fx:id="dateDeb" />
+                     <Label text="Date Fin:" />
+                     <JFXDatePicker fx:id="dateFin" />
+                  </children>
+                  <VBox.margin>
+                     <Insets top="50.0" />
+                  </VBox.margin>
+               </HBox>
+               <Label text="List des Membres :" />
+               <JFXListView fx:id="membersList" prefHeight="200.0" prefWidth="300.0">
+                  <VBox.margin>
+                     <Insets left="90.0" right="60.0" />
+                  </VBox.margin>
+               </JFXListView>
+                    <JFXButton fx:id="validateButton" prefWidth="500.0" text="Update">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin></JFXButton>
+                </VBox>
+            </VBox>
+        </AnchorPane>
+    </ScrollPane>
+</fx:root>

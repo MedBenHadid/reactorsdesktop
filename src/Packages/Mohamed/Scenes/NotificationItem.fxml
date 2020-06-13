@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root alignment="CENTER" prefHeight="59.0" prefWidth="224.0" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="ImgAssNotif" fitHeight="59.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+         <HBox.margin>
+            <Insets left="3.0" />
+         </HBox.margin></ImageView>
+      <VBox alignment="CENTER_LEFT" prefHeight="90.0" prefWidth="147.0">
+         <children>
+            <Label fx:id="titleNotif">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="dateNotif" textFill="#46b4cf" />
+         </children>
+         <HBox.margin>
+            <Insets left="30.0" />
+         </HBox.margin>
+      </VBox>
+   </children>
+</fx:root>

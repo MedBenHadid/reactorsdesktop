@@ -1,9 +1,11 @@
 package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
+import SharedResources.URLScenes;
 import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -32,6 +34,14 @@ public class UserItemController implements Initializable {
 
     public UserItemController(User u) {
         this.u = u;
+        FXMLLoader thisLoader = new FXMLLoader(getClass().getResource(URLScenes.NotifItem));
+        thisLoader.setRoot( this );
+        thisLoader.setController( this );
+        try {
+            thisLoader.load();
+        } catch ( IOException e ) {
+            throw new RuntimeException( e );
+        }
     }
 
     @Override

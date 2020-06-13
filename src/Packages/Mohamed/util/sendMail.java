@@ -81,9 +81,7 @@ public class sendMail {
         //Set smtp port
         properties.put("mail.smtp.port", "587");
 
-        //Your gmail address
-        String myAccountEmail = "TestPIdevJava@gmail.com";
-        //Your gmail password
+        String myAccountEmail = "testpidevjava@gmail.com";
         String password = "PIdev12345678";
 
         //Create a session with account credentials
