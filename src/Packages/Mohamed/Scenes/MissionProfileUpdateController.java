@@ -1,11 +1,8 @@
 package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
-import Main.Services.UserService;
-import Packages.Chihab.Models.Entities.Association;
 import Packages.Chihab.Models.Entities.Category;
 import Packages.Chihab.Models.Entities.Membership;
-import Packages.Chihab.Services.AssociationService;
 import Packages.Chihab.Services.CategoryService;
 import Packages.Chihab.Services.MembershipService;
 import Packages.Mohamed.Entities.Invitation;
@@ -18,14 +15,11 @@ import SharedResources.Utils.BinaryValidator.StringLengthValidator;
 import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
-import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -39,13 +33,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import netscape.javascript.JSObject;
 import org.apache.commons.net.ftp.FTP;
 
 import java.io.File;
@@ -110,32 +102,20 @@ public class MissionProfileUpdateController extends StackPane implements Initial
         BooleanBinding descriptionFieldValid = Bindings.createBooleanBinding(() -> descriptionInput.getText().isBlank(), descriptionInput.textProperty());
         BooleanBinding adresseFieldValid = Bindings.createBooleanBinding(() -> rueValidCheck(adresseInput.getText()), adresseInput.textProperty());
         dateFin.valueProperty().addListener((e,r,event) -> {
-         //   System.out.println("test");
             if (dateDeb.getValue().compareTo(dateFin.getValue()) != -1) {
-
                 dialog(new Label("La date de fin mission doit etre supérieur à date fin"), "Invalid date").show();
-               // vers.setValue(de.getValue().plusHours(8));
             } else {
                 mission.setDateFin((java.sql.Date) Date.from(Instant.from(dateFin.getValue())));
                 mission.setDateCreation((java.sql.Date) Date.from(Instant.from(dateDeb.getValue())));
             }
         });
-        System.out.println(mission);
-
-
         descriptionInput.setText(mission.getDescription());
-
         adresseInput.getValidators().addAll(requiredFieldValidator, new StringLengthValidator(10, -1, "La taille doit etre supérieure a "));
-
-
-
         try {
-            File imageAss = FTPInterface.getInstance().downloadFile(URLServer.missionImageDir + mission.getPicture(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-            imageImageView.setImage(new Image(Objects.requireNonNull(imageAss).toURI().toString()));
+            imageImageView.setImage(new Image(Objects.requireNonNull(FTPInterface.getInstance().downloadFile(URLServer.missionImageDir + mission.getPicture(), org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE)).toURI().toString()));
         } catch (IOException e) {
-            Logger.getLogger(MissionProfileController.class.getName()).log(Level.SEVERE, "Error whilst fetching image", e);
+            Logger.getLogger(MissionProfileUpdateController.class.getName()).log(Level.SEVERE, "Error whilst fetching image", e);
         }
-
       /*  mailManager.setOnMouseClicked(event -> {
             try {
                 Desktop.getDesktop().mail(URI.create("mailto:" + association.getManager().getEmail()));
@@ -143,9 +123,7 @@ public class MissionProfileUpdateController extends StackPane implements Initial
                 dialog(new Text("Error whilst opening mailer."), "Couldnt open mailer").show();
             }
         });*/
-
         photoButton.setTooltip(new Tooltip("Veuillez choisir la photo de l'association"));
-
         photoChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JPG", "*.jpg"),
                 new FileChooser.ExtensionFilter("PNG", "*.png")
@@ -162,10 +140,10 @@ public class MissionProfileUpdateController extends StackPane implements Initial
                             imageImageView.setImage(new Image(photo.toURI().toString()));
                         }
                     } catch (SQLException ex) {
-                        ex.printStackTrace();
+                        Logger.getLogger(MissionProfileUpdateController.class.getName()).log(Level.SEVERE, "Error whilst persisting mission" + mission, ex);
                     }
                 }else {
-                    // TODO : Error
+                    dialog(new Text("Veuillez verifier votre connection!"), "Cant contact FTP Server !").show();
                 }
             } else {
                 dialog(new Text("Veuillez choisir une photo avec un format supporté"), "Wrong !").show();
@@ -205,14 +183,16 @@ public class MissionProfileUpdateController extends StackPane implements Initial
                 field.validate();
             });
         }
+
         validateButton.disableProperty().bind(descriptionFieldValid.or(adresseFieldValid));
         validateButton.setOnAction(actionEvent -> {
-            mission.setLocation(adresseInput.getText());
+            mission.setLocation(vComboBox.getSelectionModel().getSelectedItem() + " " + adresseInput.getText());
             mission.setDescription(descriptionInput.getText());
             mission.setDomaine(domaineComboBox.getValue());
             mission.setObjectif(objectifSlider.getValue());
             try {
                 if (MissionService.getInstace().update(mission)) {
+                    MissionService.getInstace().inviteMembers(invitedUsers, mission);
                     dialog(new Text("Succesfully updated " + mission.getTitleMission()), "Success!");
                 } else {
                     dialog(new Text("Couldnt update !"), "Error");
@@ -277,7 +257,6 @@ public class MissionProfileUpdateController extends StackPane implements Initial
                                     invitedUsers.add(item);
                                 }else{
                                     invitedUsers.remove(item);
-                                    System.out.println("removed");
                                 }
                             });
                             if(hbox.getChildren().size()==0){

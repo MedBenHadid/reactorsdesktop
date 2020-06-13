@@ -17,6 +17,7 @@ import javafx.collections.ObservableMap;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MissionService {
     private static MissionService instance;
@@ -100,8 +101,6 @@ public class MissionService {
             sti.setInt(2, invitation.getId_user().getId());
             // sti.setString(4,invitation.getEtat().toString());
             sti.executeUpdate();
-            // System.out.println(sti);
-
         }
     }
 
@@ -121,11 +120,8 @@ public class MissionService {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM invitation WHERE id_mission=?");
         preparedStatement.setInt(1, m.getId());
         ResultSet resultSet = preparedStatement.executeQuery();
-
         while (resultSet.next()) {
-
             Mission u = resultSetToMission(resultSet);
-
             System.out.println(resultSet.getInt("id_user"));
 
        //     ms.add(u);
@@ -159,6 +155,7 @@ public class MissionService {
         }
         return is;
     }
+
     private Invitation resultSetToInvitation(ResultSet r) throws SQLException {
         Invitation i = new Invitation();
         i.setId(r.getInt("id"));
@@ -184,7 +181,6 @@ public class MissionService {
                 ",domaine_id=? " +
                 "WHERE id=?"
         );
-        System.out.println("__" + m.getLat());
         st.setString(1, m.getTitleMission());
         st.setString(2, m.getPicture());
         st.setString(3, m.getDescription());
@@ -212,7 +208,7 @@ public class MissionService {
     public boolean delete(Mission m) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Mission WHERE id=?");
         preparedStatement.setInt(1, m.getId());
-        if(preparedStatement.executeUpdate() > 0){
+        if (preparedStatement.executeUpdate() > 0) {
             database.remove(m.getId());
             return true;
         } else {
@@ -220,7 +216,49 @@ public class MissionService {
         }
     }
 
-    public Mission searchByMissionId(int id){
+
+    /**
+     * @param newMembersList description : List of members to check with database
+     * @param m              description Mission to invite members to
+     */
+    public void inviteMembers(ArrayList<User> newMembersList, Mission m) {
+        ArrayList<Integer> newMembersID = newMembersList.stream().map(User::getId).collect(Collectors.toCollection(ArrayList::new));
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id_user FROM invitation WHERE id_mission=?");
+            preparedStatement.setInt(1, m.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ArrayList<Integer> invitedUsers = new ArrayList<>();
+            while (resultSet.next()) {
+                invitedUsers.add(resultSet.getInt("id_user"));
+            }
+            System.out.println("Already invited user : " + invitedUsers);
+            invitedUsers.removeAll(newMembersID);
+            System.out.println("Already invited - new : " + invitedUsers);
+            newMembersID.removeAll(invitedUsers);
+            System.out.println("Members to email and notify : " + newMembersID);
+            for (User member : newMembersList) {
+                if (newMembersID.contains(member.getId())) {
+                    PreparedStatement sti = connection.prepareStatement("INSERT INTO invitation (`id_mission`,`id_user` , `etat`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                    sti.setInt(1, m.getId());
+                    sti.setInt(2, member.getId());
+                    sti.setString(3, EtatEnum.inviter.toString());
+                    sti.executeUpdate();
+                    sendMail.sendMail(member.getEmail(), m);
+                    System.out.println("Emailing " + member.getEmail());
+                }
+            }
+            for (int toRemove : invitedUsers) {
+                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM invitation WHERE id_user=?");
+                deleteStatement.setInt(1, toRemove);
+                deleteStatement.executeUpdate();
+                System.out.println("removed :" + toRemove);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public Mission searchByMissionId(int id) {
         return database.get(id);
     }
 

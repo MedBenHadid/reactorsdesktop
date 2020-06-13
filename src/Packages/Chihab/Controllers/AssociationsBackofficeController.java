@@ -10,7 +10,6 @@ import SharedResources.URLServer;
 import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.*;
 import javafx.animation.*;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -26,7 +25,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -34,9 +32,6 @@ import javafx.util.Duration;
 import org.apache.commons.net.ftp.FTP;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-import tray.animations.AnimationType;
-import tray.notification.NotificationType;
-import tray.notification.TrayNotification;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,6 +41,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class AssociationsBackofficeController extends StackPane implements Initializable {
+    private static JFXDialog dialog;
     @FXML
     private StackPane rootStackPane;
     @FXML
@@ -68,9 +64,14 @@ public class AssociationsBackofficeController extends StackPane implements Initi
     private JFXComboBox<Category> dCombo;
     @FXML
     private JFXTextField inputName;
-    private static JFXDialog dialog;
     @FXML
     private Label size, hits;
+    @FXML
+    private JFXSpinner spinner;
+    @FXML
+    private JFXButton addButton, resetButton, espaceMembershipButton, resetD, resetV;
+    @FXML
+    private ImageView logoImageViewer;
     private final Image reactorsLogo = new Image(getClass().getResource("/SharedResources/Images/logoreactors.png").toString());
     private final JFXDialogLayout layout = new JFXDialogLayout();
     private final AssociationCreateController createPanel = new AssociationCreateController();
@@ -78,12 +79,7 @@ public class AssociationsBackofficeController extends StackPane implements Initi
     private final User loggedIn = UserSession.getInstace().getUser();
     private final JFXButton close = new JFXButton("Fermer");
     private final FadeTransition ft = new FadeTransition(Duration.millis(1500));
-    @FXML
-    private JFXSpinner spinner;
-    @FXML
-    private JFXButton addButton, resetButton, espaceMembershipButton, resetD, resetV;
-    @FXML
-    private ImageView logoImageViewer;
+
 
     public AssociationsBackofficeController() {
         thisLoader.setRoot(this);
@@ -114,16 +110,6 @@ public class AssociationsBackofficeController extends StackPane implements Initi
         trans.setCycleCount(RotateTransition.INDEFINITE);
         trans.setAutoReverse(true);
         trans.play();
-
-        Platform.runLater(() -> {
-                    TrayNotification tray = new TrayNotification("Test", "Message", NotificationType.SUCCESS);
-                    tray.setImage(reactorsLogo);
-                    tray.setRectangleFill(Paint.valueOf("6200EE"));
-                    tray.setAnimationType(AnimationType.POPUP);
-                    tray.showAndDismiss(new Duration(1200));
-                }
-        );
-
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), ev -> {
             Task<Void> fetchTask = AssociationService.getInstance().updateWizard();
             fetchProgress.visibleProperty().bind(fetchTask.runningProperty());
@@ -133,7 +119,6 @@ public class AssociationsBackofficeController extends StackPane implements Initi
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-
         associationTableView.itemsProperty().bind(Bindings.createObjectBinding(() -> AssociationService.getInstance().getRecords().values().stream().filter(association -> {
             boolean test = true;
             if (vCombo.getSelectionModel().getSelectedIndex() != -1) {
@@ -147,7 +132,6 @@ public class AssociationsBackofficeController extends StackPane implements Initi
             }
             return test;
         }).collect(Collectors.toCollection(FXCollections::observableArrayList)), AssociationService.getInstance().getRecords(), inputName.textProperty(), inputName.focusedProperty(), vCombo.focusedProperty(), dCombo.focusedProperty()));
-
         domaineCol.setCellValueFactory(data -> data.getValue().domaineProperty());
         managerCol.setCellValueFactory(data -> data.getValue().managerProperty());
         villeCol.setCellValueFactory(data -> data.getValue().villeProperty());

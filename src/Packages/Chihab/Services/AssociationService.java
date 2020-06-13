@@ -187,40 +187,42 @@ public class AssociationService {
             for(int i : toUpdate.keySet()){
                 System.out.println("updated" + records.get(i).getNom());
                 records.remove(i);
-                records.put(toUpdate.get(i).getId(),toUpdate.get(i));
+                records.put(toUpdate.get(i).getId(), toUpdate.get(i));
             }
-            for(int i : toRemoveList){
+            for (int i : toRemoveList) {
                 System.out.println("Removed");
                 records.remove(i);
             }
         };
     }
 
-    public boolean delete(Association toBeDeleted){
+    public boolean delete(Association toBeDeleted) {
+        boolean result = false;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM association WHERE id=?");
             preparedStatement.setInt(1, toBeDeleted.getId());
             MembershipService.getInstace().deleteAllAssociationMemberShips(toBeDeleted.getId());
-            if(preparedStatement.executeUpdate() > 0){
+            if (preparedStatement.executeUpdate() > 0) {
                 records.remove(toBeDeleted.getId());
-                return true;
-            } else {
-                return false;
+                result = true;
             }
-        } catch (SQLException throwables) {
-            logger.log(Level.SEVERE, "Error whilst deleting", throwables.getLocalizedMessage());
-            return false;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error whilst deleting", ex);
         }
+        return result;
     }
 
     public Association getAssociationById(int id) throws SQLException {
+        Association result;
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM association WHERE id=?");
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            return new Association(resultSet);
+            result = new Association(resultSet);
+        } else {
+            result = new Association();
         }
-        return new Association();
+        return result;
     }
 
     public ObservableMap<Integer, Association> getRecords() {
