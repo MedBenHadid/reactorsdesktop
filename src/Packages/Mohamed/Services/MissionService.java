@@ -4,9 +4,11 @@ import Main.Entities.User;
 import Main.Entities.UserSession;
 import Main.Services.UserService;
 import Packages.Chihab.Models.Entities.Association;
+import Packages.Chihab.Services.AssociationService;
 import Packages.Chihab.Services.CategoryService;
 import Packages.Mohamed.Entities.Invitation;
 import Packages.Mohamed.Entities.Mission;
+import Packages.Mohamed.Entities.Notification;
 import Packages.Mohamed.Entities.enums.EtatEnum;
 import Packages.Mohamed.util.sendMail;
 import SharedResources.Utils.Connector.ConnectionUtil;
@@ -15,7 +17,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,21 +89,64 @@ public class MissionService {
         //sendMailToMembers
         for (int i = 0; i < checkedList.size(); i++) {
             sendMail.sendMail(checkedList.get(i).getEmail(), m);
-            PreparedStatement sti = connection.prepareStatement("INSERT INTO invitation " +
+
+            System.out.println("--------notification----------");
+
+
+            Notification notification=new Notification();
+            notification.setId_user(checkedList.get(i));
+            notification.setId_mission(m);
+           //notification.getId_association(AssociationService.getInstance().getAssociationById(UserSession.getInstace().getManagedAss().get().)); TODO : Add association id
+            notification.setTitle(m.getTitleMission());
+            notification.setDescription(m.getDescription());
+            notification.setNotification_date(new java.sql.Date(new java.util.Date().getTime()));
+            notification.setSeen(false);
+            PreparedStatement stn = connection.prepareStatement("INSERT INTO notification " +
                             "(`id_mission`, " +
-                            "`id_user`)" +
-                            "VALUES (?,?)"
+                            "`id_user`, " +
+                            "`id_association`, " +
+                            "`title`, " +
+                            "`description`, " +
+                            "`notification_date`, " +
+                            "`seen`)" +
+                            "VALUES (?,?,?,?,?,?,?)"
                     , Statement.RETURN_GENERATED_KEYS
             );
-            System.out.println("------------------");
+            stn.setInt(1, notification.getId_mission().getId());
+            stn.setInt(2,notification.getId_user().getId());
+            stn.setInt(3, 20); // ass ID
+            stn.setString(4, notification.getTitle());
+            stn.setString(5, notification.getDescription());
+            stn.setDate(6, (java.sql.Date) notification.getNotification_date());
+            stn.setBoolean(7, notification.getSeen());
+
+            stn.executeUpdate();
+            ResultSet rtn = stn.getGeneratedKeys();
+            if (rtn.next()) {
+                notification.setId(rtn.getInt(1));
+            }
+
+            System.out.println("--------invitation----------");
+
+
+
             Invitation invitation = new Invitation();
-            String inviter = "inviter";
             invitation.setEtat(EtatEnum.inviter);
             invitation.setId_mission(m);
-            // invitation.setId_notification(1);
+             invitation.setId_notification(rtn.getInt(1));
             invitation.setId_user(checkedList.get(i));
-            sti.setInt(1, rs.getInt(1));
+            PreparedStatement sti = connection.prepareStatement("INSERT INTO invitation " +
+                            "(`id_mission`, " +
+                            "`id_user`," +
+                            "`etat`," +
+                            "`id_notification`)" +
+                            "VALUES (?,?,?,?)"
+                    , Statement.RETURN_GENERATED_KEYS
+            );
+            sti.setInt(1,  invitation.getId_mission().getId());
             sti.setInt(2, invitation.getId_user().getId());
+            sti.setString(3,invitation.getEtat().toString());
+            sti.setInt(4,invitation.getId_notification());
             // sti.setString(4,invitation.getEtat().toString());
             sti.executeUpdate();
         }
@@ -217,12 +265,16 @@ public class MissionService {
     }
 
 
+
+
     /**
      * @param newMembersList description : List of members to check with database
      * @param m              description Mission to invite members to
      */
-    public void inviteMembers(ArrayList<User> newMembersList, Mission m) {
+    public void inviteMembers(HashSet<User> newMembersList, Mission m) {
+        System.out.println("newMembersList : "+newMembersList);
         ArrayList<Integer> newMembersID = newMembersList.stream().map(User::getId).collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("newMembersID : "+newMembersID);
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id_user FROM invitation WHERE id_mission=?");
             preparedStatement.setInt(1, m.getId());
@@ -231,13 +283,13 @@ public class MissionService {
             while (resultSet.next()) {
                 invitedUsers.add(resultSet.getInt("id_user"));
             }
-            System.out.println("Already invited user : " + invitedUsers);
-            invitedUsers.removeAll(newMembersID);
-            System.out.println("Already invited - new : " + invitedUsers);
-            newMembersID.removeAll(invitedUsers);
-            System.out.println("Members to email and notify : " + newMembersID);
+           // System.out.println("Already invited user : " + invitedUsers);
+    //    newMembersID.removeAll(invitedUsers);
+      //      System.out.println("ToBeDeleted : "+newMembersID);
+
+          //  System.out.println("Members to email and notify : " + newMembersID);
             for (User member : newMembersList) {
-                if (newMembersID.contains(member.getId())) {
+                if (!invitedUsers.contains(member.getId())) {
                     PreparedStatement sti = connection.prepareStatement("INSERT INTO invitation (`id_mission`,`id_user` , `etat`) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
                     sti.setInt(1, m.getId());
                     sti.setInt(2, member.getId());
@@ -245,14 +297,20 @@ public class MissionService {
                     sti.executeUpdate();
                     sendMail.sendMail(member.getEmail(), m);
                     System.out.println("Emailing " + member.getEmail());
+
+                    //To do : Notif percisT
                 }
             }
-            for (int toRemove : invitedUsers) {
-                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM invitation WHERE id_user=?");
+       //      invitedUsers.removeAll(newMembersID);
+           // System.out.println(invitedUsers);
+          /*  for (int toRemove : invitedUsers) {
+
+                PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM invitation WHERE id_user=? AND id_mission=?");
                 deleteStatement.setInt(1, toRemove);
+                deleteStatement.setInt(2, m.getId());
                 deleteStatement.executeUpdate();
                 System.out.println("removed :" + toRemove);
-            }
+            }*/
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -15,6 +15,10 @@ import java.util.Date;
 
 public class Notification {
 
+    public Notification() {
+
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;

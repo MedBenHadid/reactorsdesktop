@@ -4,7 +4,9 @@ import Main.Entities.UserSession;
 import Main.Services.UserService;
 import Packages.Chihab.Models.Entities.Association;
 import Packages.Chihab.Services.AssociationService;
+import Packages.Mohamed.Entities.Mission;
 import Packages.Mohamed.Entities.Notification;
+import Packages.Mohamed.Entities.enums.EtatEnum;
 import SharedResources.Utils.Connector.ConnectionUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -21,9 +23,15 @@ public class NotificationService {
     private final Connection connection = ConnectionUtil.getInstance().getConn();
     private final Logger logger = Logger.getLogger(NotificationService.class.getName());
     private static NotificationService instance;
+    public ObservableMap<Integer, Notification> getDatabase() {
+        return database;
+    }
 
+    private final ObservableMap<Integer,Notification> database = FXCollections.observableHashMap();
+
+    //TODO : Sync dataBase
     private void init() throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM notification WHERE id_user = ?");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM notification WHERE id_user = ? AND seen = 0");
         preparedStatement.setInt(1, UserSession.getInstace().getUser().getId());
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
@@ -82,6 +90,33 @@ public class NotificationService {
                 records.remove(i);
             }
         };
+    }
+
+    public boolean AcceptMissionNotification(Notification n) throws SQLException {
+
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE invitation SET etat=? WHERE id_mission=? AND id_user=? AND id_notification=?");
+        preparedStatement.setString(1, String.valueOf(EtatEnum.accepter));
+        preparedStatement.setInt(2, n.getId_mission().getId());
+        preparedStatement.setInt(3, UserSession.getInstace().getUser().getId());
+        preparedStatement.setInt(4, n.getId());
+        PreparedStatement ps = connection.prepareStatement("UPDATE notification SET seen=1 WHERE id_mission=? AND id_user=?");
+        ps.setInt(1, n.getId_mission().getId());
+        ps.setInt(2, UserSession.getInstace().getUser().getId());
+        ps.executeUpdate();
+        return preparedStatement.executeUpdate() > 0;
+    }
+    public boolean RefuserMissionNotification(Notification n) throws SQLException {
+
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE invitation SET etat=? WHERE id_mission=? AND id_user=? AND id_notification=?");
+        preparedStatement.setString(1, String.valueOf(EtatEnum.réfuser));
+        preparedStatement.setInt(2, n.getId_mission().getId());
+        preparedStatement.setInt(3, UserSession.getInstace().getUser().getId());
+        preparedStatement.setInt(4, n.getId());
+        PreparedStatement ps = connection.prepareStatement("UPDATE notification SET seen=1 WHERE id_mission=? AND id_user=?");
+        ps.setInt(1, n.getId_mission().getId());
+        ps.setInt(2, UserSession.getInstace().getUser().getId());
+        ps.executeUpdate();
+        return preparedStatement.executeUpdate() > 0;
     }
 
     public ObservableMap<Integer, Notification> getRecords() {

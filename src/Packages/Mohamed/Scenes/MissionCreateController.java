@@ -227,7 +227,7 @@ public class MissionCreateController implements Initializable {
 
 
         createButton.setOnAction(e -> {
-
+//TODO : Validate Form
 
             try {
                 mission.setLat((double) window.getMember("lat"));

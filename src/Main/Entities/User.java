@@ -59,19 +59,6 @@ public class User extends RecursiveTreeObject<User> {
         this.profile = profile;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return getId() == user.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
-
     public int getId() {
         return id;
     }
@@ -145,6 +132,19 @@ public class User extends RecursiveTreeObject<User> {
     }
     public User() {
         this.profile = new Profile();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public void removeRole(RoleEnum role) {

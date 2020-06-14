@@ -18,8 +18,10 @@ import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,6 +40,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import netscape.javascript.JSObject;
 import org.apache.commons.net.ftp.FTP;
 
 import java.io.File;
@@ -45,10 +48,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,11 +80,12 @@ public class MissionProfileUpdateController extends StackPane implements Initial
     private File photo;
     final  ObservableList<User> users =FXCollections.observableArrayList();
     final ArrayList<Invitation> InviMember=new ArrayList<>();
-    final ArrayList<User> invitedUsers = new ArrayList<>();
+    final HashSet<User> invitedUsers = new HashSet<>();
     public MissionProfileUpdateController(Mission mission) throws IOException {
         this.mission = mission;
         try {
             InviMember.addAll(MissionService.getInstace().getInvitationsByMission(mission));
+           // System.out.println("List InviMember :"+InviMember);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,11 +104,15 @@ public class MissionProfileUpdateController extends StackPane implements Initial
         BooleanBinding descriptionFieldValid = Bindings.createBooleanBinding(() -> descriptionInput.getText().isBlank(), descriptionInput.textProperty());
         BooleanBinding adresseFieldValid = Bindings.createBooleanBinding(() -> rueValidCheck(adresseInput.getText()), adresseInput.textProperty());
         dateFin.valueProperty().addListener((e,r,event) -> {
-            if (dateDeb.getValue().compareTo(dateFin.getValue()) != -1) {
-                dialog(new Label("La date de fin mission doit etre supérieur à date fin"), "Invalid date").show();
+            if (dateDeb.getValue().isAfter(dateFin.getValue())) {
+                dialog(new Label("La date de fin mission doit etre supérieur à date début"), "Invalid date").show();
             } else {
-                mission.setDateFin((java.sql.Date) Date.from(Instant.from(dateFin.getValue())));
-                mission.setDateCreation((java.sql.Date) Date.from(Instant.from(dateDeb.getValue())));
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+
+
+                mission.setDateFin(new java.sql.Date(Date.from(dateFin.getValue().atStartOfDay(defaultZoneId).toInstant()).getTime()));
+                mission.setDateCreation(new java.sql.Date(Date.from(dateDeb.getValue().atStartOfDay(defaultZoneId).toInstant()).getTime()));
+                System.out.println(mission.getDateFin());
             }
         });
         descriptionInput.setText(mission.getDescription());
@@ -164,17 +170,18 @@ public class MissionProfileUpdateController extends StackPane implements Initial
             Logger.getLogger(MissionCreateController.class.getName()).log(Level.SEVERE, null, e);
         }
 
-        /**gmapWebView.getEngine().load(this.getClass().getResource("/Packages/MohamedM/Scenes/WebView/showAndModifyMissionLocation.html").toString());
+        System.out.println(mission.getLon()+"----"+mission.getLat());
+        gmapWebView.getEngine().load(this.getClass().getResource("/Packages/Mohamed/Scenes/WebView/showAndModifyMissionLocation.html").toString());
         gmapWebView.getEngine().getLoadWorker().stateProperty().addListener(
                 (ChangeListener<? super Worker.State>) (observable, oldValue, newValue) -> {
                     if (newValue == Worker.State.SUCCEEDED) {
                         gmapWebView.setVisible(true);
                         gmapWebView.getEngine().executeScript("initMap(" + mission.getLat() + "," + mission.getLon() + ")");
                         JSObject window = (JSObject) gmapWebView.getEngine().executeScript("window");
-                        window.setMember("mission", mission);
+                        window.setMember("association", mission);
                     }
                 }
-        );*/
+        );
         ObservableList<JFXTextField> textFields = FXCollections.observableArrayList();
         textFields.add(adresseInput);
 
@@ -184,7 +191,7 @@ public class MissionProfileUpdateController extends StackPane implements Initial
             });
         }
 
-        validateButton.disableProperty().bind(descriptionFieldValid.or(adresseFieldValid));
+       // validateButton.disableProperty().bind(descriptionFieldValid.or(adresseFieldValid));
         validateButton.setOnAction(actionEvent -> {
             mission.setLocation(vComboBox.getSelectionModel().getSelectedItem() + " " + adresseInput.getText());
             mission.setDescription(descriptionInput.getText());
@@ -238,9 +245,11 @@ public class MissionProfileUpdateController extends StackPane implements Initial
                         profilePicture.setFitHeight(30);
                         checkbox.setDisable(true);
                         if (item != null && !empty) {
-                            InviMember.forEach(invi -> {if(invi.getId_user().getId()==item.getId()){
+                            InviMember.forEach(invi -> {
+                                if(invi.getId_user().getId()==item.getId()){
                                 checkbox.setSelected(true);
                                 invitedUsers.add(item);
+                                System.out.println("added : "+item);
                             }
                             });
                             username.setText(item.getUsername());
@@ -255,6 +264,7 @@ public class MissionProfileUpdateController extends StackPane implements Initial
                                 checkbox.setSelected(!checkbox.isSelected());
                                 if(checkbox.isSelected()){
                                     invitedUsers.add(item);
+                                   // System.out.println(invitedUsers.get(invitedUsers.indexOf(item)));
                                 }else{
                                     invitedUsers.remove(item);
                                 }
@@ -333,6 +343,7 @@ public class MissionProfileUpdateController extends StackPane implements Initial
         confirmDelete.setOnMouseClicked(event -> {
             try {
                 if (MissionService.getInstace().delete(mission)) {
+                    dialog.close();
                     MissionController.getDialog().close();
                 } else {
                     System.out.println("Couldnt delete");

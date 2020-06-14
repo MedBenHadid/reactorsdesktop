@@ -2,40 +2,41 @@ package Packages.Mohamed.Scenes;
 
 import Main.Entities.User;
 import Main.Entities.UserSession;
+import Packages.Chihab.Models.Entities.Association;
 import Packages.Mohamed.Entities.Mission;
 import Packages.Mohamed.Entities.Notification;
-import Packages.Mohamed.Scenes.MissionProfileUpdateController;
 import Packages.Mohamed.Services.MissionService;
 import Packages.Mohamed.Services.NotificationService;
 import SharedResources.URLScenes;
+import SharedResources.URLServer;
+import SharedResources.Utils.FTPInterface.FTPInterface;
 import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import org.apache.commons.net.ftp.FTP;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,13 +48,11 @@ public class MissionController implements Initializable {
     @FXML
     private TableView<Mission> missionTableView;
     @FXML
-    private TableColumn<Mission, Mission> deleteOption;
-    @FXML
     private TableColumn<Mission, String> TitleCol, descCol, locationCol, domaineCol;
     @FXML
-    private TableColumn<Mission, Float> SumCollectedCol, objectifCol;
+    private TableColumn<Mission, Double> SumCollectedCol, objectifCol;
     @FXML
-    private TableColumn<Mission, Number> idCol, upsCol;
+    private TableColumn<Mission, Number> upsCol;
     @FXML
     private TableColumn<User, String> managerCol;
     @FXML
@@ -62,31 +61,21 @@ public class MissionController implements Initializable {
     private TextField inputName, inputCity;
     @FXML
     private Label size;
-
     @FXML
     Button addButton,notifbtn;
     @FXML
-    private JFXNodesList notifNodesList;
-    @FXML
     private JFXListView<Notification> notifListView;
-    @FXML
-    private StackPane NotifStackPane;
     private final JFXDialogLayout layout = new JFXDialogLayout();
     private final JFXButton close = new JFXButton("Fermer");
     private static JFXDialog dialog;
+    private int k =-1;
 
-    int k =-1;
-
-    public MissionController() {
-        //dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
-    }
     public static JFXDialog getDialog() {
         return dialog;
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
-        // TODO 1: Based on role, disable { addButton, idCol's view, deleteOption, managerCol, statusCol}
         //addButton.setVisible(UserSession.getInstace().getUser().isAssociationAdmin());
         missionTableView.itemsProperty().bind(Bindings.createObjectBinding(() -> MissionService.getInstace().getDatabase().values().stream().filter(mission -> {
             boolean test = true;
@@ -97,8 +86,7 @@ public class MissionController implements Initializable {
                 test = test && mission.getLocation().contains(inputCity.getText());
             }
             return test;
-        }).collect(Collectors.toCollection(FXCollections::observableArrayList)),inputName.textProperty(),inputCity.textProperty()));
-
+        }).collect(Collectors.toCollection(FXCollections::observableArrayList)),MissionService.getInstace().getDatabase(),inputName.textProperty(),inputCity.textProperty()));
         TitleCol.setCellValueFactory(new PropertyValueFactory<>("TitleMission"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
@@ -109,16 +97,11 @@ public class MissionController implements Initializable {
         DateCreationCol.setCellValueFactory(new PropertyValueFactory<>("DateCreation"));
         DateFinCol.setCellValueFactory(new PropertyValueFactory<>("DateFin"));
         upsCol.setCellValueFactory(new PropertyValueFactory<>("ups"));
-        /**
-         * Start of Super Admin section
-         */
-        deleteOption.setVisible(true);
-        idCol.setVisible(true);
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+
         TitleCol.setCellFactory(TextFieldTableCell.forTableColumn());
         descCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        //  SumCollectedCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        // objectifCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        // SumCollectedCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        objectifCol.setCellFactory(this::objectiveSliderCallBack);
         //DateCreationCol.setCellFactory(TextFieldTableCell.forTableColumn());
         //DateFinCol.setCellFactory(DateTableCell.forTableColumn());
 
@@ -164,45 +147,6 @@ public class MissionController implements Initializable {
                 }
         );
 */
-
-        // Update section
-        // Delete section
-        deleteOption.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-        deleteOption.setCellFactory(param -> new TableCell<>() {
-            private final Button deleteButton = new Button("Supprimer");
-
-            @Override
-            protected void updateItem(Mission a, boolean empty) {
-                super.updateItem(a, empty);
-                if (a == null) {
-                    setGraphic(null);
-                    return;
-                }
-                setGraphic(deleteButton);
-                deleteButton.setOnAction(event -> {
-                    Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
-                    confirmationDialog.setTitle("Suppression");
-                    confirmationDialog.setHeaderText("Vous aller supprimer la mission " + a.getTitleMission() + "!");
-                    confirmationDialog.setContentText("Etes vous sure?");
-                    Optional<ButtonType> confirmationResult = confirmationDialog.showAndWait();
-                    if (confirmationResult.isPresent())
-                        if (confirmationResult.get() == ButtonType.OK)
-                            try {
-                                MissionService.getInstace().delete(a);
-                                missionTableView.getItems().remove(a);
-                                showDialog(Alert.AlertType.CONFIRMATION, "", "", "Mission supprimée !!");
-                            } catch (SQLException e) {
-                                Logger.getLogger(
-                                        MissionController.class.getName()).log(
-                                        Level.INFO, null, e
-                                );
-                                showDialog(Alert.AlertType.ERROR, "Suppression échoué", "Raison : Reference", "Domaine ne peut pas étre supprimé!");
-                            }
-                });
-            }
-        });
-
-
         // Profile Section
         missionTableView.setRowFactory(tv -> {
             TableRow<Mission> row = new TableRow<>();
@@ -211,25 +155,14 @@ public class MissionController implements Initializable {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Mission rowData = row.getItem();
                     FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.missionProfile));
-
                     MissionProfileController controller = new MissionProfileController(rowData);
                     loader.setController(controller);
-
-                    StackPane createMission = null;
                     try {
-                        createMission = loader.load();
+                        StackPane createMission = loader.load();
+                        dialog(createMission,"Mission :" + rowData.getTitleMission()).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    JFXDialogLayout layout = new JFXDialogLayout();
-                    layout.setBody(createMission);
-                    layout.setHeading(new Text("Mission :" + rowData.getTitleMission()));
-                    JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
-                    JFXButton close = new JFXButton("Annuler");
-                    close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
-                    layout.setActions(close);
-                    dialog.show();
-
                 }
                 }else{
                  try {
@@ -237,81 +170,83 @@ public class MissionController implements Initializable {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    /*   Mission rowData = row.getItem();
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.missionUpdate));
-
-                    MissionProfileUpdateController controller = null;
-
-                    loader.setController(controller);
-
-                    StackPane update = null;
-                    try {
-                        update = loader.load();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    JFXDialogLayout layout = new JFXDialogLayout();
-                    layout.setBody(update);
-                    layout.setHeading(new Text("Mission :" + rowData.getTitleMission()));
-                    JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
-                    JFXButton close = new JFXButton("Annuler");
-                    close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
-                    layout.setActions(close);
-                    dialog.show();*/
-
-
                 }
-
             });
             return row;
         });
-
-
-
-        // Profile Section
-        // Add Mission section
         addButton.setOnAction(e -> {
             try {
-                //AnchorPane createMission = FXMLLoader.load(getClass().getResource("/Packages/Mohamed/Scenes/MissionCreate.fxml"));
-                JFXDialogLayout layout = new JFXDialogLayout();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.missionCreate));
                 AnchorPane createMission = loader.load();
-                JFXDialog dialog = new JFXDialog(rootStackPane, layout, JFXDialog.DialogTransition.CENTER);
-                JFXButton close = new JFXButton("Cancel");
-                JFXButton foo = (JFXButton) loader.getNamespace().get("createButton");
-                foo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    dialog.close();
-                });
-                layout.setBody(createMission);
-                layout.setHeading(new Text("Ajout d'une nouvelle mission"));
-
-                close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
-                layout.setActions(close);
-                dialog.show();
-
-
+                dialog(createMission,"Creation d'une nouvelle mission :").show();
             } catch (IOException ex) {
-
-                Logger.getLogger(
-                        MissionController.class.getName()).log(
-                        Level.WARNING, null, e
-                );
-                ex.printStackTrace();
+                Logger.getLogger(MissionController.class.getName()).log(Level.WARNING, null, e);
             }
         });
         notifListView.itemsProperty().bind(Bindings.createObjectBinding(() ->NotificationService.getInstance().getRecords().values().stream().collect(Collectors.toCollection(FXCollections::observableArrayList)),NotificationService.getInstance().getRecords()));
         notifListView.setCellFactory(new Callback<>() {
             @Override
             public ListCell<Notification> call(ListView<Notification> param) {
+                final HBox actionsContainer = new HBox();
+                final VBox infoContainer = new VBox();
+                final ImageView assProfile = new ImageView();
+                final JFXButton deny = new JFXButton("Deny");
+                final JFXButton accept = new JFXButton("Accepter");
+                final Label missionName = new Label();
+                final Label missionDescription = new Label();
                 return new JFXListCell<>() {
                     @Override
                     public void updateItem(Notification item, boolean empty) {
+
+                        //TODO:sync notif and test
                         super.updateItem(item, empty);
+                        assProfile.setFitHeight(20);
+                        assProfile.setFitWidth(20);
+                        infoContainer.setAlignment(Pos.CENTER);
+                        actionsContainer.setAlignment(Pos.CENTER);
+                        accept.setStyle("-fx-background-color: green");
+                        deny.setStyle("-fx-background-color: red");
                         if (item != null && !empty) {
                             setOnMouseClicked(event -> {
                                 rootStackPane.getChildren().get(0).setViewOrder(0);
                                 k=-1;
-                                //TODO : Show popup dialog.
+                                try {
+                                    assProfile.setImage(new Image(Objects.requireNonNull(FTPInterface.getInstance().downloadFile(URLServer.associationImageDir + item.getId_association().getPhotoAgence(), FTP.BINARY_FILE_TYPE)).toURI().toString()));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                missionName.setText("Titre :"+item.getTitle());
+                                missionDescription.setText("Description de l'evenement :"+item.getDescription());
+                                accept.setOnMouseClicked(event1 -> {
+                                    try {
+                                        if ( NotificationService.getInstance().AcceptMissionNotification(item)){
+                                            dialog.close();
+                                            showDialog(Alert.AlertType.INFORMATION, "Mission accépter", "", "\"Merci pour votre acceptation ! \"");
+
+                                        }
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+                                    dialog.close();
+                                });
+                                deny.setOnMouseClicked(event1 -> {
+
+                                    try {
+                                        if (NotificationService.getInstance().RefuserMissionNotification(item)){
+                                            dialog.close();
+                                            showDialog(Alert.AlertType.INFORMATION, "Mission réfuser", "", "\"Merci pour votre réponse ! \"");
+                                        }
+
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                });
+                                actionsContainer.getChildren().addAll(accept,deny);
+                                infoContainer.getChildren().addAll(assProfile,missionName,missionDescription,actionsContainer);
+                                dialog(infoContainer,"Responding to :" + item.getId_mission().getTitleMission()).show();
                             });
                             setGraphic(new NotificationItemController(item));
                             setText("");
@@ -325,27 +260,29 @@ public class MissionController implements Initializable {
             rootStackPane.getChildren().get(0).setViewOrder(k);
             k = k==-1 ? 0 : -1 ;
         });
-        // Add Mission section
-        /**
-         * End of Super Admin section
-         */
-        // Search by name bindings
         TextFields.bindAutoCompletion(inputName, missionTableView.getItems().stream().map(Mission::getTitleMission).toArray());
-
-        // Search by city bindings
         TextFields.bindAutoCompletion(inputCity, missionTableView.getItems().stream().map(Mission::getLocation).toArray());
-
-
-
-
-
-
-
-        // TODO : Search by manager
-        // TODO : Client view of Mission list, render items inside HBox whilst passing Mission instance to that item, i hope you fucker know what i'm talking about when you wake up
-        // Label for displaying number of current Mission bindings
         size.textProperty().bind(Bindings.size((missionTableView.getItems())).asString("Missions : %d"));
+    }
 
+    private TableCell<Mission, Double> objectiveSliderCallBack(TableColumn<Mission, Double> missionFloatTableColumn){
+        return new TableCell<>() {
+            JFXSlider progressSlider = new JFXSlider();
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null && empty) {
+                    setText("");
+                    setGraphic(null);
+                } else {
+                    progressSlider.setDisable(true);
+                    progressSlider.setMax(getTableRow().getItem().getObjectif());
+                    progressSlider.setValue(getTableRow().getItem().getSumCollected());
+                    setText("Somme collecté");
+                    setGraphic(progressSlider);
+                }
+            }
+        };
     }
 
 

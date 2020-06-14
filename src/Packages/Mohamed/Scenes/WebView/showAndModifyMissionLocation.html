@@ -30,6 +30,12 @@
             zoom: 10,
             center: myLatLng
         });
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: 'Emplacement Mission',
+            draggable: true
+        });
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -38,13 +44,8 @@
                     lng: position.coords.longitude
                 };
 
-                map.setCenter(pos);
-                var marker = new google.maps.Marker({
-                    position: pos,
-                    map: map,
-                    title: 'Emplacement Mission',
-                    draggable: true
-                });
+
+
                 google.maps.event.addListener(marker, 'dragend', function (evt) {
                     $('#emplacement_lat').val(evt.latLng.lat());
                     $('#emplacement_lng').val(evt.latLng.lng());
@@ -59,7 +60,7 @@
                 var marker = new google.maps.Marker({
                     position: myLatLng,
                     map: map,
-                    title: 'Emplacement Mission',
+                    title: 'Emplacement mission',
                     draggable: true
                 });
                 google.maps.event.addListener(marker, 'dragend', function (evt) {
@@ -75,7 +76,7 @@
             var marker = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
-                title: 'Emplacement Mission',
+                title: 'Emplacement mission',
                 draggable: true
             });
             google.maps.event.addListener(marker, 'dragend', function (evt) {
