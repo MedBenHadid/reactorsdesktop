@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXRippler?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-<VBox fx:id="v" alignment="TOP_CENTER" stylesheets="@styles.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
+<VBox fx:id="v" alignment="TOP_CENTER" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #03DAC6;">
       <JFXButton fx:id="profile" text="Profile" />
       <JFXButton fx:id="logout" text="Log-out" />
@@ -33,7 +40,7 @@
                   <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                </VBox.margin>
             </JFXButton>
-            <JFXButton buttonType="RAISED" ripplerFill="#a186bd" text="Dons">
+            <JFXButton fx:id="donButton" buttonType="RAISED" ripplerFill="#a186bd" text="Dons">
                <VBox.margin>
                   <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                </VBox.margin>

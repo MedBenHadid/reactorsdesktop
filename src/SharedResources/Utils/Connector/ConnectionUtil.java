@@ -38,7 +38,7 @@ public class ConnectionUtil {
             conn = DriverManager.getConnection(URLServer.DATABASE_DRIVER + URLServer.DATABASE_HOST + URLServer.DATABASE_PORT + URLServer.DATABASE_NAME + URLServer.DATABASE_UTC_SUPPORT, URLServer.DATABASE_USERNAME, URLServer.DATABASE_PASSWORD);
             statement = conn.createStatement();
         } catch (SQLException e) {
-            logger.log(Level.INFO, "Error whilst connecting to database : Retrying in 20 : REASON :", e.getSQLState());
+            logger.log(Level.INFO, "Error whilst connecting to database : Retrying in 20 : REASON :", e);
         }
     }
 
@@ -48,7 +48,7 @@ public class ConnectionUtil {
     public static synchronized ConnectionUtil getInstance(){
         if ( instance == null ) {
             instance = new ConnectionUtil();
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(20), ev -> {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), ev -> {
                 if(conn==null||statement==null){
                     instance= new ConnectionUtil();
                     System.out.println("Attempting to reconnect");

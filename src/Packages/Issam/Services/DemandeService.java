@@ -1,11 +1,13 @@
 package Packages.Issam.Services;
 
+import Packages.Chihab.Services.CategoryService;
 import Packages.Issam.Models.Demande;
+import Packages.Issam.Models.Don;
+import SharedResources.Utils.Connector.ConnectionUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,66 +16,80 @@ public class DemandeService {
     private static DemandeService instance;
     private Connection connection;
 
-    public void ajouter(Demande d) {
-        String sql = "INSERT INTO association " +
-                "(`id`, " +
-                "`domaine_id`, " +
-                "`user_id`, " +
-                "`title`, " +
-                "`description`, " +
-                "`address`, " +
-                "`phone`, " +
-                "`ups`, " +
-                "`creationDate`, " +
-                "`rib`, " +
-                "`latitude`, " +
-                "`longitude`, " +
-                "`image`, " +
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement st;
-        try {
-            st = connection.prepareStatement(sql);
-            st.setInt(1, d.getId());
-            st.setInt(2, d.getCategory());
-            st.setInt(3, d.getUser());
-            st.setString(4, d.getTitle());
-            st.setString(5, d.getDescription());
-            st.setString(6, d.getAddress());
-            st.setString(7, d.getPhone());
-            st.setInt(8, d.getUps());
-            st.setString(9, d.getCreationDate());
-            st.setString(10, d.getRib());
-            st.setDouble(11, d.getLat());
-            st.setDouble(12, d.getLon());
-            st.setString(15, d.getRib());
-            st.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public DemandeService(){
+        connection = ConnectionUtil.getInstance().getConn(); }
+
+
+        public static DemandeService getInstance(){
+            if (instance == null) {
+                instance = new DemandeService();
+            }
+            return instance;
         }
+
+    public ObservableList<Demande> readAll() throws SQLException {
+        ObservableList<Demande> demandeItems = FXCollections.observableArrayList();
+        String req = "SELECT * FROM demande";
+        PreparedStatement preparedStatement;
+        preparedStatement = connection.prepareStatement(req);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            demandeItems.add(resultSetToDemande(resultSet));
+            System.out.println("dsqdsqdqsd");
+            System.out.println(demandeItems);
+        }
+        return demandeItems;
+    }
+
+    public int create(Demande demande ) throws SQLException {
+        PreparedStatement st = connection.prepareStatement("INSERT INTO demande (domaine_id,Title,Description,address,phone ,rib, image) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        st.setInt(1, demande.getCategory().getId());
+        st.setString(2, demande.getTitle());
+        st.setString(3, demande.getDescription());
+        st.setString(4,demande.getAddress());
+        st.setString(5,demande.getPhone());
+        st.setString(6, demande.getRib());
+        st.setString(7 , demande.getImage());
+        st.executeUpdate();
+        ResultSet rs = st.getGeneratedKeys();
+        if (rs.next())
+            return rs.getInt(1);
+        return 0;
     }
 
 
-    public List<Demande> afficher() {
-        List<Demande> list = new ArrayList<>();
+    public void update(Demande demande) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE demande SET Title=?,Description=?,address=?,phone=?,rib=?  WHERE id=?");
+        preparedStatement.setString(1, demande.getTitle());
+        preparedStatement.setString(2, demande.getDescription());
+        preparedStatement.setString(3, demande.getAddress());
+        preparedStatement.setString(4, demande.getPhone());
+        preparedStatement.setString(5, demande.getRib());
+        preparedStatement.setInt(6, demande.getId());
 
-        try {
-            String requete = "SELECT * FROM personne";
-            PreparedStatement pst = connection.prepareStatement(requete);
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                list.add(new Demande(rs.getInt(1), rs.getInt(2), rs.getString(3)
-                        , rs.getString(4), rs.getString(5),
-                        rs.getString(6), rs.getString(7),
-                        rs.getInt(8), rs.getDouble(9),
-                        rs.getDouble(10), rs.getString(11),
-                        rs.getInt(12), rs.getString(13)));
-                System.out.println();
-            }
+        preparedStatement.executeUpdate();
+    }
 
-        } catch (SQLException ex) {
-            System.err.println(ex.getMessage());
-        }
+    public void delete(Demande demande) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM demande WHERE id=?");
+        preparedStatement.setInt(1, demande.getId());
+        preparedStatement.executeUpdate();
+    }
 
-        return list;
+    Demande resultSetToDemande(ResultSet rs) throws SQLException {
+        Demande demande = new Demande();
+
+            demande.setId(rs.getInt("id"));
+            demande.setTitle(rs.getString("Title"));
+            demande.setDescription(rs.getString("Description"));
+            demande.setAddress(rs.getString("address"));
+            demande.setPhone(rs.getString("phone"));
+            demande.setCreationDate(rs.getString("creationDate"));
+            demande.setRib(rs.getString("rib"));
+            demande.setImage(rs.getString("image"));
+            demande.setCategory(CategoryService.getInstace().readById(rs.getInt("domaine_id")));
+            demande.setUser(rs.getInt("user_id"));
+
+        return demande;
     }
 }

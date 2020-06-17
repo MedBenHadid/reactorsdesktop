@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Reactors FX : Map view</title>
+    <script src="jquery-2.1.0.min.js"></script>
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #wrapper {
+            min-height: 100%;
+        }
+    </style>
+</head>
+<body class="full">
+<div style="height:100%">
+    <div id="map" style="height:100%"></div>
+    <input id="lat_don" name="lat_don" type="hidden"/>
+    <input id="lng_don" name="lng_don" type="hidden"/>
+</div>
+<p hidden id="lat"></p>
+<p id="lon"></p>
+<script>
+
+    function initMap() {
+        var myLatLng = {lat: 36.772315, lng: 10.0375315};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            center: myLatLng
+        });
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: 'Emplacement don',
+            draggable: true
+        });
+        google.maps.event.addListener(marker, 'dragend', function (evt) {
+            document.getElementById('lat_don').value = evt.latLng.lat();
+            document.getElementById('lng_don').value = evt.latLng.lng();
+            window.lat = evt.latLng.lat();
+            window.lon = evt.latLng.lng();
+            //document.getElementById('current').innerHTML = '<p>Marker dropped: Current Lat: ' + evt.latLng.lat().toFixed(3) + ' Current Lng: ' + evt.latLng.lng().toFixed(3) + '</p>';
+        });
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                map.setCenter(pos);
+                var marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: 'Emplacement don',
+                    draggable: true
+                });
+                google.maps.event.addListener(marker, 'dragend', function (evt) {
+                    $('#emplacement_lat').val(evt.latLng.lat());
+                    $('#emplacement_lng').val(evt.latLng.lng());
+                    document.getElementById('lat_don').value = evt.latLng.lat();
+                    document.getElementById('lng_don').value = evt.latLng.lng();
+
+
+                });
+            }, function () {
+                //handleLocationError(true, infoWindow, map.getCenter());
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: 'Emplacement don',
+                    draggable: true
+                });
+                google.maps.event.addListener(marker, 'dragend', function (evt) {
+                    document.getElementById('lat_don').value = evt.latLng.lat();
+                    document.getElementById('lng_don').value = evt.latLng.lng();
+                    console.log(document.getElementById('lng_don').value);
+                });
+                alert('Error: The Geolocation service failed.');
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            //handleLocationError(false, infoWindow, map.getCenter());
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                title: 'Emplacement don',
+                draggable: true
+            });
+            google.maps.event.addListener(marker, 'dragend', function (evt) {
+                document.getElementById('lat_don').value = evt.latLng.lat();
+                document.getElementById('lng_don').value = evt.latLng.lng();
+                window.lat = evt.latLng.lat();
+                window.lon = evt.latLng.lng();
+                //document.getElementById('current').innerHTML = '<p>Marker dropped: Current Lat: ' + evt.latLng.lat().toFixed(3) + ' Current Lng: ' + evt.latLng.lng().toFixed(3) + '</p>';
+            });
+            alert('Error: The Geolocation service failed.');
+        }
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.');
+    }
+
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD00UW-yFHi17pDyHLe19_ImRpo0ja5Q3k&callback=initMap">
+</script>
+</body>
+</html>

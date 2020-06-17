@@ -50,4 +50,16 @@ public class URLScenes {
     // Ramy
     final public static String Requetefxml = "/Packages/Ramy/views/Requete.fxml";
 
+
+    //issam
+    final  public  static String donCreate = "/Packages/Issam/Scenes/DonCreate.fxml";
+    final  public  static String demandeCreate = "/Packages/Issam/Scenes/DemandeCreate.fxml";
+    final public static String donProfile = "/Packages/Issam/Scenes/DonProfileShow.fxml";
+    final public static String demandeProfile = "/Packages/Issam/Scenes/DemandeProfileShow.fxml";
+
+    final public static  String donUpdate = "/Packages/Issam/Scenes/DonUpdate.fxml";
+    final public static  String donMain = "/Packages/Issam/Scenes/mainUser.fxml";
+    final public static String donDash ="/Packages/Issam/Scenes/Don.fxml";
+
+
 }

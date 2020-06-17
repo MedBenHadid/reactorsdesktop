@@ -1,3 +1,4 @@
+/*
 package Packages.Nasri.ui.controllers.admin;
 
 import Packages.Nasri.entities.HebergementOffer;
@@ -812,3 +813,4 @@ public class MainController implements Initializable {
         loadRequestsTable(models);
     }
 }
+*/
