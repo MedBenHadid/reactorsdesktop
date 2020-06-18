@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -29,7 +30,8 @@ public class AuthLayout extends Application implements Initializable {
     @FXML private VBox mainVBox;
     @FXML private ImageView logo;
     private final Parent login = FXMLLoader.load(getClass().getResource(URLScenes.login));
-    private final AssociationCreateController register = new AssociationCreateController();
+    private final Parent register = FXMLLoader.load(getClass().getResource(URLScenes.register));
+    private final AssociationCreateController registerAss = new AssociationCreateController();
     private final FadeTransition ft = new FadeTransition(Duration.millis(1500));
     private double xOffset = 0;
     private double yOffset = 0;

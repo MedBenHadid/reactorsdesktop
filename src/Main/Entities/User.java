@@ -91,7 +91,7 @@ public class User extends RecursiveTreeObject<User> {
         this.last_login = last_login;
     }
 
-    public User(String email, String username, String password) {
+    public User(String email, String username, String password, String profileImage) {
         this.email = email;
         this.username = username;
         this.password = password;
@@ -100,6 +100,7 @@ public class User extends RecursiveTreeObject<User> {
         this.roles = new MixedArray();
         this.roles.put(0, RoleEnum.ROLE_CLIENT);
         this.profile = new Profile();
+        this.profile.setImage(profileImage);
     }
     public void setApprouved(Boolean approuved) {
         this.approuved = approuved;

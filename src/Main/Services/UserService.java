@@ -18,10 +18,10 @@ public class UserService {
     // TODO : Update
     private final Connection connection = ConnectionUtil.getInstance().getConn();
 
-    public UserService() throws SQLException {
+    public UserService() {
     }
 
-    public static UserService getInstace() throws SQLException {
+    public static UserService getInstace(){
         if(instance == null) {
             instance = new UserService();
         }
@@ -79,8 +79,9 @@ public class UserService {
         return u;
     }
 
-    public int create(User u) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("insert into user (username,username_canonical,email,email_canonical,enabled,password,roles,banned) values (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+    public int create(User u) {
+        try{
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into user (username,username_canonical,email,email_canonical,enabled,password,roles,banned,image) values (?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, u.getUsername());
         preparedStatement.setString(2, u.getUsername());
         preparedStatement.setString(3, u.getEmail());
@@ -89,11 +90,15 @@ public class UserService {
         preparedStatement.setString(6, u.getPassword());
         preparedStatement.setString(7, Pherialize.serialize(u.getRoles()));
         preparedStatement.setBoolean(8, u.getBanned());
+        preparedStatement.setString(9, u.getProfile().getImage());
         preparedStatement.executeUpdate();
 
         ResultSet rs = preparedStatement.getGeneratedKeys();
         if (rs.next())
             return rs.getInt(1);
+        }catch(SQLException e){
+            System.out.println(e);
+        }
         return -1;
     }
 

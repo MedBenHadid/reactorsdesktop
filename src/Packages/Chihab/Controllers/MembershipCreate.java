@@ -132,7 +132,7 @@ public class MembershipCreate implements Initializable {
                             User newUser=null;
                             try {
                                 String passwordPlain = UUID.randomUUID().toString().substring(0, 8);
-                                newUser = new User(emailInput.getText(), emailInput.getText().substring(0, emailInput.getText().indexOf("@")), BCrypt.hashpw(passwordPlain, BCrypt.gensalt(13)));
+                                newUser = new User(emailInput.getText(), emailInput.getText().substring(0, emailInput.getText().indexOf("@")), BCrypt.hashpw(passwordPlain, BCrypt.gensalt(13)),"user.png");
                                 newUser.removeRole(RoleEnum.ROLE_CLIENT);
                                 newUser.getProfile().setImage("user.png");
                                 newUser.setId(UserService.getInstace().create(newUser));
