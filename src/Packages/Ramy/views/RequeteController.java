@@ -1,11 +1,13 @@
 package Packages.Ramy.views;
 
+import Main.Entities.UserSession;
 import Packages.Ramy.Models.Requete;
 import Packages.Ramy.Models.Rponse;
 import Packages.Ramy.Services.RequeteService;
 import Packages.Ramy.Services.RponseService;
 import SharedResources.Utils.Connector.ConnectionUtil;
 import com.jfoenix.controls.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -18,7 +20,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import tray.animations.AnimationType;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -32,11 +39,10 @@ public class RequeteController implements Initializable {
 
     ObservableList<String> listt = FXCollections.observableArrayList("Question générale sur Reactors", "J'ai un problem concernant cette application", "Autre");
     ObservableList<String> l = FXCollections.observableArrayList("Question générale sur Reactors", "J'ai un problem concernant cette application", "Autre");
-    ObservableList<Requete> oblist = FXCollections.observableArrayList();
     @FXML
     private TableView<Requete> catTV;
     @FXML
-    private TableColumn<Requete, Requete> deleteOption, addrep;
+    private TableColumn<Requete, Requete> deleteOption, addrep,getrep, upreq;
     @FXML
     private TableColumn<Requete, String> nomCol, descCol;
     @FXML
@@ -64,16 +70,24 @@ public class RequeteController implements Initializable {
 
         combobox.setItems(listt);
 
+        ResultSet rs;
+
+
+
         try {
-            ResultSet rs = connection.createStatement().executeQuery("select * from requete");
+            rs = connection.createStatement().executeQuery("select * from requete");
             while (rs.next()) {
-                oblist.add(new Requete(rs.getInt("id"), rs.getString("Sujet"), rs.getString("Description"), rs.getDate("DernierMAJ"), rs.getInt("Statut"), rs.getInt("Type")));
+                if(UserSession.getInstace().getUser().isAdmin())
+                    catTV.getItems().add(new Requete(rs.getInt("id"), rs.getString("Sujet"), rs.getString("Description"), rs.getDate("DernierMAJ"), rs.getInt("Statut"), rs.getInt("Type")));
+                if(!UserSession.getInstace().getUser().isAdmin() && rs.getInt("user_id")==UserSession.getInstace().getUser().getId())
+                    catTV.getItems().add(new Requete(rs.getInt("id"), rs.getString("Sujet"), rs.getString("Description"), rs.getDate("DernierMAJ"), rs.getInt("Statut"), rs.getInt("Type")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         //System.out.println("Hello world");
+
 
 
         nomCol.setCellValueFactory(new PropertyValueFactory<>("sujet"));
@@ -119,19 +133,137 @@ public class RequeteController implements Initializable {
             return cell;
         });
 
+        upreq.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        upreq.setCellFactory(param -> new TableCell<>() {
+            private final Button modButton = new Button("Modifier");
 
-        catTV.setItems(oblist);
+            @Override
+            protected void updateItem(Requete cat, boolean empty) {
+                super.updateItem(cat, empty);
+                if (cat == null) {
+                    setGraphic(null);
+                    return;
+                }
+                setGraphic(modButton);
+                modButton.setOnAction(event -> {
+                    JFXDialogLayout layout = new JFXDialogLayout();
+                    //layout.setHeading(new Text("Dissaproving association "+a.getNom()));
+                    VBox v = new VBox();
+                    JFXTextField tf = new JFXTextField();
+                    tf.setPromptText("Sujet");
+                    JFXTextArea tr = new JFXTextArea();
+                    tr.setPromptText("Nouvelle Description");
+                    v.getChildren().addAll(tf, tr);
+                    //tr.getValidators().add(new RegexValidator("La raison doit etre comprise entre 5 et 255","^[\\d\\w]{5,255}"));
+                    //tr.setOnKeyTyped(e->tr.validate());
+                    layout.setBody(v);
+                    JFXDialog dialog = new JFXDialog(rootStack, layout, JFXDialog.DialogTransition.CENTER);
+                    JFXButton verify = new JFXButton("Envoyer");
+                    JFXButton close = new JFXButton("Fermer");
+                    close.getStyleClass().addAll("jfx-button-error");
+                    close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+                    verify.disableProperty().bind(Bindings.createBooleanBinding(() -> !tr.textProperty().get().matches("^[\\d\\w\\s]{5,255}"), tr.textProperty()));
+                    verify.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                        Requete ri = new Requete();
+                        ri.setDescription(tr.getText());
+                        ri.setSujet(tf.getText());
+                        ri.setId(cat.getId());
+                        /*Rponse r = new Rponse();
+                        r.setUser(UserSession.getInstace().getUser().getId());
+                        r.setRating(2);
+                        r.setRequete(cat.getId());
+                        r.setSujet(tf.getText());
+                        r.setRep(tr.getText());
+                        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+                        r.setDate(sqlDate);
+                        System.out.println(r.getRequete());*/
+                        try {
+                            RequeteService rservice = new RequeteService();
+                            rservice.update(ri);
+                            Platform.runLater(() -> {
+                                        TrayNotification tray = new TrayNotification("Service", "Requete Modifier", NotificationType.SUCCESS);
+                                        //tray.setImage(reactorsLogo);
+                                        tray.setRectangleFill(Paint.valueOf("6200EE"));
+                                        tray.setAnimationType(AnimationType.POPUP);
+                                        tray.showAndDismiss(new Duration(1200));
+                                    }
+                            );
+                            /*RponseService rep = new RponseService();
+                            System.out.println(r.getId());
+                            rep.add(r);
+                            int l = rep.getidrep(r);
+                            r.setId(l);
+                            RequeteService req = new RequeteService();
+                            System.out.println(r.getId());
+                            Requete reqq = new Requete(1, r.getId(), "prob", "decri", sqlDate, 1, 2);
+                            reqq.setId(cat.getId());
+                            req.updaterponse(reqq);*/
 
-        /*typeCol.setCellFactory(ComboBoxTableCell.forTableColumn(
-                "Question générale sur Reactors","J'ai un problem concernant cette application","Autre"
-        ));
-        typeCol.setOnEditCommit(requeteStringCellEditEvent -> {
-            Requete r = catTV.getItems().get(requeteStringCellEditEvent.getTablePosition().getRow());
-            if (requeteStringCellEditEvent.getOldValue()!=requeteStringCellEditEvent.getNewValue()) {
-                System.out.println(requeteStringCellEditEvent.getNewValue());
+
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        } finally {
+                            dialog.close();
+                            JFXDialogLayout l = new JFXDialogLayout();
+                            //l.setHeading(new Text(a.getNom()+" : Approval"));
+                            l.setBody(new Label("Requete modifier"));
+                            JFXDialog d = new JFXDialog(rootStack, l, JFXDialog.DialogTransition.CENTER);
+                            JFXButton fermer = new JFXButton("Fermer");
+                            fermer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> d.close());
+                            l.setActions(fermer);
+                            d.show();
+                        }
+                    });
+                    layout.setActions(close, verify);
+                    dialog.show();
+                });
             }
-        });*/
-        //add2
+        });
+
+
+        getrep.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        getrep.setCellFactory(param -> new TableCell<>() {
+            private final Button repButton = new Button("Reponse");
+
+
+            @Override
+            protected void updateItem(Requete cat, boolean empty) {
+                super.updateItem(cat, empty);
+                if (cat == null) {
+                    setGraphic(null);
+                    return;
+                }
+                if (cat.getStatut() == 0) {
+                    repButton.setDisable(true);
+                }
+                setGraphic(repButton);
+                repButton.setOnAction(event -> {
+                    JFXDialogLayout layout = new JFXDialogLayout();
+                    //layout.setHeading(new Text("Dissaproving association "+a.getNom()));
+                    VBox v = new VBox();
+                    Label tf = new Label();
+                    RponseService re = new RponseService();
+                    tf.setText(re.getrepbyid(cat.getId()).getSujet());
+                    Label tr = new Label();
+                    tr.setText(re.getrepbyid(cat.getId()).getRep());
+                    v.getChildren().addAll(tf, tr);
+                    //tr.getValidators().add(new RegexValidator("La raison doit etre comprise entre 5 et 255","^[\\d\\w]{5,255}"));
+                    //tr.setOnKeyTyped(e->tr.validate());
+                    layout.setBody(v);
+                    JFXDialog dialog = new JFXDialog(rootStack, layout, JFXDialog.DialogTransition.CENTER);
+                    JFXButton close = new JFXButton("Fermer");
+                    close.getStyleClass().addAll("jfx-button-error");
+                    close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
+
+                    layout.setActions(close);
+                    dialog.show();
+                });
+            }
+        });
+        //addrep
+        if(!UserSession.getInstace().getUser().isAdmin())
+            addrep.setVisible(false);
+
         addrep.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         addrep.setCellFactory(param -> new TableCell<>() {
             private final JFXButton repButton = new JFXButton("Repondre");
@@ -164,7 +296,7 @@ public class RequeteController implements Initializable {
                     verify.disableProperty().bind(Bindings.createBooleanBinding(() -> !tr.textProperty().get().matches("^[\\d\\w\\s]{5,255}"), tr.textProperty()));
                     verify.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
                         Rponse r = new Rponse();
-                        r.setUser(72);
+                        r.setUser(UserSession.getInstace().getUser().getId());
                         r.setRating(2);
                         r.setRequete(cat.getId());
                         r.setSujet(tf.getText());
@@ -180,9 +312,19 @@ public class RequeteController implements Initializable {
                             r.setId(l);
                             RequeteService req = new RequeteService();
                             System.out.println(r.getId());
-                            Requete reqq = new Requete(72, r.getId(), "prob", "decri", sqlDate, 1, 2);
+                            Requete reqq = new Requete(1, r.getId(), "prob", "decri", sqlDate, 1, 2);
                             reqq.setId(cat.getId());
                             req.updaterponse(reqq);
+                            Platform.runLater(() -> {
+                                        TrayNotification tray = new TrayNotification("Service", "Reponse envoyer", NotificationType.SUCCESS);
+                                        //tray.setImage(reactorsLogo);
+                                        tray.setRectangleFill(Paint.valueOf("6200EE"));
+                                        tray.setAnimationType(AnimationType.POPUP);
+                                        tray.showAndDismiss(new Duration(1200));
+                                    }
+                            );
+
+
 
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
@@ -196,6 +338,8 @@ public class RequeteController implements Initializable {
                             fermer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> d.close());
                             l.setActions(fermer);
                             d.show();
+
+
                         }
                     });
                     layout.setActions(close, verify);
@@ -207,7 +351,7 @@ public class RequeteController implements Initializable {
         //delete
         deleteOption.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         deleteOption.setCellFactory(param -> new TableCell<>() {
-            private final JFXButton deleteButton = new JFXButton("Supprimer");
+            private final Button deleteButton = new Button("Supprimer");
 
             @Override
             protected void updateItem(Requete cat, boolean empty) {
@@ -234,6 +378,14 @@ public class RequeteController implements Initializable {
                             req.delete(cat);
                             catTV.getItems().remove(cat);
                             showDialog(Alert.AlertType.CONFIRMATION, "", "", "Requete supprimée !!");
+                            Platform.runLater(() -> {
+                                        TrayNotification tray = new TrayNotification("Service", "Requete Supprimee", NotificationType.SUCCESS);
+                                        //tray.setImage(reactorsLogo);
+                                        tray.setRectangleFill(Paint.valueOf("6200EE"));
+                                        tray.setAnimationType(AnimationType.POPUP);
+                                        tray.showAndDismiss(new Duration(1200));
+                                    }
+                            );
                         }
                 });
             }
@@ -246,7 +398,7 @@ public class RequeteController implements Initializable {
     }*/
     public void ajoutButton() throws SQLException {
         Requete req = new Requete();
-        req.setUser(72);
+        req.setUser(UserSession.getInstace().getUser().getId());
         req.setDescription(description.getText());
         req.setSujet(nom.getText());
         if (combobox.getValue() == "Question générale sur Reactors") {
@@ -266,6 +418,14 @@ public class RequeteController implements Initializable {
         req.setStatut(0);
         RequeteService servicereq = new RequeteService();
         servicereq.add(req);
+        Platform.runLater(() -> {
+                    TrayNotification tray = new TrayNotification("Service", "Requete Envoyer", NotificationType.SUCCESS);
+                    //tray.setImage(reactorsLogo);
+                    tray.setRectangleFill(Paint.valueOf("6200EE"));
+                    tray.setAnimationType(AnimationType.POPUP);
+                    tray.showAndDismiss(new Duration(1200));
+                }
+        );
         nom.setText("");
         description.setText("");
         /*Notifications.create()
@@ -303,191 +463,30 @@ public class RequeteController implements Initializable {
 
     //refresh
     public void handlebuttonAction(ActionEvent event) {
+        System.out.println("lol");
        /* Notifications.create()
                 .darkStyle()
                 .title("Title")
                 .graphic(null) // sets node to display
                 .hideAfter(Duration.seconds(10))
                 .showWarning();*/
-        oblist.clear();
-        Connection connection = ConnectionUtil.getInstance().getConn();
+        catTV.getItems().clear();
+        ResultSet rs;
 
 
 
         try {
-            ResultSet rs = connection.createStatement().executeQuery("select * from requete");
+            rs = ConnectionUtil.getInstance().getConn().createStatement().executeQuery("select * from requete");
             while (rs.next()) {
-                oblist.add(new Requete(rs.getInt("id"), rs.getString("Sujet"), rs.getString("Description"), rs.getDate("DernierMAJ"), rs.getInt("Statut"), rs.getInt("Type")));
+                if(UserSession.getInstace().getUser().isAdmin())
+                    catTV.getItems().add(new Requete(rs.getInt("id"), rs.getString("Sujet"), rs.getString("Description"), rs.getDate("DernierMAJ"), rs.getInt("Statut"), rs.getInt("Type")));
+                if(!UserSession.getInstace().getUser().isAdmin() && rs.getInt("user_id")==UserSession.getInstace().getUser().getId())
+                    catTV.getItems().add(new Requete(rs.getInt("id"), rs.getString("Sujet"), rs.getString("Description"), rs.getDate("DernierMAJ"), rs.getInt("Statut"), rs.getInt("Type")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        //System.out.println("Hello world");
-
-
-        nomCol.setCellValueFactory(new PropertyValueFactory<>("sujet"));
-        descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        statutCol.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("derniermaj"));
-        statutCol.setCellFactory(column -> {
-            TableCell<Requete, Number> cell = new TableCell<Requete, Number>() {
-                @Override
-                protected void updateItem(Number statut, boolean empty) {
-                    super.updateItem(statut, empty);
-
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        Label label = new Label();
-                        label.setText(statut.intValue() == 0 ? "non Resolu" : "Resolu");
-                        setGraphic(label);
-                    }
-                }
-            };
-
-            return cell;
-        });
-        typeCol.setCellFactory(column -> {
-            TableCell<Requete, Number> cell = new TableCell<Requete, Number>() {
-                @Override
-                protected void updateItem(Number statut, boolean empty) {
-                    super.updateItem(statut, empty);
-
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        Label label = new Label();
-                        label.setText(statut.intValue() == 2 ? "J'ai un problem concernant cette application" : statut.intValue() == 1 ? "Question générale sur Reactors" : "Autre");
-                        setGraphic(label);
-                    }
-                }
-            };
-
-            return cell;
-        });
-
-
-        catTV.setItems(oblist);
-
-        /*typeCol.setCellFactory(ComboBoxTableCell.forTableColumn(
-                "Question générale sur Reactors","J'ai un problem concernant cette application","Autre"
-        ));
-        typeCol.setOnEditCommit(requeteStringCellEditEvent -> {
-            Requete r = catTV.getItems().get(requeteStringCellEditEvent.getTablePosition().getRow());
-            if (requeteStringCellEditEvent.getOldValue()!=requeteStringCellEditEvent.getNewValue()) {
-                System.out.println(requeteStringCellEditEvent.getNewValue());
-            }
-        });*/
-        //add2
-        addrep.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-        addrep.setCellFactory(param -> new TableCell<>() {
-            private final JFXButton repButton = new JFXButton("Repondre");
-
-            @Override
-            protected void updateItem(Requete cat, boolean empty) {
-                super.updateItem(cat, empty);
-                if (cat == null) {
-                    setGraphic(null);
-                    return;
-                }
-                setGraphic(repButton);
-                repButton.setOnAction(event -> {
-                    JFXDialogLayout layout = new JFXDialogLayout();
-                    //layout.setHeading(new Text("Dissaproving association "+a.getNom()));
-                    VBox v = new VBox();
-                    JFXTextField tf = new JFXTextField();
-                    tf.setPromptText("Sujet");
-                    JFXTextArea tr = new JFXTextArea();
-                    tr.setPromptText("Ecrire la reponse");
-                    v.getChildren().addAll(tf, tr);
-                    //tr.getValidators().add(new RegexValidator("La raison doit etre comprise entre 5 et 255","^[\\d\\w]{5,255}"));
-                    //tr.setOnKeyTyped(e->tr.validate());
-                    layout.setBody(v);
-                    JFXDialog dialog = new JFXDialog(rootStack, layout, JFXDialog.DialogTransition.CENTER);
-                    JFXButton verify = new JFXButton("Envoyer");
-                    JFXButton close = new JFXButton("Fermer");
-                    close.getStyleClass().addAll("jfx-button-error");
-                    close.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> dialog.close());
-                    verify.disableProperty().bind(Bindings.createBooleanBinding(() -> !tr.textProperty().get().matches("^[\\d\\w\\s]{5,255}"), tr.textProperty()));
-                    verify.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-                        Rponse r = new Rponse();
-                        r.setUser(72);
-                        r.setRating(2);
-                        r.setRequete(cat.getId());
-                        r.setSujet(tf.getText());
-                        r.setRep(tr.getText());
-                        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
-                        r.setDate(sqlDate);
-                        System.out.println(r.getRequete());
-                        try {
-                            RponseService rep = new RponseService();
-                            System.out.println(r.getId());
-                            rep.add(r);
-                            int l = rep.getidrep(r);
-                            r.setId(l);
-                            RequeteService req = new RequeteService();
-                            System.out.println(r.getId());
-                            Requete reqq = new Requete(72, r.getId(), "prob", "decri", sqlDate, 1, 2);
-                            reqq.setId(cat.getId());
-                            req.updaterponse(reqq);
-
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        } finally {
-                            dialog.close();
-                            JFXDialogLayout l = new JFXDialogLayout();
-                            //l.setHeading(new Text(a.getNom()+" : Approval"));
-                            l.setBody(new Label("Reponse envoyer"));
-                            JFXDialog d = new JFXDialog(rootStack, l, JFXDialog.DialogTransition.CENTER);
-                            JFXButton fermer = new JFXButton("Fermer");
-                            fermer.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> d.close());
-                            l.setActions(fermer);
-                            d.show();
-                        }
-                    });
-                    layout.setActions(close, verify);
-                    dialog.show();
-                });
-            }
-        });
-
-        //delete
-        deleteOption.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-        deleteOption.setCellFactory(param -> new TableCell<>() {
-            private final JFXButton deleteButton = new JFXButton("Supprimer");
-
-            @Override
-            protected void updateItem(Requete cat, boolean empty) {
-                super.updateItem(cat, empty);
-                if (cat == null) {
-                    setGraphic(null);
-                    return;
-                }
-                setGraphic(deleteButton);
-                deleteButton.setOnAction(event -> {
-                    Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
-                    confirmationDialog.setTitle("Suppression");
-                    confirmationDialog.setHeaderText("Vous aller supprimer la Requete " + cat.getSujet() + "!");
-                    confirmationDialog.setContentText("Etes vous sure?");
-                    Optional<ButtonType> confirmationResult = confirmationDialog.showAndWait();
-                    if (confirmationResult.isPresent())
-                        if (confirmationResult.get() == ButtonType.OK) {
-                            RequeteService req = null;
-                            try {
-                                req = new RequeteService();
-                            } catch (SQLException throwables) {
-                                throwables.printStackTrace();
-                            }
-                            req.delete(cat);
-                            catTV.getItems().remove(cat);
-                            showDialog(Alert.AlertType.CONFIRMATION, "", "", "Requete supprimée !!");
-                        }
-                });
-            }
-        });
     }
 
 }

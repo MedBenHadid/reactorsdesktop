@@ -1,6 +1,7 @@
 package Packages.Ramy;
 
 
+import Main.Entities.UserSession;
 import SharedResources.URLScenes;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -35,10 +36,11 @@ public class SupportMain extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(scene);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-
+        if (UserSession.login("username", "pass")) {
+            Parent root = FXMLLoader.load(scene);
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 }

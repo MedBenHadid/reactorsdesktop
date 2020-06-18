@@ -75,6 +75,28 @@ public class RponseService implements IService<Rponse> {
 
         return 0;
     }
+    public Rponse getrepbyid(int id){
+        try {
+            String query = "SELECT * FROM rponse where requete_id="+ id ;
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if(resultSet.next())
+            return new Rponse(resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getInt(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getDate(6),
+                        resultSet.getInt(7));
+
+
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return new Rponse();
+
+
+    }
 
     @Override
     public List<Rponse> display() {
