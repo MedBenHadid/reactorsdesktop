@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<fx:root fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="640.0" stylesheets="@../../../Main/styles.css" type="javafx.scene.layout.StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="762.0" prefWidth="907.0" vbarPolicy="ALWAYS">
+        <AnchorPane minHeight="0.0" minWidth="0.0">
+            <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <padding>
+                    <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+                </padding>
+                <HBox alignment="CENTER" prefHeight="22.0" prefWidth="795.0">
+                    <children>
+                        <Label fx:id="donNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="122.0" prefWidth="499.0" text="title" textAlignment="CENTER">
+                            <font>
+                                <Font name="Arial Black" size="32.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Label>
+                    </children>
+                </HBox>
+                <ImageView fx:id="imageImageView" fitHeight="318.0" fitWidth="784.0" pickOnBounds="true" preserveRatio="true" />
+                <VBox>
+               <Label text="Title:">
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </Label>
+               <JFXTextField fx:id="titleInput" focusColor="#a126b9" />
+                    <Label text="Description : ">
+                  <VBox.margin>
+                     <Insets top="15.0" />
+                  </VBox.margin>
+               </Label>
+                    <JFXTextArea fx:id="descInput" focusColor="#873087" prefColumnCount="20" prefHeight="57.0" prefWidth="487.0" wrapText="true">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin>
+               </JFXTextArea>
+                    <Label prefHeight="18.0" prefWidth="102.0" text="Address : ">
+                  <VBox.margin>
+                     <Insets top="15.0" />
+                  </VBox.margin>
+               </Label>
+                    <JFXTextField fx:id="addrInput" focusColor="#a126b9">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin>
+               </JFXTextField>
+                    <Label text="Phone : ">
+                  <VBox.margin>
+                     <Insets top="15.0" />
+                  </VBox.margin>
+               </Label>
+                    <JFXTextField fx:id="phoneInput" focusColor="#a126b9">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin>
+               </JFXTextField>
+               <Label text="Category : ">
+                  <VBox.margin>
+                     <Insets top="15.0" />
+                  </VBox.margin>
+               </Label>
+               <JFXComboBox fx:id="categoryComboBox" focusColor="#a126b9" prefHeight="26.0" prefWidth="253.0" />
+               <Label text="Change picture : ">
+                  <VBox.margin>
+                     <Insets top="15.0" />
+                  </VBox.margin>
+               </Label>
+               <JFXButton fx:id="photoButton" text="image" />
+               <Label text="Change Location : ">
+                  <VBox.margin>
+                     <Insets top="25.0" />
+                  </VBox.margin>
+               </Label>
+                    <WebView fx:id="gmapWebView" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="652.0" VBox.vgrow="ALWAYS">
+                        <VBox.margin>
+                            <Insets top="20.0" />
+                        </VBox.margin>
+                    </WebView>
+
+                          <JFXButton fx:id="UpdateButton" prefWidth="500.0" text="Update">
+                        <VBox.margin>
+                            <Insets bottom="20.0" left="170.0" right="200.0" top="20.0" />
+                        </VBox.margin>
+               </JFXButton>
+                </VBox>
+            </VBox>
+        </AnchorPane>
+    </ScrollPane>
+</fx:root>

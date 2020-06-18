@@ -19,13 +19,16 @@ public class URLServer {
     public final static String missionImageDir = "mission/images/";
 
 
+    public final static String donImageDir = "images/donImages/";
+
+
     public final static String DATABASE_DRIVER = "jdbc:mysql:";
     public final static String DATABASE_HOST = "//localhost";
-    public final static String DATABASE_NAME = "/reactorsdb";
+    public final static String DATABASE_NAME = "/basepi";
     public final static String DATABASE_UTC_SUPPORT = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     public final static String DATABASE_USERNAME = "root";
     public final static String DATABASE_PORT = ":3306";
-    public final static String DATABASE_PASSWORD = "";
+    public final static String DATABASE_PASSWORD = "root";
     public final static String DATABASE_CJ_DRIVER = "com.mysql.cj.jdbc.Driver";
 
 }

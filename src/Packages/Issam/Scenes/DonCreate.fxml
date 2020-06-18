@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane fx:id="rootPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="778.0" prefWidth="575.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Packages.Issam.Controller.DonCreateController">
+    <children>
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <content>
+                <AnchorPane>
+                    <children>
+                        <VBox alignment="CENTER" prefHeight="823.0" prefWidth="597.0" AnchorPane.bottomAnchor="-59.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <Label text="Création d'une nouvelle donnation:">
+                                    <VBox.margin>
+                                        <Insets left="20.0" top="20.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <Separator>
+                                    <VBox.margin>
+                                        <Insets left="20.0" right="20.0" />
+                                    </VBox.margin>
+                                </Separator>
+                        <HBox prefHeight="218.0" prefWidth="597.0">
+                           <children>
+      
+                                    <WebView fx:id="gmapWebView" prefHeight="195.0" prefWidth="560.0" />
+                           </children>
+                        </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label text="Titre don:">
+                                            <HBox.margin>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                        <JFXTextField fx:id="TitleInput" focusColor="#8c27d5" unFocusColor="#0045b5">
+                                            <HBox.margin>
+                                                <Insets top="10.0" />
+                                            </HBox.margin>
+                                        </JFXTextField>
+                                    </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label text="Description :">
+                                            <HBox.margin>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                        <JFXTextArea fx:id="descriptionInput" focusColor="#a42bba" prefHeight="5.0" prefWidth="240.0" unFocusColor="#0045b5" />
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label text="Adresse :">
+                                            <HBox.margin>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                        <JFXTextField fx:id="addressInput" focusColor="#a52dbd" unFocusColor="#0045b5">
+                                            <HBox.margin>
+                                                <Insets left="20.0" top="10.0" />
+                                            </HBox.margin>
+                                        </JFXTextField>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                      <HBox>
+                                          <children>
+                                              <Label text="Phone:">
+                                                  <HBox.margin>
+                                                      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                                  </HBox.margin>
+                                              </Label>
+                                              <JFXTextField fx:id="phoneInput" focusColor="#b236bf" unFocusColor="#0045b5">
+                                                  <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                  </HBox.margin>
+                                              </JFXTextField>
+                                          </children>
+                                      </HBox>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label text="domaine de donnation">
+                                            <HBox.margin>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </HBox.margin>
+                                        </Label>
+                              <JFXComboBox fx:id="categoryComboBox" focusColor="#a837ca" prefHeight="26.0" prefWidth="145.0" unFocusColor="#0045b5" />
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label text="image donnation">
+                                            <HBox.margin>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                        <JFXButton fx:id="photoButton" prefHeight="26.0" prefWidth="94.0" text="Click here">
+                                            <HBox.margin>
+                                                <Insets top="18.0" />
+                                            </HBox.margin>
+                                        </JFXButton>
+                                    </children>
+                                </HBox>
+                        <HBox alignment="CENTER" prefHeight="151.0" prefWidth="517.0">
+                           <children>
+                              <ImageView fx:id="imageView" fitHeight="151.0" fitWidth="370.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                        </HBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                                        <JFXButton fx:id="createButton" prefHeight="39.0" prefWidth="575.0" ripplerFill="#a326bf" text="Créer Mission" textAlignment="CENTER">
+                                            <font>
+                                                <Font size="18.0" />
+                                            </font>
+                                        </JFXButton>
+                           </children>
+                        </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

@@ -1,42 +1,28 @@
 package Packages.Issam.Models;
 
 
-public class Demande {
-    private int id;
-    private int user;
-    private String title;
-    private String description;
-    private String address;
-    private String phone;
-    private String creationDate;
-    private int ups;
-    private Double lat, lon;
-    private String image;
-    private int category;
-    private String rib;
+import Packages.Chihab.Models.Entities.Category;
 
-    public Demande(int id, int user, String title, String description, String address, String phone, String creationDate, int ups, Double lat, Double lon, String image, int category, String rib) {
-        this.id = id;
-        this.user = user;
-        this.title = title;
-        this.description = description;
-        this.address = address;
-        this.phone = phone;
-        this.creationDate = creationDate;
-        this.ups = ups;
-        this.lat = lat;
-        this.lon = lon;
-        this.image = image;
-        this.category = category;
-        this.rib = rib;
-    }
+public class Demande {
+    private int id ;
+    private int user;
+    private String title ;
+    private String description ;
+    private String address ;
+    private String phone ;
+    private String creationDate ;
+    private int ups ;
+    private Double lat,lon;
+    private String image ;
+    private Category category;
+    private String rib ;
 
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-        this.id = 5;
+        this.id=id;
     }
 
     public String getTitle() {
@@ -119,11 +105,11 @@ public class Demande {
         this.user = user;
     }
 
-    public int getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(int category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -134,6 +120,24 @@ public class Demande {
     public void setRib(String rib) {
         this.rib = rib;
     }
+
+    public Demande(int id, int user, String title, String description, String address, String phone, String creationDate, int ups, Double lat, Double lon, String image, Category category, String rib) {
+        this.id = id;
+        this.user = user;
+        this.title = title;
+        this.description = description;
+        this.address = address;
+        this.phone = phone;
+        this.creationDate = creationDate;
+        this.ups = ups;
+        this.lat = lat;
+        this.lon = lon;
+        this.image = image;
+        this.category = category;
+        this.rib = rib;
+    }
+
+public Demande (){}
 
     @Override
     public String toString() {
@@ -150,6 +154,7 @@ public class Demande {
                 ", image='" + image + '\'' +
                 ", category=" + category +
                 '}';
+
 
 
     }

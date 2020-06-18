@@ -36,6 +36,7 @@ public class HomeController implements Initializable {
     @FXML private JFXHamburger hamburger;
     @FXML private JFXDrawer drawer;
     private final Tab associationsTab = new Tab(), domainesTab = new Tab(), missionsTab = new Tab(), refugeesTab = new Tab(), helpdeskTab = new Tab();
+    private final Tab donTab = new Tab();
     private final FXMLLoader loader = new FXMLLoader(getClass().getResource(URLScenes.sidePanel));
     private HamburgerBackArrowBasicTransition transition;
     private final AssociationsBackofficeController associationsMain = new AssociationsBackofficeController();
@@ -51,6 +52,9 @@ public class HomeController implements Initializable {
     private final JFXButton refugees;
     private final JFXButton refugeesUser;
     private final JFXButton helpdesk;
+    private final JFXButton don;
+
+
     public HomeController() throws IOException {
         box = loader.load();
         // Side panel header
@@ -64,11 +68,17 @@ public class HomeController implements Initializable {
         this.associationsTab.setText("Associations");
         this.associationsTab.setContent(associationsMain);
 
+
+        this.don=(JFXButton) loader.getNamespace().get("donButton");
+
+
+
         domaines = (JFXButton) loader.getNamespace().get("chihabDomaines");
         missions = (JFXButton) loader.getNamespace().get("mohamedMissions");
         refugees = (JFXButton) loader.getNamespace().get("nasriRefugees");
         refugeesUser = (JFXButton) loader.getNamespace().get("nasriRefugeesUser");
         helpdesk = (JFXButton) loader.getNamespace().get("ramyHelpesk");
+
     }
 
     @Override
@@ -164,7 +174,35 @@ public class HomeController implements Initializable {
                 changeTab(helpdeskTab);
             });
             /** Issam */
-            // !!!!!!!!!!!!!! ------------------------ Add your buttons here ------------------------ !!!!!!!!!!!!!! \\
+
+
+
+
+            don.setOnMouseClicked(mouseEvent -> {
+
+
+
+                        this.donTab.setText("donnation");
+                        try {
+                            if (UserSession.getInstace().getUser().isAdmin())
+                                this.donTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.donDash)));
+
+                            else
+
+                            this.donTab.setContent(FXMLLoader.load(getClass().getResource(URLScenes.donMain)));
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        changeTab(donTab);
+
+                    }
+
+                    );
+
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

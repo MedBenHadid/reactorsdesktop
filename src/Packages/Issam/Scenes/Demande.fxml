@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@/Packages/Issam/resources/css/Main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Packages.Issam.Controller.DemandeController">
+    <children>
+        <AnchorPane stylesheets="@../resources/css/Main.css">
+            <children>
+                <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                        <Tab text="Don">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <viewport>
+                                        <Rectangle2D />
+                                    </viewport>
+                                    <image>
+                                        <Image url="@../../../SharedResources/Images/icons8_Share_64px.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0">
+                                    <children>
+                                        <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <children>
+                                                <HBox>
+                                                    <children>
+                                                        <Label text="Liste des dons" textFill="#221aba">
+                                                            <HBox.margin>
+                                                                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                                                            </HBox.margin>
+                                                            <font>
+                                                                <Font size="25.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label prefHeight="32.0" prefWidth="111.0" text="Search by title : " textFill="#221aba">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                            <HBox.margin>
+                                                                <Insets right="10.0" top="50.0" />
+                                                            </HBox.margin>
+                                                        </Label>
+                                                        <TextField fx:id="inputTitle">
+                                                            <HBox.margin>
+                                                                <Insets bottom="30.0" right="30.0" top="50.0" />
+                                                            </HBox.margin>
+                                                        </TextField>
+                                                        <Label prefHeight="32.0" prefWidth="131.0" text="Search by address:" textFill="#221aba">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                            <HBox.margin>
+                                                                <Insets bottom="50.0" left="5.0" right="10.0" top="50.0" />
+                                                            </HBox.margin>
+                                                        </Label>
+                                                        <TextField fx:id="inputAddress">
+                                                            <HBox.margin>
+                                                                <Insets right="10.0" top="50.0" />
+                                                            </HBox.margin>
+                                                        </TextField>
+                                                    </children>
+                                                </HBox>
+                                                <TableView fx:id="demandeTV" editable="true" tableMenuButtonVisible="true">
+                                                    <columns>
+                                                        <TableColumn fx:id="idCol" prefWidth="75.0" text="ID" visible="false" />
+                                                        <TableColumn fx:id="titleCol" prefWidth="75.0" text="title" />
+                                                        <TableColumn fx:id="descCol" prefWidth="100.0" text="description" />
+                                                        <TableColumn fx:id="addrCol" prefWidth="100.0" text="address" />
+                                                        <TableColumn fx:id="phoneCol" prefWidth="100.0" text="phone" />
+                                          <TableColumn fx:id="ribCol" prefWidth="100.0" text="Rib" />
+                                                        <TableColumn fx:id="deleteOption" prefWidth="75.0" text="Supprimer" visible="false" />
+                                                    </columns>
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                </TableView>
+                                            </children>
+                                        </VBox>
+                                        <HBox alignment="BOTTOM_RIGHT" layoutX="353.0" prefHeight="42.0" prefWidth="366.0">
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <children>
+                                                <JFXButton fx:id="addButton" contentDisplay="RIGHT" prefHeight="26.0" prefWidth="370.0" ripplerFill="#8100fa" text="Ajouter une mission">
+                                                    <HBox.margin>
+                                                        <Insets bottom="10.0" left="5.0" right="10.0" top="5.0" />
+                                                    </HBox.margin>
+                                                </JFXButton>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

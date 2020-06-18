@@ -1,0 +1,51 @@
+.root {
+    -fx-background-color: #F0F4F8;
+    -fx-font-size: 16px;
+}
+
+.header {
+    -fx-background-color: #eee;
+    -fx-padding: 0;
+    -fx-alignment: center;
+}
+
+.logo {
+    -fx-text-fill: #044E54;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+.callToActionButton {
+    -fx-font-family: "Tahoma";
+    -fx-background-color: #1DB386;
+    -fx-text-fill: #eee;
+    -fx-padding: 12px;
+}
+
+.callToActionButton:hover {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 12, 0, 0, 0);
+}
+
+
+.heroLabel {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #eee;
+}
+
+.sectionOffers {
+    -fx-background-color: #C8F7E9;
+}
+
+.sectionDemandes {
+    -fx-background-color: #E8FFF8;
+}
+
+.sectionTitle {
+    -fx-text-fill: #044E54;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+

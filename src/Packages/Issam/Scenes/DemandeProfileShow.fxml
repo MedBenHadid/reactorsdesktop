@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="640.0" stylesheets="@../../../Main/styles.css" type="javafx.scene.layout.StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="705.0" prefWidth="755.0" vbarPolicy="ALWAYS">
+        <AnchorPane minHeight="0.0" minWidth="0.0">
+            <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <padding>
+                    <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+                </padding>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="742.0">
+                    <children>
+                        <Label fx:id="donNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="122.0" prefWidth="499.0" text="title" textAlignment="CENTER">
+                            <font>
+                                <Font name="Arial Black" size="32.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets bottom="80.0" />
+                            </HBox.margin>
+                        </Label>
+                    </children>
+                </HBox>
+                <ImageView fx:id="imageImageView" fitHeight="296.0" fitWidth="644.0" pickOnBounds="true" preserveRatio="true" />
+                <VBox>
+                    <Label text="Description : " />
+                    <JFXTextArea fx:id="descInput" editable="false" focusColor="#873087" prefColumnCount="20" prefHeight="57.0" prefWidth="487.0" wrapText="true">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin></JFXTextArea>
+                    <Label prefHeight="18.0" prefWidth="102.0" text="Address : " />
+                    <JFXTextField fx:id="addrInput" editable="false" focusColor="#873087">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin></JFXTextField>
+                    <Label text="Phone : " />
+                    <JFXTextField fx:id="phoneInput" editable="false" focusColor="#873087">
+                        <VBox.margin>
+                            <Insets bottom="20.0" top="20.0" />
+                        </VBox.margin></JFXTextField>
+               <Label text="Rib" />
+               <JFXTextField fx:id="ribInput" />
+
+                    <JFXButton fx:id="SmsButton" prefWidth="500.0" text="Send message">
+                        <VBox.margin>
+                            <Insets bottom="20.0" left="90.0" right="50.0" top="20.0" />
+                        </VBox.margin></JFXButton>
+                </VBox>
+            </VBox>
+        </AnchorPane>
+    </ScrollPane>
+</fx:root>
